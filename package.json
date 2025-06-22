@@ -30,6 +30,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "npm run build && changeset publish",
+    "release": "npm run build && npm run changeset:publish",
     "prepare": "lefthook install"
   },
   "keywords": [
@@ -47,6 +51,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.4",
+    "@changesets/cli": "^2.29.5",
     "@types/bun": "latest",
     "@types/node": "^20.0.0",
     "lefthook": "^1.11.14",

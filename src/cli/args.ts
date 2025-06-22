@@ -16,10 +16,16 @@ export interface ClaudeMaxOptions {
 export function parseArgs(): ClaudeMaxOptions {
   const args = process.argv.slice(2);
 
+  // Handle version flag
+  if (args.includes('--version') || args.includes('-v')) {
+    console.log('claude-codex v1.0.0');
+    process.exit(0);
+  }
+
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
-    console.log(`${colors.bright('Claude Code SDK - Max Subscription')}\n`);
+    console.log(`${colors.bright('Claude Codex - Local Background Agents')}\n`);
     console.log('Usage:');
-    console.log('  npx tsx claude-sdk-max.ts "Your prompt here" [options]\n');
+    console.log('  claude-codex "Your prompt here" [options]\n');
     console.log('Options:');
     console.log('  --max-turns <n>      Maximum conversation turns (default: 1)');
     console.log('  --output-format      Output format: text, json, stream-json (default: text)');
@@ -30,12 +36,13 @@ export function parseArgs(): ClaudeMaxOptions {
     console.log(
       '  --permission-mode    Permission mode: default, acceptEdits, bypassPermissions, plan'
     );
+    console.log('  --version, -v        Show version number');
     console.log('  --help, -h           Show this help message\n');
     console.log('Examples:');
-    console.log('  npx tsx claude-sdk-max.ts "Write a fibonacci function"');
-    console.log('  npx tsx claude-sdk-max.ts "Fix the bug in app.js" --max-turns 3');
-    console.log('  npx tsx claude-sdk-max.ts "Refactor this code" --allowed-tools Read,Write');
-    console.log('  npx tsx claude-sdk-max.ts "testing" --debug');
+    console.log('  claude-codex "Write a fibonacci function"');
+    console.log('  claude-codex "Fix the bug in app.js" --max-turns 3');
+    console.log('  claude-codex "Refactor this code" --allowed-tools Read,Write');
+    console.log('  claude-codex "testing" --debug');
     process.exit(0);
   }
 
