@@ -1,0 +1,52 @@
+{
+  "name": "claude-scripts",
+  "version": "1.0.0",
+  "description": "Automation scripts powered by Claude Code SDK",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "claude-scripts": "./bin/claude-scripts.js"
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./core": "./src/core/index.js",
+    "./cli": "./src/cli/index.js"
+  },
+  "files": [
+    "src/",
+    "bin/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node bin/claude-scripts.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [
+    "claude",
+    "automation",
+    "ai",
+    "scripts",
+    "code-generation"
+  ],
+  "author": "abuusama",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abuusama/claude-scripts.git"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-code": "^1.0.31",
+    "@reliverse/relinka": "^1.5.3",
+    "picocolors": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
