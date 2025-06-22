@@ -20,7 +20,17 @@
   "scripts": {
     "build": "tsc",
     "start": "node bin/claude-codex.js",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "format": "biome format --write .",
+    "format:check": "biome format --check .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "lefthook install"
   },
   "keywords": [
     "claude",
@@ -36,10 +46,13 @@
     "url": "https://github.com/abuusama/claude-codex.git"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.0.4",
     "@types/bun": "latest",
     "@types/node": "^20.0.0",
+    "lefthook": "^1.11.14",
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.31",

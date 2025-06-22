@@ -1,28 +1,24 @@
-import { query, type SDKMessage } from "@anthropic-ai/claude-code";
-import { writeFile } from "fs/promises";
-import { forceSubscriptionAuth } from "./auth.js";
-import { colors, formatMessage } from "./messaging.js";
+import { query, type SDKMessage } from '@anthropic-ai/claude-code';
+import { writeFile } from 'fs/promises';
+import { forceSubscriptionAuth } from './auth.js';
+import { colors, formatMessage } from './messaging.js';
 
 export interface ClaudeQueryOptions {
   prompt: string;
   maxTurns?: number;
-  outputFormat?: "text" | "json" | "stream-json";
+  outputFormat?: 'text' | 'json' | 'stream-json';
   verbose?: boolean;
   cwd?: string;
   allowedTools?: string[];
-  permissionMode?: "default" | "acceptEdits" | "bypassPermissions" | "plan";
+  permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions' | 'plan';
 }
 
 /**
  * Run Claude Code using the SDK with Max subscription
  */
 export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<void> {
-  console.log(
-    colors.cyan(colors.bright("Claude Code SDK - Max Subscription Mode")),
-  );
-  console.log(
-    colors.dim("Using the official @anthropic-ai/claude-code SDK") + "\n",
-  );
+  console.log(colors.cyan(colors.bright('Claude Code SDK - Max Subscription Mode')));
+  console.log(colors.dim('Using the official @anthropic-ai/claude-code SDK') + '\n');
 
   // Force subscription authentication
   forceSubscriptionAuth();
@@ -30,14 +26,14 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
   const abortController = new AbortController();
 
   // Handle Ctrl+C gracefully
-  process.on("SIGINT", () => {
-    console.log("\n" + colors.yellow("Aborting..."));
+  process.on('SIGINT', () => {
+    console.log('\n' + colors.yellow('Aborting...'));
     abortController.abort();
     process.exit(0);
   });
 
-  console.log(colors.bright("Prompt:") + ` ${options.prompt}\n`);
-  console.log(colors.bright("─".repeat(60)) + "\n");
+  console.log(colors.bright('Prompt:') + ` ${options.prompt}\n`);
+  console.log(colors.bright('─'.repeat(60)) + '\n');
 
   const messages: SDKMessage[] = [];
   let hasError = false;
@@ -65,10 +61,7 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
       messages.push(message);
 
       // Display message in real-time
-      if (
-        options.outputFormat === "json" ||
-        options.outputFormat === "stream-json"
-      ) {
+      if (options.outputFormat === 'json' || options.outputFormat === 'stream-json') {
         console.log(JSON.stringify(message, null, 2));
       } else {
         const formatted = formatMessage(message);
@@ -79,11 +72,9 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
       }
 
       // Check for errors in result messages
-      if (message.type === "result" && message.is_error) {
+      if (message.type === 'result' && message.is_error) {
         hasError = true;
-        console.error(
-          "\n" + colors.red("Execution Error Detected"),
-        );
+        console.error('\n' + colors.red('Execution Error Detected'));
         console.error(`Error type: ${message.subtype}`);
       }
     }
@@ -102,18 +93,15 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
       })
     ) {
       console.log(
-        "\n" +
-          colors.yellow(
-            `Note: Received ${messageCount} messages but no visible content.`,
-          ),
+        '\n' + colors.yellow(`Note: Received ${messageCount} messages but no visible content.`)
       );
-      console.log("Try running with --debug flag to see raw messages.");
+      console.log('Try running with --debug flag to see raw messages.');
     }
 
     // Summary if verbose mode
     if (options.verbose && messages.length > 0) {
-      console.log("\n" + colors.bright("─".repeat(60)));
-      console.log(colors.green("Summary:"));
+      console.log('\n' + colors.bright('─'.repeat(60)));
+      console.log(colors.green('Summary:'));
       console.log(`- Total messages: ${messages.length}`);
 
       const messageTypes = messages.reduce(
@@ -121,7 +109,7 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
           acc[msg.type] = (acc[msg.type] || 0) + 1;
           return acc;
         },
-        {} as Record<string, number>,
+        {} as Record<string, number>
       );
 
       Object.entries(messageTypes).forEach(([type, count]) => {
@@ -130,26 +118,24 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
     }
 
     // Save conversation if requested
-    if (options.outputFormat === "json" && !hasError) {
+    if (options.outputFormat === 'json' && !hasError) {
       const outputFile = `claude-conversation-${Date.now()}.json`;
       await writeFile(outputFile, JSON.stringify(messages, null, 2));
-      console.log(
-        "\n" + colors.green("✓") + ` Conversation saved to: ${outputFile}`,
-      );
+      console.log('\n' + colors.green('✓') + ` Conversation saved to: ${outputFile}`);
     }
   } catch (error) {
-    console.error("\n" + colors.red("SDK Error:"), error);
+    console.error('\n' + colors.red('SDK Error:'), error);
 
     if (error instanceof Error) {
-      if (error.message.includes("ENOENT")) {
-        console.error("\nClaude Code might not be installed. Install it with:");
-        console.error("  npm install -g @anthropic-ai/claude-code");
+      if (error.message.includes('ENOENT')) {
+        console.error('\nClaude Code might not be installed. Install it with:');
+        console.error('  npm install -g @anthropic-ai/claude-code');
       } else if (
-        error.message.includes("authentication") ||
-        error.message.includes("unauthorized")
+        error.message.includes('authentication') ||
+        error.message.includes('unauthorized')
       ) {
-        console.error("\nAuthentication failed. Make sure you:");
-        console.error("1. Have an active Max subscription");
+        console.error('\nAuthentication failed. Make sure you:');
+        console.error('1. Have an active Max subscription');
         console.error('2. Have logged in via "claude" command');
         console.error("3. Haven't hit rate limits");
       }

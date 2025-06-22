@@ -1,0 +1,23 @@
+pre-push:
+  parallel: true
+  commands:
+    format:
+      run: npm run format:check
+      fail_text: "Code formatting failed. Run 'npm run format' to fix."
+    lint:
+      run: npm run lint
+      fail_text: "Linting failed. Fix the issues before pushing."
+    test:
+      run: npm run test
+      fail_text: "Tests failed. Fix the failing tests before pushing."
+      skip:
+        - merge
+        - rebase
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.{js,ts,json,md}"
+      run: npx biome format --write {staged_files}
+      stage_fixed: true

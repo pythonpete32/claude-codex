@@ -175,3 +175,9 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Claude Codex local state
+.codex/
+
+# Test coverage
+coverage/
