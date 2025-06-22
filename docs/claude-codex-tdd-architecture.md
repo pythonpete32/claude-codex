@@ -25,7 +25,8 @@ src/
 │   └── tdd.ts (main TDD workflow orchestrator)
 ├── shared/
 │   ├── types.ts (all interfaces and types)
-│   └── errors.ts (custom error classes)
+│   ├── errors.ts (custom error classes)
+│   └── preflight.ts (environment validation)
 └── index.ts (existing entry point)
 ```
 
@@ -92,10 +93,10 @@ async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>
   - `options.cleanup`: Whether to cleanup worktree on failure (default: true)
 - **Returns**: TDDResult with success status, PR URL if created, iteration count, and task ID
 - **Behavior**:
-  1. Generate unique task ID and initialize state
+  1. Generate unique task ID 
   2. Read and validate spec file exists
   3. Create isolated git worktree with new branch
-  4. Initialize task state file (`.codex/task-{id}.json`)
+  4. Initialize task state file (`.codex/task-{id}.json`) with worktree info
   5. **Agent Loop** (max iterations):
      - Format Coder Agent prompt with spec + any previous feedback
      - Call `runClaudeWithSDK` with Coder prompt
@@ -105,7 +106,8 @@ async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>
      - Call `runClaudeWithSDK` with Reviewer prompt
      - Check if PR was created (success condition)
      - If PR exists: return success result
-     - If feedback provided: save feedback and continue loop
+     - If feedback provided: save feedback and continue loop  
+     - If neither PR nor feedback: terminate with failure
      - If max iterations reached: return partial result
   6. Cleanup worktree and task state if requested
   7. Return final result with success status and metadata
@@ -135,6 +137,7 @@ Manages `.codex/task-{id}.json` files that coordinate data flow between workflow
 #### **Function Signatures**
 
 ```typescript
+// All interfaces defined in shared/types.ts
 interface TaskState {
   taskId: string
   specPath: string
@@ -198,7 +201,7 @@ async function cleanupTaskState(taskId: string): Promise<void>
   - `taskId` - The task identifier  
   - `response` - Raw response string from Coder Agent
 - **Returns**: void
-- **Behavior**: Load state, append response to coderResponses array, increment iteration, update file
+- **Behavior**: Load state, append response to coderResponses array, update file
 
 **`addReviewerResponse(taskId: string, response: string): Promise<void>`**
 - **Purpose**: Appends new reviewer response to existing task state
@@ -239,11 +242,7 @@ Manages git worktree creation and cleanup for task isolation, ensuring each TDD 
 #### **Function Signatures**
 
 ```typescript
-interface WorktreeInfo {
-  path: string
-  branchName: string
-  baseBranch: string
-}
+// WorktreeInfo defined in shared/types.ts
 
 async function createWorktree(taskId: string, options?: { branchName?: string, baseBranch?: string }): Promise<WorktreeInfo>
 async function getCurrentBranch(): Promise<string>
@@ -311,6 +310,7 @@ async function listWorktrees(): Promise<WorktreeInfo[]>
 #### **Implementation Notes**
 - Worktrees are created outside the main repo to avoid cluttering workspace
 - Branch naming follows `tdd/{taskId}` convention for easy identification
+- Use `--no-track` when pushing to avoid remote branch cleanup issues
 - Cleanup is designed to be safe - won't fail if worktree already removed
 
 ---
@@ -322,7 +322,7 @@ Handles GitHub REST API integration for PR detection and repository operations, 
 
 #### **Dependencies**
 - Node.js `https` or `fetch` for HTTP requests
-- GitHub REST API v4
+- GitHub REST API v3
 - Environment variable `GITHUB_TOKEN` for authentication
 
 #### **Function Signatures**
@@ -389,7 +389,7 @@ async function listPRsForBranch(branchName: string): Promise<PRInfo[]>
 - Authentication failure scenarios need coverage
 
 #### **Implementation Notes**
-- Uses GitHub REST API v4 for compatibility
+- Uses GitHub REST API v3 for compatibility
 - Expects standard GitHub token with repo read permissions
 - Handles both public and private repositories
 - PR detection is immediate after agent execution completes
@@ -402,8 +402,9 @@ async function listPRsForBranch(branchName: string): Promise<PRInfo[]>
 Provides prompt templating utilities for formatting Coder and Reviewer agent prompts with proper context and structure.
 
 #### **Dependencies**
-- `shared/types.ts` for TaskState, CoderHandoff, ReviewerFeedback interfaces
+- `shared/types.ts` for interface definitions
 - Node.js `fs/promises` for reading spec files
+- Existing `runClaudeWithSDK` from `core/query.ts`
 
 #### **Function Signatures**
 
@@ -421,6 +422,24 @@ interface ReviewerPromptOptions {
 async function formatCoderPrompt(options: CoderPromptOptions): Promise<string>
 async function formatReviewerPrompt(options: ReviewerPromptOptions): Promise<string>
 async function extractFinalMessage(messages: SDKMessage[]): Promise<string>
+
+// Expected runClaudeWithSDK interface (from core/query.ts)
+interface ClaudeMaxOptions {
+  prompt: string
+  // Additional options as defined in existing implementation
+}
+
+interface SDKMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string | { type: string; text?: string; [key: string]: any }[]
+}
+
+interface SDKResult {
+  messages: SDKMessage[]
+  // Additional fields as defined in existing implementation
+}
+
+async function runClaudeWithSDK(options: ClaudeMaxOptions): Promise<SDKResult>
 ```
 
 #### **Behavioral Description**
@@ -474,3 +493,124 @@ async function extractFinalMessage(messages: SDKMessage[]): Promise<string>
 - Uses SDK message structure instead of brittle text parsing
 - Simple prompt parameters focused on essential data only
 - Orchestrator handles iteration logic, not individual agents
+
+---
+
+## Consolidated Type Definitions (`shared/types.ts`)
+
+```typescript
+// Core workflow types
+export interface TaskState {
+  taskId: string
+  specPath: string
+  originalSpec: string
+  currentIteration: number
+  maxIterations: number
+  branchName: string
+  worktreeInfo: WorktreeInfo
+  coderResponses: string[]
+  reviewerResponses: string[]
+  createdAt: string
+  updatedAt: string
+  status: 'running' | 'completed' | 'failed'
+}
+
+export interface WorktreeInfo {
+  path: string
+  branchName: string
+  baseBranch: string
+}
+
+export interface PRInfo {
+  number: number
+  title: string
+  url: string
+  state: 'open' | 'closed' | 'merged'
+  headBranch: string
+  baseBranch: string
+}
+
+// Claude SDK types
+export interface SDKMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string | { type: string; text?: string; [key: string]: any }[]
+}
+
+export interface SDKResult {
+  messages: SDKMessage[]
+  // Additional fields as defined in existing implementation
+}
+
+// Configuration types
+export interface TDDOptions {
+  specPath: string
+  maxReviews: number
+  branchName?: string
+  cleanup: boolean
+}
+
+export interface TDDResult {
+  success: boolean
+  prUrl?: string
+  iterations: number
+  taskId: string
+  error?: string
+}
+
+export interface GitHubConfig {
+  token: string
+  owner: string
+  repo: string
+}
+
+// Prompt utility types
+export interface CoderPromptOptions {
+  specContent: string
+  reviewerFeedback?: string
+}
+
+export interface ReviewerPromptOptions {
+  originalSpec: string
+  coderHandoff: string
+}
+```
+
+## Error Handling Standards (`shared/errors.ts`)
+
+```typescript
+// Standardized error classes with consistent naming
+export class SpecFileNotFoundError extends Error {}
+export class WorktreeCreationError extends Error {}
+export class AgentExecutionError extends Error {}
+export class GitHubAPIError extends Error {}
+export class StateManagementError extends Error {}
+export class TaskNotFoundError extends Error {}
+export class StateParseError extends Error {}
+export class FileSystemError extends Error {}
+export class ValidationError extends Error {}
+export class GitRepositoryNotFoundError extends Error {}
+export class WorktreeCleanupError extends Error {}
+export class GitCommandError extends Error {}
+export class GitHubAuthError extends Error {}
+export class RepositoryNotFoundError extends Error {}
+export class ConfigurationError extends Error {}
+export class PromptFormattingError extends Error {}
+export class MessageExtractionError extends Error {}
+```
+
+## Environment Validation (`shared/preflight.ts`)
+
+```typescript
+export interface PreflightResult {
+  success: boolean
+  errors: string[]
+  warnings: string[]
+}
+
+export async function validateEnvironment(): Promise<PreflightResult>
+// Validates:
+// - Git repository exists
+// - GITHUB_TOKEN is present and valid
+// - Claude credentials are configured
+// - Required directories are writable
+```
