@@ -1,5 +1,5 @@
+import { writeFile } from 'node:fs/promises';
 import { query, type SDKMessage } from '@anthropic-ai/claude-code';
-import { writeFile } from 'fs/promises';
 import { forceSubscriptionAuth } from './auth.js';
 import { colors, formatMessage } from './messaging.js';
 
@@ -18,7 +18,7 @@ export interface ClaudeQueryOptions {
  */
 export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<void> {
   console.log(colors.cyan(colors.bright('Claude Code SDK - Max Subscription Mode')));
-  console.log(colors.dim('Using the official @anthropic-ai/claude-code SDK') + '\n');
+  console.log(`${colors.dim('Using the official @anthropic-ai/claude-code SDK')}\n`);
 
   // Force subscription authentication
   forceSubscriptionAuth();
@@ -27,13 +27,13 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
 
   // Handle Ctrl+C gracefully
   process.on('SIGINT', () => {
-    console.log('\n' + colors.yellow('Aborting...'));
+    console.log(`\n${colors.yellow('Aborting...')}`);
     abortController.abort();
     process.exit(0);
   });
 
-  console.log(colors.bright('Prompt:') + ` ${options.prompt}\n`);
-  console.log(colors.bright('─'.repeat(60)) + '\n');
+  console.log(`${colors.bright('Prompt:')} ${options.prompt}\n`);
+  console.log(`${colors.bright('─'.repeat(60))}\n`);
 
   const messages: SDKMessage[] = [];
   let hasError = false;
@@ -74,7 +74,7 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
       // Check for errors in result messages
       if (message.type === 'result' && message.is_error) {
         hasError = true;
-        console.error('\n' + colors.red('Execution Error Detected'));
+        console.error(`\n${colors.red('Execution Error Detected')}`);
         console.error(`Error type: ${message.subtype}`);
       }
     }
@@ -93,14 +93,14 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
       })
     ) {
       console.log(
-        '\n' + colors.yellow(`Note: Received ${messageCount} messages but no visible content.`)
+        `\n${colors.yellow(`Note: Received ${messageCount} messages but no visible content.`)}`
       );
       console.log('Try running with --debug flag to see raw messages.');
     }
 
     // Summary if verbose mode
     if (options.verbose && messages.length > 0) {
-      console.log('\n' + colors.bright('─'.repeat(60)));
+      console.log(`\n${colors.bright('─'.repeat(60))}`);
       console.log(colors.green('Summary:'));
       console.log(`- Total messages: ${messages.length}`);
 
@@ -121,10 +121,10 @@ export async function runClaudeWithSDK(options: ClaudeQueryOptions): Promise<voi
     if (options.outputFormat === 'json' && !hasError) {
       const outputFile = `claude-conversation-${Date.now()}.json`;
       await writeFile(outputFile, JSON.stringify(messages, null, 2));
-      console.log('\n' + colors.green('✓') + ` Conversation saved to: ${outputFile}`);
+      console.log(`\n${colors.green('✓')} Conversation saved to: ${outputFile}`);
     }
   } catch (error) {
-    console.error('\n' + colors.red('SDK Error:'), error);
+    console.error(`\n${colors.red('SDK Error:')}`, error);
 
     if (error instanceof Error) {
       if (error.message.includes('ENOENT')) {

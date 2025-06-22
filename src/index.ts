@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { parseArgs } from './cli/args.js';
-import { runClaudeWithSDK } from './core/query.js';
 import { colors } from './core/messaging.js';
+import { runClaudeWithSDK } from './core/query.js';
 
 // Main execution
 (async () => {

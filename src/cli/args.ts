@@ -17,7 +17,7 @@ export function parseArgs(): ClaudeMaxOptions {
   const args = process.argv.slice(2);
 
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
-    console.log(colors.bright('Claude Code SDK - Max Subscription') + '\n');
+    console.log(`${colors.bright('Claude Code SDK - Max Subscription')}\n`);
     console.log('Usage:');
     console.log('  npx tsx claude-sdk-max.ts "Your prompt here" [options]\n');
     console.log('Options:');

@@ -22,7 +22,7 @@
     "start": "node bin/claude-codex.js",
     "dev": "tsx src/index.ts",
     "format": "biome format --write .",
-    "format:check": "biome format --check .",
+    "format:check": "biome check .",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "check": "biome check .",

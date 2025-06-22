@@ -1,5 +1,5 @@
-import pc from 'picocolors';
 import type { SDKMessage } from '@anthropic-ai/claude-code';
+import pc from 'picocolors';
 
 // Helper function to extract content from message content
 export function extractContent(content: unknown): string {
@@ -42,7 +42,7 @@ export function formatMessage(message: SDKMessage): string {
 
   switch (message.type) {
     case 'assistant':
-      output += colors.cyan(`[${timestamp}] Assistant:`) + '\n';
+      output += `${colors.cyan(`[${timestamp}] Assistant:`)}\n`;
       // SDKAssistantMessage has a message property of type APIAssistantMessage
       if (message.message.content) {
         output += extractContent(message.message.content);
@@ -50,7 +50,7 @@ export function formatMessage(message: SDKMessage): string {
       break;
 
     case 'user':
-      output += colors.magenta(`[${timestamp}] User:`) + '\n';
+      output += `${colors.magenta(`[${timestamp}] User:`)}\n`;
       // SDKUserMessage has a message property of type APIUserMessage
       if (message.message.content) {
         output += extractContent(message.message.content);

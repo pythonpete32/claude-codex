@@ -9,7 +9,7 @@ export function forceSubscriptionAuth(): void {
   let removed = false;
   for (const varName of apiKeyVars) {
     if (process.env[varName]) {
-      console.log(colors.yellow('→') + ` Removing ${varName} from environment`);
+      console.log(`${colors.yellow('→')} Removing ${varName} from environment`);
       delete process.env[varName];
       removed = true;
     }
@@ -19,6 +19,6 @@ export function forceSubscriptionAuth(): void {
   process.env.CLAUDE_USE_SUBSCRIPTION = 'true';
 
   if (removed) {
-    console.log(colors.green('✓') + ' Environment cleaned for subscription auth\n');
+    console.log(`${colors.green('✓')} Environment cleaned for subscription auth\n`);
   }
 }
