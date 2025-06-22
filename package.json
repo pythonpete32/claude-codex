@@ -1,11 +1,11 @@
 {
-  "name": "claude-scripts",
+  "name": "claude-codex",
   "version": "1.0.0",
   "description": "Automation scripts powered by Claude Code SDK",
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "claude-scripts": "./bin/claude-scripts.js"
+    "claude-codex": "./bin/claude-codex.js"
   },
   "exports": {
     ".": "./src/index.js",
@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "start": "node bin/claude-scripts.js",
+    "start": "node bin/claude-codex.js",
     "dev": "tsx src/index.ts"
   },
   "keywords": [
@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/abuusama/claude-scripts.git"
+    "url": "https://github.com/abuusama/claude-codex.git"
   },
   "devDependencies": {
     "@types/bun": "latest",
