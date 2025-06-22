@@ -107,7 +107,7 @@ async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>
      - If PR exists: return success result
      - If feedback provided: save feedback and continue loop
      - If max iterations reached: return partial result
-  6. Cleanup worktree if requested
+  6. Cleanup worktree and task state if requested
   7. Return final result with success status and metadata
 
 #### **Error Handling**
@@ -119,6 +119,358 @@ async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>
 
 #### **Types/Interfaces Needed**
 - `TaskState` - Structure for task state files
-- `CoderHandoff` - Structured handoff template from Coder Agent
-- `ReviewerFeedback` - Feedback structure from Reviewer Agent
 - `WorktreeInfo` - Git worktree metadata
+
+---
+
+### **State Manager** (`core/operations/state.ts`)
+
+#### **Purpose**
+Manages `.codex/task-{id}.json` files that coordinate data flow between workflow steps and agent iterations.
+
+#### **Dependencies**
+- Node.js `fs/promises` for file operations
+- `shared/types.ts` for type definitions
+
+#### **Function Signatures**
+
+```typescript
+interface TaskState {
+  taskId: string
+  specPath: string
+  originalSpec: string
+  currentIteration: number
+  maxIterations: number
+  branchName: string
+  worktreeInfo: WorktreeInfo
+  coderResponses: string[]
+  reviewerResponses: string[]
+  createdAt: string
+  updatedAt: string
+  status: 'running' | 'completed' | 'failed'
+}
+
+interface WorktreeInfo {
+  path: string
+  branchName: string
+  baseBranch: string
+}
+
+async function initializeTaskState(specPath: string, options: Partial<TaskState>): Promise<TaskState>
+async function getTaskState(taskId: string): Promise<TaskState>
+async function updateTaskState(taskState: TaskState): Promise<void>
+async function addCoderResponse(taskId: string, response: string): Promise<void>
+async function addReviewerResponse(taskId: string, response: string): Promise<void>
+async function cleanupTaskState(taskId: string): Promise<void>
+```
+
+#### **Behavioral Description**
+
+**`initializeTaskState(specPath: string, options: Partial<TaskState>): Promise<TaskState>`**
+- **Purpose**: Creates new task state file and returns initialized TaskState
+- **Parameters**: 
+  - `specPath`: Path to the spec file
+  - `options`: Optional overrides for default task state values
+- **Returns**: Complete TaskState object with generated taskId and timestamps
+- **Behavior**:
+  1. Generate unique task ID (timestamp + random suffix)
+  2. Read and store original spec content
+  3. Create `.codex/` directory if it doesn't exist
+  4. Initialize TaskState with defaults and provided options
+  5. Write state file to `.codex/task-{id}.json`
+  6. Return complete TaskState object
+
+**`getTaskState(taskId: string): Promise<TaskState>`**
+- **Purpose**: Retrieves existing task state from file
+- **Parameters**: `taskId` - The task identifier
+- **Returns**: Complete TaskState object
+- **Behavior**: Read and parse `.codex/task-{taskId}.json`, validate structure
+
+**`updateTaskState(taskState: TaskState): Promise<void>`**
+- **Purpose**: Overwrites entire task state file with new data
+- **Parameters**: `taskState` - Complete updated TaskState object
+- **Returns**: void
+- **Behavior**: Update `updatedAt` timestamp and write to file atomically
+
+**`addCoderResponse(taskId: string, response: string): Promise<void>`**
+- **Purpose**: Appends new coder response to existing task state
+- **Parameters**: 
+  - `taskId` - The task identifier  
+  - `response` - Raw response string from Coder Agent
+- **Returns**: void
+- **Behavior**: Load state, append response to coderResponses array, increment iteration, update file
+
+**`addReviewerResponse(taskId: string, response: string): Promise<void>`**
+- **Purpose**: Appends new reviewer response to existing task state
+- **Parameters**: 
+  - `taskId` - The task identifier
+  - `response` - Raw response string from Reviewer Agent
+- **Returns**: void  
+- **Behavior**: Load state, append response to reviewerResponses array, update file
+
+**`cleanupTaskState(taskId: string): Promise<void>`**
+- **Purpose**: Removes task state file from filesystem
+- **Parameters**: `taskId` - The task identifier
+- **Returns**: void
+- **Behavior**: Delete `.codex/task-{taskId}.json` file
+
+#### **Error Handling**
+- **TaskNotFoundError**: When task state file doesn't exist
+- **StateParseError**: When task state JSON is malformed
+- **FileSystemError**: When file operations fail (permissions, disk space)
+- **ValidationError**: When task state structure is invalid
+
+#### **Testing Considerations**
+- File operations must be mockable for unit tests
+- State validation should be tested with malformed JSON
+- Concurrent access scenarios should be considered (though unlikely in MVP)
+
+---
+
+### **Worktree Operations** (`core/operations/worktree.ts`)
+
+#### **Purpose**
+Manages git worktree creation and cleanup for task isolation, ensuring each TDD task runs in its own branch and directory.
+
+#### **Dependencies**
+- Node.js `child_process` for git command execution
+- `shared/types.ts` for WorktreeInfo interface
+
+#### **Function Signatures**
+
+```typescript
+interface WorktreeInfo {
+  path: string
+  branchName: string
+  baseBranch: string
+}
+
+async function createWorktree(taskId: string, options?: { branchName?: string, baseBranch?: string }): Promise<WorktreeInfo>
+async function getCurrentBranch(): Promise<string>
+async function isGitRepository(): Promise<boolean>
+async function cleanupWorktree(worktreeInfo: WorktreeInfo): Promise<void>
+async function listWorktrees(): Promise<WorktreeInfo[]>
+```
+
+#### **Behavioral Description**
+
+**`createWorktree(taskId: string, options?: { branchName?: string, baseBranch?: string }): Promise<WorktreeInfo>`**
+- **Purpose**: Creates isolated git worktree and branch for TDD task
+- **Parameters**: 
+  - `taskId`: Unique task identifier for naming consistency
+  - `options.branchName`: Optional custom branch name (defaults to `tdd/{taskId}`)
+  - `options.baseBranch`: Base branch to branch from (defaults to current branch)
+- **Returns**: WorktreeInfo with paths and branch names
+- **Behavior**:
+  1. Validate we're in a git repository
+  2. Get current branch as base (unless overridden)
+  3. Generate branch name: `tdd/{taskId}` or use provided name
+  4. Create worktree path: `../.codex-worktrees/{taskId}`
+  5. Execute: `git worktree add ../.codex-worktrees/{taskId} -b {branchName} {baseBranch}`
+  6. Return WorktreeInfo with generated paths and branch names
+
+**`getCurrentBranch(): Promise<string>`**
+- **Purpose**: Gets the currently checked out git branch name
+- **Parameters**: None
+- **Returns**: Current branch name as string
+- **Behavior**: Execute `git branch --show-current` and return result
+
+**`isGitRepository(): Promise<boolean>`**
+- **Purpose**: Validates that current directory is inside a git repository
+- **Parameters**: None
+- **Returns**: Boolean indicating if git repo exists
+- **Behavior**: Execute `git rev-parse --git-dir` and check for success
+
+**`cleanupWorktree(worktreeInfo: WorktreeInfo): Promise<void>`**
+- **Purpose**: Removes git worktree and associated branch
+- **Parameters**: `worktreeInfo` - The worktree information to cleanup
+- **Returns**: void
+- **Behavior**:
+  1. Execute: `git worktree remove {worktreeInfo.path}` (removes worktree)
+  2. Execute: `git branch -D {worktreeInfo.branchName}` (deletes branch)
+  3. Remove empty parent directory if no other worktrees exist
+
+**`listWorktrees(): Promise<WorktreeInfo[]>`**
+- **Purpose**: Lists all existing worktrees (useful for debugging/cleanup)
+- **Parameters**: None
+- **Returns**: Array of WorktreeInfo for all worktrees
+- **Behavior**: Parse output of `git worktree list --porcelain`
+
+#### **Error Handling**
+- **NotGitRepositoryError**: When not inside a git repository
+- **WorktreeCreationError**: When git worktree creation fails (branch exists, path conflicts)
+- **WorktreeCleanupError**: When worktree removal fails (worktree in use, permission issues)
+- **GitCommandError**: When any git command execution fails
+
+#### **Testing Considerations**
+- Git commands must be mockable for unit tests
+- Temporary directories needed for integration tests
+- Branch name conflicts should be tested
+- Cleanup should be tested with both success and failure scenarios
+
+#### **Implementation Notes**
+- Worktrees are created outside the main repo to avoid cluttering workspace
+- Branch naming follows `tdd/{taskId}` convention for easy identification
+- Cleanup is designed to be safe - won't fail if worktree already removed
+
+---
+
+### **GitHub Operations** (`core/operations/github.ts`)
+
+#### **Purpose**
+Handles GitHub REST API integration for PR detection and repository operations, enabling workflow success detection.
+
+#### **Dependencies**
+- Node.js `https` or `fetch` for HTTP requests
+- GitHub REST API v4
+- Environment variable `GITHUB_TOKEN` for authentication
+
+#### **Function Signatures**
+
+```typescript
+interface PRInfo {
+  number: number
+  title: string
+  url: string
+  state: 'open' | 'closed' | 'merged'
+  headBranch: string
+  baseBranch: string
+}
+
+interface GitHubConfig {
+  token: string
+  owner: string
+  repo: string
+}
+
+async function getGitHubConfig(): Promise<GitHubConfig>
+async function checkPRExists(branchName: string): Promise<PRInfo | null>
+async function listPRsForBranch(branchName: string): Promise<PRInfo[]>
+```
+
+#### **Behavioral Description**
+
+**`getGitHubConfig(): Promise<GitHubConfig>`**
+- **Purpose**: Extracts GitHub repository info and validates authentication
+- **Parameters**: None
+- **Returns**: GitHubConfig with token, owner, and repo name
+- **Behavior**:
+  1. Check for `GITHUB_TOKEN` environment variable
+  2. Execute `git remote get-url origin` to get repository URL
+  3. Parse URL to extract owner and repo name (handles both HTTPS and SSH formats)
+  4. Return validated config object
+
+**`checkPRExists(branchName: string): Promise<PRInfo | null>`**
+- **Purpose**: Checks if a pull request exists for the given branch
+- **Parameters**: `branchName` - The branch to check for PRs
+- **Returns**: PRInfo if PR exists, null if no PR found
+- **Behavior**:
+  1. Get GitHub config (token, owner, repo)
+  2. Call GitHub API: `GET /repos/{owner}/{repo}/pulls?head={owner}:{branchName}&state=open`
+  3. If PR found, return formatted PRInfo
+  4. If no PR found, return null
+
+**`listPRsForBranch(branchName: string): Promise<PRInfo[]>`**
+- **Purpose**: Lists all PRs (open/closed/merged) for a branch (debugging utility)
+- **Parameters**: `branchName` - The branch to list PRs for
+- **Returns**: Array of all PRInfo for the branch
+- **Behavior**: Call GitHub API with `state=all` parameter and return all matches
+
+#### **Error Handling**
+- **GitHubAuthError**: When `GITHUB_TOKEN` is missing or invalid
+- **GitHubAPIError**: When API requests fail (rate limits, network issues)
+- **RepositoryNotFoundError**: When git remote origin is not a GitHub repository
+- **ConfigurationError**: When unable to parse repository info from git remote
+
+#### **Testing Considerations**
+- GitHub API calls must be mockable for unit tests
+- Rate limiting scenarios should be tested
+- Different repository URL formats (HTTPS/SSH) should be tested
+- Authentication failure scenarios need coverage
+
+#### **Implementation Notes**
+- Uses GitHub REST API v4 for compatibility
+- Expects standard GitHub token with repo read permissions
+- Handles both public and private repositories
+- PR detection is immediate after agent execution completes
+
+---
+
+### **Prompt Utilities** (`core/operations/prompts.ts`)
+
+#### **Purpose**
+Provides prompt templating utilities for formatting Coder and Reviewer agent prompts with proper context and structure.
+
+#### **Dependencies**
+- `shared/types.ts` for TaskState, CoderHandoff, ReviewerFeedback interfaces
+- Node.js `fs/promises` for reading spec files
+
+#### **Function Signatures**
+
+```typescript
+interface CoderPromptOptions {
+  specContent: string
+  reviewerFeedback?: string
+}
+
+interface ReviewerPromptOptions {
+  originalSpec: string
+  coderHandoff: string
+}
+
+async function formatCoderPrompt(options: CoderPromptOptions): Promise<string>
+async function formatReviewerPrompt(options: ReviewerPromptOptions): Promise<string>
+async function extractFinalMessage(messages: SDKMessage[]): Promise<string>
+```
+
+#### **Behavioral Description**
+
+**`formatCoderPrompt(options: CoderPromptOptions): Promise<string>`**
+- **Purpose**: Formats the prompt for the Coder Agent with spec and optional feedback
+- **Parameters**: 
+  - `options.specContent`: The specification file content
+  - `options.reviewerFeedback`: Optional feedback from previous review iteration (if present, this is a revision run)
+- **Returns**: Formatted prompt string ready for `runClaudeWithSDK`
+- **Behavior**:
+  1. Choose prompt template: initial run if no feedback, revision run if feedback provided
+  2. Inject spec content into template
+  3. Include reviewer feedback if provided
+  4. Add structured handoff template requirement
+  5. Return complete prompt string
+
+**`formatReviewerPrompt(options: ReviewerPromptOptions): Promise<string>`**
+- **Purpose**: Formats the prompt for the Reviewer Agent with full context
+- **Parameters**: 
+  - `options.originalSpec`: The original specification content
+  - `options.coderHandoff`: The final message content from Coder Agent
+- **Returns**: Formatted prompt string ready for `runClaudeWithSDK`
+- **Behavior**:
+  1. Use reviewer prompt template from PRD
+  2. Inject original specification and coder handoff
+  3. Add clear outcome instructions (PR creation vs feedback)
+  4. Return complete prompt string
+
+**`extractFinalMessage(messages: SDKMessage[]): Promise<string>`**
+- **Purpose**: Extracts the final assistant message content from Claude SDK response
+- **Parameters**: `messages` - The complete message array from `runClaudeWithSDK`
+- **Returns**: The content of the last assistant message as string
+- **Behavior**:
+  1. Find the last message where `message.role === 'assistant'`
+  2. Extract the content (handle both string and complex content structures)
+  3. Return the content as plain text
+
+#### **Error Handling**
+- **PromptFormattingError**: When template rendering fails
+- **MessageExtractionError**: When no assistant message found in SDK response
+- **SpecFileError**: When spec file cannot be read or is empty
+
+#### **Testing Considerations**
+- Template rendering should be tested with various input combinations
+- Message extraction should handle different SDK response formats
+- Template consistency with PRD specifications should be validated
+
+#### **Implementation Notes**
+- Prompt templates match exactly with PRD specifications
+- Uses SDK message structure instead of brittle text parsing
+- Simple prompt parameters focused on essential data only
+- Orchestrator handles iteration logic, not individual agents
