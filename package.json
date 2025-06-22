@@ -3,23 +3,23 @@
   "version": "1.0.0",
   "description": "Automation scripts powered by Claude Code SDK",
   "type": "module",
-  "main": "src/index.js",
+  "main": "dist/lib.js",
   "bin": {
-    "claude-codex": "./bin/claude-codex.js"
+    "claude-codex": "./dist/index.js"
   },
   "exports": {
-    ".": "./src/index.js",
-    "./core": "./src/core/index.js",
-    "./cli": "./src/cli/index.js"
+    ".": "./dist/lib.js",
+    "./core": "./dist/core/index.js",
+    "./cli": "./dist/cli/index.js"
   },
   "files": [
-    "src/",
-    "bin/",
+    "dist/",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
-    "start": "node bin/claude-codex.js",
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "format": "biome format --write .",
     "format:check": "biome check .",
@@ -50,6 +50,7 @@
     "@types/bun": "latest",
     "@types/node": "^20.0.0",
     "lefthook": "^1.11.14",
+    "tsup": "^8.5.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
     "vitest": "^3.2.4"
