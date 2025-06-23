@@ -14,8 +14,8 @@ vi.mock('node:path', () => ({
   resolve: vi.fn((path: string) => `/resolved/${path}`),
 }));
 
-vi.mock('../../src/core/claude.js', () => ({
-  runAgent: vi.fn(),
+vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
+  runClaudeAgent: vi.fn(),
 }));
 
 vi.mock('../../src/core/operations/github.js', () => ({
@@ -23,7 +23,6 @@ vi.mock('../../src/core/operations/github.js', () => ({
 }));
 
 vi.mock('../../src/core/operations/prompts.js', () => ({
-  extractFinalMessage: vi.fn(),
   formatCoderPrompt: vi.fn(),
   formatReviewerPrompt: vi.fn(),
 }));
@@ -43,7 +42,7 @@ vi.mock('../../src/core/operations/worktree.js', () => ({
 // Import mocked modules
 const mockFs = await import('node:fs');
 const mockPath = await import('node:path');
-const mockClaude = await import('../../src/core/claude.js');
+const mockClaude = await import('../../src/core/messaging/sdk-wrapper.js');
 const mockGitHub = await import('../../src/core/operations/github.js');
 const mockPrompts = await import('../../src/core/operations/prompts.js');
 const mockState = await import('../../src/core/operations/state.js');
@@ -107,10 +106,9 @@ describe('TDD Workflow Orchestrator', () => {
     vi.mocked(mockPath.resolve).mockReturnValue('/resolved/test-spec.md');
     vi.mocked(mockState.initializeTaskState).mockResolvedValue(mockTaskState);
     vi.mocked(mockWorktree.createWorktree).mockResolvedValue(mockWorktreeInfo);
-    vi.mocked(mockClaude.runAgent).mockResolvedValue(mockAgentResult);
+    vi.mocked(mockClaude.runClaudeAgent).mockResolvedValue(mockAgentResult);
     vi.mocked(mockPrompts.formatCoderPrompt).mockResolvedValue('Coder prompt');
     vi.mocked(mockPrompts.formatReviewerPrompt).mockResolvedValue('Reviewer prompt');
-    vi.mocked(mockPrompts.extractFinalMessage).mockReturnValue('Agent response');
     vi.mocked(mockState.addCoderResponse).mockResolvedValue(undefined);
     vi.mocked(mockState.addReviewerResponse).mockResolvedValue(undefined);
     vi.mocked(mockWorktree.cleanupWorktree).mockResolvedValue(undefined);
@@ -152,14 +150,14 @@ describe('TDD Workflow Orchestrator', () => {
       );
 
       // Verify agent execution
-      expect(mockClaude.runAgent).toHaveBeenCalledTimes(2); // Coder + Reviewer
+      expect(mockClaude.runClaudeAgent).toHaveBeenCalledTimes(2); // Coder + Reviewer
       expect(mockPrompts.formatCoderPrompt).toHaveBeenCalledWith({
         specContent: 'Test specification content',
         reviewerFeedback: undefined,
       });
       expect(mockPrompts.formatReviewerPrompt).toHaveBeenCalledWith({
         originalSpec: 'Test specification content',
-        coderHandoff: 'Agent response',
+        coderHandoff: 'Implementation completed successfully!',
       });
 
       // Verify cleanup
@@ -201,7 +199,7 @@ describe('TDD Workflow Orchestrator', () => {
         taskId: expect.stringMatching(/^task-\d+-[a-z0-9]+$/),
       });
 
-      expect(mockClaude.runAgent).toHaveBeenCalledTimes(6); // 3 iterations × 2 agents
+      expect(mockClaude.runClaudeAgent).toHaveBeenCalledTimes(6); // 3 iterations × 2 agents
       expect(mockGitHub.checkPRExists).toHaveBeenCalledTimes(3);
     });
   });
@@ -237,7 +235,7 @@ describe('TDD Workflow Orchestrator', () => {
     });
 
     it('should handle coder agent execution failure', async () => {
-      vi.mocked(mockClaude.runAgent).mockRejectedValue(new Error('Agent timeout'));
+      vi.mocked(mockClaude.runClaudeAgent).mockRejectedValue(new Error('Agent timeout'));
 
       const result = await executeTDDWorkflow(mockOptions);
 
@@ -253,7 +251,7 @@ describe('TDD Workflow Orchestrator', () => {
     });
 
     it('should handle reviewer agent execution failure', async () => {
-      vi.mocked(mockClaude.runAgent)
+      vi.mocked(mockClaude.runClaudeAgent)
         .mockResolvedValueOnce(mockAgentResult) // Coder succeeds
         .mockRejectedValue(new Error('Reviewer failed')); // Reviewer fails
 
@@ -279,13 +277,13 @@ describe('TDD Workflow Orchestrator', () => {
         error: 'Max iterations (3) reached without PR creation',
       });
 
-      expect(mockClaude.runAgent).toHaveBeenCalledTimes(6); // 3 iterations × 2 agents
+      expect(mockClaude.runClaudeAgent).toHaveBeenCalledTimes(6); // 3 iterations × 2 agents
       expect(mockGitHub.checkPRExists).toHaveBeenCalledTimes(3);
     });
 
     it('should handle agent returning unsuccessful result', async () => {
       const unsuccessfulResult = { ...mockAgentResult, success: false };
-      vi.mocked(mockClaude.runAgent).mockResolvedValue(unsuccessfulResult);
+      vi.mocked(mockClaude.runClaudeAgent).mockResolvedValue(unsuccessfulResult);
 
       const result = await executeTDDWorkflow(mockOptions);
 
@@ -343,7 +341,7 @@ describe('TDD Workflow Orchestrator', () => {
     });
 
     it('should cleanup even when workflow fails', async () => {
-      vi.mocked(mockClaude.runAgent).mockRejectedValue(new Error('Agent failed'));
+      vi.mocked(mockClaude.runClaudeAgent).mockRejectedValue(new Error('Agent failed'));
 
       const result = await executeTDDWorkflow(mockOptions);
 
