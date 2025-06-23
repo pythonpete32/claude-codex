@@ -1,26 +1,40 @@
 {
   "name": "claude-codex",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Automation scripts powered by Claude Code SDK",
   "type": "module",
-  "main": "src/index.js",
+  "main": "dist/lib.js",
   "bin": {
-    "claude-codex": "./bin/claude-codex.js"
+    "claude-codex": "./dist/index.js"
   },
   "exports": {
-    ".": "./src/index.js",
-    "./core": "./src/core/index.js",
-    "./cli": "./src/cli/index.js"
+    ".": "./dist/lib.js",
+    "./core": "./dist/core/index.js",
+    "./cli": "./dist/cli/index.js"
   },
   "files": [
-    "src/",
-    "bin/",
+    "dist/",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
-    "start": "node bin/claude-codex.js",
-    "dev": "tsx src/index.ts"
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "format": "biome format --write .",
+    "format:check": "biome check .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "npm run build && changeset publish",
+    "release": "npm run build && npm run changeset:publish",
+    "prepare": "lefthook install"
   },
   "keywords": [
     "claude",
@@ -36,10 +50,16 @@
     "url": "https://github.com/abuusama/claude-codex.git"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.0.4",
+    "@changesets/cli": "^2.29.5",
     "@types/bun": "latest",
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "lefthook": "^1.11.14",
+    "tsup": "^8.5.0",
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.31",

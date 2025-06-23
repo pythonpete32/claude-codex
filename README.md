@@ -340,25 +340,278 @@ claude-codex tdd tasks/feature.md --no-cleanup
 tail -f .codex/logs/agent-execution.log
 ```
 
-### Development Setup
+## 🛠️ Development Setup
+
+### Prerequisites
+
+- **Node.js 18+** (we recommend using Node.js 20 LTS)
+- **Bun** (our preferred package manager for speed)
+- **Git** with SSH access to GitHub
+
+### Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/anthropics/claude-codex.git
 cd claude-codex
 
-# Install dependencies
-npm install
-# or with bun (faster)
+# Install dependencies (using Bun for speed)
 bun install
 
+# Install git hooks
+bun run prepare
+
 # Run in development mode
-npm run dev
-# or with bun
-bun run index.ts
+bun run dev
 
 # Build for production
-npm run build
+bun run build
+
+# Run the built CLI
+bun run start --help
+```
+
+## 🔧 Development Tooling Stack
+
+Claude Codex uses a modern, fast development tooling stack:
+
+### **🎨 Code Quality**
+- **[Biome](https://biomejs.dev/)** - Ultra-fast linting and formatting (replaces ESLint + Prettier)
+- **[TypeScript](https://www.typescriptlang.org/)** - Type safety and modern JavaScript features
+
+### **🧪 Testing**
+- **[Vitest](https://vitest.dev/)** - Fast unit testing with coverage support
+- **[Bun](https://bun.sh/)** - Lightning-fast package manager and runtime
+
+### **📦 Build & Bundle**
+- **[tsup](https://tsup.egoist.dev/)** - Modern TypeScript bundler optimized for CLI tools
+- **ESM modules** - Modern JavaScript module system
+
+### **🔄 Automation**
+- **[Lefthook](https://github.com/evilmartians/lefthook)** - Fast git hooks manager
+- **[Changesets](https://github.com/changesets/changesets)** - Version management and changelog generation
+
+## 📋 Available Scripts
+
+### **Development**
+```bash
+bun run dev              # Run in development mode with hot reload
+bun run build            # Build for production  
+bun run build:watch     # Build in watch mode (currently has Node v23 issues)
+bun run start           # Run the built CLI executable
+```
+
+### **Code Quality**
+```bash
+bun run format          # Format all code with Biome
+bun run format:check    # Check if code is formatted
+bun run lint            # Lint code with Biome
+bun run lint:fix        # Auto-fix linting issues
+bun run check           # Run both linting and formatting checks
+bun run check:fix       # Auto-fix all issues
+```
+
+### **Testing**
+```bash
+bun run test            # Run all tests
+bun run test:watch      # Run tests in watch mode
+bun run test:coverage   # Run tests with coverage report
+```
+
+### **Release Management**
+```bash
+bun run changeset       # Create a new changeset (describe changes)
+bun run changeset:version # Bump version and update changelog
+bun run changeset:publish # Publish to npm after building
+bun run release         # Complete release workflow (build + publish)
+```
+
+## 🔄 Development Workflow
+
+Claude Codex uses **automated releases** via GitHub Actions and Changesets. No more manual `npm publish` or 2FA hassles!
+
+### **1. Making Changes**
+
+```bash
+# Create a feature branch
+git checkout -b feature/your-feature-name
+
+# Make your changes
+# ... edit files ...
+
+# The git hooks will automatically:
+# - Format your code on commit (pre-commit)
+# - Run linting, formatting checks, and tests on push (pre-push)
+```
+
+### **2. Code Quality Automation**
+
+Our git hooks automatically ensure code quality:
+
+- **Pre-commit hook**: Formats staged files automatically
+- **Pre-push hook**: Runs format check, linting, and tests
+- If any checks fail, the push is blocked until fixed
+
+```bash
+# Manual quality checks (run these anytime)
+bun run check:fix      # Fix all formatting and linting issues
+bun run test           # Ensure tests pass
+```
+
+### **3. Creating a Changeset**
+
+When you're ready to describe your changes for release:
+
+```bash
+# Create a changeset describing your changes
+bun run changeset
+
+# Follow the prompts:
+# 1. Select packages to bump (claude-codex)
+# 2. Choose bump type: patch (bug fix), minor (feature), major (breaking change)
+# 3. Write a description of your changes
+```
+
+**Example changeset workflow:**
+```bash
+bun run changeset
+# ? Which packages would you like to include? › claude-codex
+# ? Which type of change is this for claude-codex? › minor
+# ? Please enter a summary for this change: Add new TDD workflow features
+```
+
+### **4. Automated Release Process**
+
+**🚀 No manual steps required!** Our GitHub Actions workflow handles everything:
+
+```bash
+# 1. Push your changes to main (via PR)
+git push origin main
+
+# 2. GitHub Actions automatically:
+#    - Creates a "Release PR" with version bump + changelog
+#    - Shows exactly what will be published
+
+# 3. Review and merge the Release PR
+#    - GitHub Actions automatically publishes to NPM
+#    - Creates GitHub release
+#    - No 2FA prompts or manual commands!
+```
+
+**🎯 Your release workflow:**
+1. **Make changes** → Create changeset → Push to main
+2. **Release PR appears** → Review the changes
+3. **Merge Release PR** → Automatic NPM publish! 🎉
+
+### **4. Manual Release (Fallback)**
+
+If you need to publish manually for any reason:
+
+```bash
+# Update version and generate changelog
+bun run changeset:version
+
+# Commit the version changes
+git add . && git commit -m "chore: release version bump"
+
+# Publish to npm (requires NPM authentication)
+bun run release
+```
+
+## 🏗️ Project Structure
+
+```
+claude-codex/
+├── .changeset/              # Changesets for version management
+├── .github/
+│   └── workflows/
+│       ├── ci.yml           # Continuous integration (tests, linting, build)
+│       └── release.yml      # Automated NPM releases via Changesets
+├── .vscode/                 # VS Code settings
+├── dist/                    # Built output (created by tsup)
+├── docs/                    # Architecture documentation
+├── src/
+│   ├── cli/                 # CLI argument parsing and entry points
+│   ├── core/                # Core functionality (auth, messaging, query)
+│   ├── workflows/           # Background agent workflows (TDD, etc.)
+│   ├── shared/              # Shared types, errors, utilities
+│   └── index.ts             # Main CLI executable entry point
+├── tests/                   # Test files
+├── biome.json              # Biome configuration (linting & formatting)
+├── lefthook.yml            # Git hooks configuration
+├── tsup.config.ts          # Build configuration
+├── vitest.config.ts        # Test configuration
+└── package.json            # Package metadata and scripts
+```
+
+## 🚀 CI/CD & Automation
+
+### **GitHub Actions Workflows**
+
+**📋 Continuous Integration (`ci.yml`)**
+- Runs on every push and pull request
+- Format checking, linting, testing, and build validation
+- Ensures code quality before merging
+
+**🚀 Automated Releases (`release.yml`)**
+- Triggered when changesets are pushed to main
+- Creates Release PRs with version bumps and changelog
+- Automatically publishes to NPM when Release PR is merged
+- No manual `npm publish` or 2FA required!
+
+### **Git Hooks (Local Development)**
+
+### **Pre-commit Hook**
+Automatically formats your code when you commit:
+```bash
+git commit -m "your message"
+# → Automatically formats staged files with Biome
+# → Stages the formatted files
+# → Completes the commit
+```
+
+### **Pre-push Hook**
+Validates code quality before pushing:
+```bash
+git push
+# → Runs format check (fails if code isn't formatted)
+# → Runs linting (fails if linting errors exist)
+# → Runs tests (fails if tests don't pass)
+# → Only pushes if all checks pass
+```
+
+### **Bypassing Hooks (Emergency Only)**
+```bash
+# Skip pre-commit hook (not recommended)
+git commit --no-verify -m "emergency fix"
+
+# Skip pre-push hook (not recommended)  
+git push --no-verify
+```
+
+## 📊 Testing Strategy
+
+### **Unit Tests**
+- Located in `src/**/*.test.ts`
+- Use Vitest for fast execution
+- Test individual functions and components
+- Run with `bun run test`
+
+### **Coverage Reports**
+- Generate with `bun run test:coverage`
+- View HTML report in `coverage/index.html`
+- Aim for >80% coverage on core functionality
+
+### **Test Development**
+```bash
+# Watch mode for TDD
+bun run test:watch
+
+# Run specific test files
+bun run test src/core/messaging.test.ts
+
+# Debug tests
+bun run test --reporter=verbose
 ```
 
 ### Troubleshooting
@@ -428,29 +681,50 @@ jobs:
 
 We welcome contributions to the first local background agent system for developers!
 
-### Project Structure
+### Quick Contribution Guide
 
-```
-claude-codex/
-├── src/
-│   ├── cli/                 # CLI interface and commands
-│   ├── core/                # Core operations and utilities
-│   ├── workflows/           # Multi-workflow orchestration
-│   └── shared/              # Types, errors, and utilities
-├── docs/                    # Architecture and design docs
-├── examples/                # Example task specifications
-└── tests/                   # Test suites
-```
+1. **🍴 Fork & Clone**
+   ```bash
+   git clone https://github.com/your-username/claude-codex.git
+   cd claude-codex
+   bun install
+   ```
+
+2. **🌿 Create Feature Branch**
+   ```bash
+   git checkout -b feature/amazing-new-feature
+   ```
+
+3. **⚡ Develop with Modern Tooling**
+   ```bash
+   bun run dev          # Start development
+   bun run test:watch   # Run tests in watch mode
+   # Git hooks handle formatting automatically!
+   ```
+
+4. **📝 Document Your Changes**
+   ```bash
+   bun run changeset    # Create changeset describing your changes
+   ```
+
+5. **🚀 Submit Pull Request**
+   - All tests must pass
+   - Code is automatically formatted by git hooks
+   - Include changeset describing your changes
+
+### Development Standards
+
+- **Code Quality**: Biome enforces consistent formatting and linting
+- **Testing**: Write tests for new features using Vitest
+- **Git Hooks**: Pre-commit formatting and pre-push validation are automatic
+- **Changesets**: All changes must include a changeset for proper versioning
+- **TypeScript**: Use proper types, avoid `any` when possible
 
 ### Contributing Guidelines
 
 1. **🐛 Found a bug?** Open an issue with reproduction steps
 2. **💡 New workflow idea?** Start a discussion to gather feedback  
-3. **🔧 Want to contribute code?**
-   - Fork the repository
-   - Create a feature branch
-   - Write tests for your changes
-   - Submit a pull request
+3. **🔧 Want to contribute code?** Follow the quick contribution guide above
 
 ### Development Philosophy
 
@@ -466,12 +740,17 @@ claude-codex/
 
 ### 🎯 Current Focus (v1.0)
 - [x] Local agent runtime architecture
+- [x] Modern development tooling (Biome, Vitest, tsup, Changesets)
+- [x] Automated git hooks and code quality enforcement
+- [x] TypeScript bundling and CLI optimization
+- [x] Version management and release automation
 - [x] TDD workflow implementation
 - [x] Git worktree isolation
 - [x] Claude Code integration
 - [x] GitHub operations
-- [ ] Comprehensive test suite
+- [ ] Comprehensive test suite expansion
 - [ ] Performance optimization
+- [ ] Documentation completion
 
 ### 🚀 Additional Workflows (v1.1+)
 - [ ] **Code Review Workflow**: Automated quality analysis and security scanning

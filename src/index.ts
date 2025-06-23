@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { parseArgs } from "./cli/args.js";
-import { runClaudeWithSDK } from "./core/query.js";
-import { colors } from "./core/messaging.js";
+import { parseArgs } from './cli/args.js';
+import { colors } from './core/messaging.js';
+import { runClaudeWithSDK } from './core/query.js';
 
 // Main execution
 (async () => {
@@ -10,7 +10,7 @@ import { colors } from "./core/messaging.js";
     const options = parseArgs();
     await runClaudeWithSDK(options);
   } catch (error) {
-    console.error(colors.red("Fatal error:"), error);
+    console.error(colors.red('Fatal error:'), error);
     process.exit(1);
   }
 })();
