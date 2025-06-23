@@ -44,7 +44,7 @@ Claude Codex is the **first local background agent system** for software develop
 
 - **Claude Code CLI** installed and authenticated
 - **Node.js** 18+
-- **Git** repository 
+- **Git** repository
 - **GitHub** repository with `GITHUB_TOKEN`
 
 ### Installation
@@ -93,7 +93,7 @@ claude-codex tdd tasks/user-authentication.md
 # Code review workflow (coming soon)
 claude-codex review --branch feature/auth
 
-# Feature implementation workflow (coming soon)  
+# Feature implementation workflow (coming soon)
 claude-codex implement tasks/payment-system.md
 
 # Bug fix workflow (coming soon)
@@ -119,7 +119,7 @@ claude-codex fix --issue 123
   ├─ Implementing authentication logic
   └─ Following security best practices
 
-🤖 Reviewer Agent (Local)  
+🤖 Reviewer Agent (Local)
   ├─ Validating implementation quality
   ├─ Checking test coverage (94%)
   ├─ Verifying security practices
@@ -157,7 +157,7 @@ Claude Codex supports multiple background agent workflows:
 
 ### 📝 **Documentation Generation** *(Coming Soon)*
 - API documentation creation
-- Code comment generation  
+- Code comment generation
 - README and guide updates
 
 ---
@@ -267,7 +267,7 @@ graph TB
     D --> E[🧠 Claude AI Models]
     C --> F[✅ Local Processing]
     F --> G[📤 GitHub PR]
-    
+
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style C fill:#e8f5e8
@@ -279,7 +279,7 @@ graph TB
 #### **Specialized Agents for Different Workflows:**
 
 - **🧪 TDD Agents**: Coder + Reviewer for test-driven development
-- **🔍 Review Agents**: Code quality and security analysis *(coming soon)*  
+- **🔍 Review Agents**: Code quality and security analysis *(coming soon)*
 - **⚙️ Implementation Agents**: Feature development and integration *(coming soon)*
 - **🐛 Debug Agents**: Bug detection and resolution *(coming soon)*
 - **📝 Documentation Agents**: Automated documentation generation *(coming soon)*
@@ -396,7 +396,7 @@ Claude Codex uses a modern, fast development tooling stack:
 ### **Development**
 ```bash
 bun run dev              # Run in development mode with hot reload
-bun run build            # Build for production  
+bun run build            # Build for production
 bun run build:watch     # Build in watch mode (currently has Node v23 issues)
 bun run start           # Run the built CLI executable
 ```
@@ -585,7 +585,7 @@ git push
 # Skip pre-commit hook (not recommended)
 git commit --no-verify -m "emergency fix"
 
-# Skip pre-push hook (not recommended)  
+# Skip pre-push hook (not recommended)
 git push --no-verify
 ```
 
@@ -723,7 +723,7 @@ We welcome contributions to the first local background agent system for develope
 ### Contributing Guidelines
 
 1. **🐛 Found a bug?** Open an issue with reproduction steps
-2. **💡 New workflow idea?** Start a discussion to gather feedback  
+2. **💡 New workflow idea?** Start a discussion to gather feedback
 3. **🔧 Want to contribute code?** Follow the quick contribution guide above
 
 ### Development Philosophy
@@ -804,7 +804,7 @@ Claude Codex is released under the [MIT License](LICENSE).
 
 **The first background agent system that puts developers in control**
 
-[![Star us on GitHub](https://img.shields.io/github/stars/anthropics/claude-codex?style=social)](https://github.com/anthropics/claude-codex) • [🐛 Report Issues](https://github.com/anthropics/claude-codex/issues) • [💬 Join Discussions](https://github.com/anthropics/claude-codex/discussions) • [📖 Documentation](docs/)
+[![Star us on GitHub](https://img.shields.io/github/stars/pythonpete32/claude-codex?style=social)](https://github.com/pythonpete32/claude-codex) • [🐛 Report Issues](https://github.com/pythonpete32/claude-codex/issues) • [💬 Join Discussions](https://github.com/pythonpete32/claude-codex/discussions) • [📖 Documentation](docs/)
 
 ---
 
