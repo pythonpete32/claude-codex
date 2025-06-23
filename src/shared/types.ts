@@ -102,3 +102,36 @@ export interface CreateWorktreeOptions {
   branchName?: string;
   baseBranch?: string;
 }
+
+// CLI Types
+export interface TDDCommandArgs {
+  specPath: string;
+  reviews?: number;
+  branch?: string;
+  cleanup?: boolean;
+  verbose?: boolean;
+}
+
+export interface ParsedArgs {
+  // Global flags
+  help?: boolean;
+  version?: boolean;
+  verbose?: boolean;
+
+  // Command routing
+  command?: 'tdd';
+
+  // TDD command arguments
+  tdd?: TDDCommandArgs;
+
+  // Direct Claude interaction (existing behavior)
+  directMode?: boolean;
+  prompt?: string;
+}
+
+// Environment validation types
+export interface PreflightResult {
+  success: boolean;
+  errors: string[];
+  warnings: string[];
+}
