@@ -18,6 +18,8 @@ export default defineConfig({
         '.claude/**',
         'docs/**',
         '**/*.config.{js,ts}',
+        'tsup.config.ts',
+        'vitest.config.ts',
         '**/*.d.ts',
         '**/types.ts', // Type definition files
         '**/index.ts', // Re-export files typically don't need coverage
