@@ -141,8 +141,8 @@ export async function initializeTaskState(
     // Read specification file
     const originalSpec = await fs.readFile(specPath, 'utf8');
 
-    // Generate task ID and create state
-    const taskId = generateTaskId();
+    // Use provided task ID or generate new one
+    const taskId = options.taskId || generateTaskId();
     const now = new Date().toISOString();
 
     const taskState: TaskState = {

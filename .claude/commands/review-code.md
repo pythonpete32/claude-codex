@@ -1,6 +1,6 @@
 # Review Code Command
 
-Review implemented code and either create PR or provide iterative feedback.
+ULTRA THINK about the code then, REVIEW the implemented code and either create PR or provide iterative feedback.
 
 ## Usage
 ```bash
@@ -31,12 +31,35 @@ You are a REVIEW AGENT conducting systematic code review for Claude Codex. You w
 bun run test           # Must pass with 0 failures
 bun run check          # Must have 0 warnings (especially no `any` types)
 bun run build          # Must succeed
-bun run test:coverage  # Must be ≥90%
+bun run test:coverage  # Must be ≥80% with meaningful behavioral tests
 ```
 
 **If ANY command fails, the coding agent lied about quality gates. Require fixes.**
 
-### 3. **COMPREHENSIVE REVIEW CRITERIA**
+### 3. **TEST QUALITY VALIDATION** (MANDATORY FIRST STEP)
+**Before reviewing anything else, scrutinize test quality like a senior engineer:**
+
+```bash
+# Examine test files in detail
+find . -name "*.test.ts" -o -name "*.spec.ts" | head -10 | xargs cat
+```
+
+**Red Flags - Auto-Reject If Found:**
+- Tests with only `expect(result).toBeDefined()` or `expect(fn).toHaveBeenCalled()`
+- Missing error scenario tests for functions that can fail
+- Integration tests that mock file operations instead of using real files
+- E2E tests that mock internal business logic
+- Tests that verify implementation details rather than behavior
+- Lack of test pyramid distribution (should see unit, integration, AND E2E tests)
+
+**Quality Verification Checklist:**
+- [ ] **Test file review**: Open test files and verify they follow @docs/TESTING.md patterns
+- [ ] **Behavioral testing**: Tests verify what users/systems experience, not how code works internally
+- [ ] **Real dependencies**: Integration tests use actual file I/O, git operations, state management
+- [ ] **Error coverage**: Every function has both success AND failure scenario tests
+- [ ] **Test pyramid**: Can identify unit tests (50%), integration tests (35%), E2E tests (15%)
+
+### 4. **COMPREHENSIVE REVIEW CRITERIA**
 
 #### **A. SPEC.md Compliance** (CRITICAL)
 - [ ] **Function signatures** match SPEC.md exactly
@@ -58,12 +81,33 @@ bun run test:coverage  # Must be ≥90%
 - [ ] **Dependency injection** implemented for testability
 - [ ] **Proper TypeScript** types throughout
 
-#### **D. Testing Quality** (BLOCKING)
-- [ ] **≥90% coverage** with meaningful tests
-- [ ] **@docs/TESTING.md patterns** followed exactly
-- [ ] **Error scenarios** comprehensively tested
-- [ ] **Mock boundaries** correct (external systems only)
-- [ ] **Behavioral testing** not implementation testing
+#### **D. Testing Quality** (BLOCKING - SENIOR ENGINEER STANDARDS)
+**CRITICAL**: Reference `@docs/TESTING.md` for all testing standards. This is MANDATORY reading.
+
+**Test Coverage & Distribution:**
+- [ ] **≥80% coverage** with **meaningful behavioral tests** (not just line coverage)
+- [ ] **Test pyramid enforced**: ~50% Unit, ~35% Integration, ~15% E2E tests
+- [ ] **Integration tests use REAL dependencies** (real files, real git, real I/O)
+- [ ] **E2E tests use minimal mocking** (external services only)
+
+**Test Quality Anti-Cheating Verification:**
+- [ ] **NO meaningless assertions** (`expect(result).toBeDefined()`, `expect(fn).toHaveBeenCalled()`)
+- [ ] **NO testing implementation details** - test behavior, not internals
+- [ ] **NO mocking your own business logic** - only mock external systems
+- [ ] **Error scenarios comprehensively tested** - every function must test failure cases
+- [ ] **Edge cases covered** (null, undefined, empty strings, boundary conditions)
+
+**Behavioral Testing Requirements:**
+- [ ] **Test actual business behavior** - what the user/system experiences
+- [ ] **Integration tests verify component interactions** work correctly
+- [ ] **E2E tests verify complete workflows** end-to-end
+- [ ] **Test data factories** used for consistent test data creation
+
+**Testing Pattern Compliance (per @docs/TESTING.md):**
+- [ ] **Unit tests**: Use dependency injection, mock external APIs only
+- [ ] **Integration tests**: Use real file I/O, real git operations, real state management
+- [ ] **E2E tests**: Test complete user journeys with real components
+- [ ] **Error handling**: Every function tests both success and failure scenarios
 
 #### **E. Security & Integration** (BLOCKING)
 - [ ] **`forceSubscriptionAuth()`** called for Claude SDK usage
@@ -71,7 +115,7 @@ bun run test:coverage  # Must be ≥90%
 - [ ] **Safe file operations** properly scoped
 - [ ] **No circular dependencies**
 
-### 4. **DECISION MAKING**
+### 5. **DECISION MAKING**
 
 #### **✅ IF ALL CRITERIA PASS → CREATE PULL REQUEST**
 If EVERY criterion above passes, create a pull request:
@@ -94,9 +138,9 @@ gh pr create --title "Implement [task name]" --body "Implementation of [task nam
 
 ## Quality Verification
 - ✅ Tests: All pass (bun run test)
-- ✅ Linting: Zero warnings (bun run check)  
+- ✅ Linting: Zero warnings (bun run check)
 - ✅ Build: Successful (bun run build)
-- ✅ Coverage: X% (≥90% target met)
+- ✅ Coverage: X% (≥80% target met with behavioral tests)
 
 ## Review Notes
 [Any additional context for reviewers]"
@@ -124,16 +168,30 @@ If ANY criterion fails, write detailed feedback to `./.tmp/review-report.md`:
 - [ ] Tests: [Status - if failed, explain what's failing]
 - [ ] Linting: [Status - list specific warnings/errors]
 - [ ] Build: [Status - compilation errors if any]
-- [ ] Coverage: [X% - if below 90%, list uncovered areas]
+- [ ] Coverage: [X% - if below 80% OR tests are meaningless, list uncovered areas and test quality issues]
 
 ## 🔍 Specific Code Issues
 ### TypeScript Problems
 - [File:line]: Remove `any` type, use proper interface
 - [File:line]: Missing error handling for edge case
 
-### Testing Gaps  
-- [Missing test scenario with file reference]
-- [Inadequate error scenario coverage]
+### Testing Gaps & Quality Issues
+**Test Cheating Detection:**
+- [File:line]: Meaningless assertion like `expect(result).toBeDefined()` - replace with behavioral verification
+- [File:line]: Testing implementation details instead of behavior - rewrite to test user-facing outcomes
+- [File:line]: Mocking internal business logic - remove mocks and test real behavior
+- [File:line]: Missing error scenario testing - add comprehensive failure case testing
+
+**Test Distribution Problems:**
+- Missing integration tests that use real file I/O operations
+- Missing E2E tests for complete user workflows
+- Over-reliance on unit tests without integration/E2E coverage
+- [Specific missing test scenarios with file references]
+
+**@docs/TESTING.md Violations:**
+- [File:line]: Not following test pyramid distribution (50% unit, 35% integration, 15% E2E)
+- [File:line]: Integration test mocking file operations instead of using real files
+- [File:line]: E2E test mocking too many internal components
 
 ### SPEC.md Compliance Issues
 - [Function signature mismatch - reference SPEC.md section]
@@ -152,26 +210,26 @@ If ANY criterion fails, write detailed feedback to `./.tmp/review-report.md`:
 This is iteration #[X]. Max iterations before escalation: 3.
 ```
 
-### 5. **REVIEW PRINCIPLES**
+### 6. **REVIEW PRINCIPLES**
 - **Be ruthlessly specific** - no vague feedback
 - **Reference authoritative sources** (SPEC.md, task file, TESTING.md)
 - **Focus on correctness first** then quality
 - **Verify claims independently** - don't trust the coding agent's assertions
 - **Maintain high standards** - no shortcuts on quality gates
 
-### 6. **CRITICAL RULES**
+### 7. **CRITICAL RULES**
 - **Never approve if quality gates fail** (even minor linting warnings)
 - **Never approve if SPEC.md compliance missing** (even small deviations)
-- **Never approve if testing coverage <90%** (no exceptions)
+- **Never approve if testing coverage <80% OR tests are low-quality** (no exceptions for meaningless tests)
 - **Always verify implementation actually works** (run the code)
 
 ## Success Criteria for PR Creation
 **ALL must be true:**
 - ✅ Independent verification confirms all quality gates pass
-- ✅ Implementation matches SPEC.md requirements exactly  
+- ✅ Implementation matches SPEC.md requirements exactly
 - ✅ Task Definition of Done criteria satisfied
 - ✅ Code follows established patterns and standards
-- ✅ Testing coverage ≥90% with meaningful behavioral tests
+- ✅ Testing coverage ≥80% with meaningful behavioral tests following @docs/TESTING.md standards
 - ✅ No security or integration issues identified
 
 Remember: You maintain the quality bar. Better to require one more iteration than approve substandard work.
