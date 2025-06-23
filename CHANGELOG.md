@@ -1,5 +1,13 @@
 # claude-codex
 
+## 0.1.1
+
+### Patch Changes
+
+- 2f9a8ca: Test automated release workflow with GitHub releases
+
+  This is a test release to verify that the complete automated workflow now works including NPM publishing, Git tag creation, and GitHub release generation.
+
 ## 0.1.0
 
 ### Minor Changes
