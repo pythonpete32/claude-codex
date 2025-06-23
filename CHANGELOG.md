@@ -1,5 +1,102 @@
 # claude-codex
 
+## 0.4.0
+
+### Minor Changes
+
+- 950c3b0: Implement core operations layer and development infrastructure
+
+  Add comprehensive operations layer with GitHub integration, state management, worktree operations, and development infrastructure improvements per SPEC.md requirements.
+
+  **Core Operations Added:**
+
+  - GitHub API integration with authentication and PR management
+  - State management with atomic file operations and task persistence
+  - Git worktree operations for isolated development environments
+  - Prompt generation system for agent coordination
+  - Claude Code SDK integration with subscription authentication
+
+  **Development Infrastructure:**
+
+  - Comprehensive testing strategy with 205+ tests
+  - CLAUDE.md project instructions and development workflow
+  - TESTING.md guidelines for behavioral testing patterns
+  - Task specifications and architecture documentation
+  - Biome integration for fast linting and formatting
+  - Vitest configuration with proper mocking patterns
+
+  **Quality Assurance:**
+
+  - Dependency injection patterns for testability
+  - Comprehensive error handling with specific error types
+  - TypeScript strict configuration throughout
+  - Pre-commit and pre-push hooks for quality enforcement
+  - Coverage reporting and test documentation
+
+  This establishes the foundation layer that enables the TDD workflow orchestration system.
+
+- 950c3b0: Refactor Claude SDK message processing with single entry point and enhanced functionality
+
+  - **BREAKING CHANGE**: Replace `runAgent()` with `runClaudeAgent()` for all Claude SDK interactions
+  - **NEW**: Single SDK wrapper with natural completion (no default maxTurns)
+  - **NEW**: Real-time progressive message display during agent execution
+  - **NEW**: Comprehensive debug logging with structured metadata
+  - **NEW**: Full Claude Code SDK option support with proper TypeScript types
+  - **IMPROVED**: Injectable dependencies for reliable testing with debug data
+  - **IMPROVED**: Bundle size reduced by 6.4% (37.13KB → 34.76KB)
+  - **REMOVED**: Legacy `runAgent()` and `extractMessageText()` functions
+  - **FIXED**: Empty finalResponse issues for naturally completed tasks
+
+  This refactor provides a clean, production-ready foundation for Claude SDK interactions with no legacy overhead and improved performance. All 232 tests pass with comprehensive coverage including real debug data integration.
+
+- 950c3b0: Implement complete TDD Workflow Orchestration & CLI Integration
+
+  Add comprehensive Test-Driven Development workflow system with agent coordination, CLI integration, and GitHub operations. This is the core feature implementation per SPEC.md requirements.
+
+  **Major Features Added:**
+
+  - Complete CLI system with argument parsing and validation
+  - TDD workflow orchestrator with Coder/Reviewer agent coordination
+  - Git worktree isolation for clean task execution
+  - GitHub integration for PR creation and management
+  - Comprehensive state management with atomic operations
+  - Environment validation and preflight checks
+  - Error handling with specific error types
+  - Agent prompt generation and formatting
+  - Comprehensive test coverage (205 tests, >95% coverage)
+
+  **New CLI Commands:**
+
+  - `claude-codex tdd <spec-file>` - Launch TDD workflow with options for reviews, branch, cleanup, and verbose output
+
+  **Technical Architecture:**
+
+  - Modular operations layer (GitHub, prompts, state, worktree)
+  - Robust error handling with specific error classes
+  - TypeScript strict typing throughout
+  - Comprehensive testing with mocked dependencies
+  - Integration with Claude Code SDK for agent execution
+
+  This implements the complete specification from Task 03 and provides the foundation for future workflow types.
+
+- 950c3b0: Task 05: Message Processing Refactor - Minor Bump (0.2.0 → 0.3.0)
+
+### Patch Changes
+
+- 950c3b0: Update README documentation to accurately reflect Claude Code API usage
+
+  Remove misleading claims about offline capability and code privacy. Update messaging to clarify that workflow orchestration runs locally while still using Claude Code API for agent execution. Focus on the actual value proposition: no additional API costs and local workflow coordination.
+
+  Key changes:
+
+  - Remove "code never leaves machine" claims
+  - Remove offline and zero latency assertions
+  - Remove cost comparison and detailed documentation sections
+  - Remove architecture diagrams with false local-only claims
+  - Remove privacy & security section with inaccurate statements
+  - Remove enterprise integration and comparison sections
+  - Update core messaging to focus on local orchestration with Claude Code API
+
 ## 0.3.0
 
 ### Minor Changes
