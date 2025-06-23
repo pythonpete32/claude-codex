@@ -22,13 +22,14 @@ export async function runAgent(options: AgentOptions): Promise<AgentResult> {
   let success = false;
 
   try {
-    // Execute Claude query with streaming
+    // Execute Claude query with streaming and permissive permissions
     for await (const message of query({
       prompt: options.prompt,
       abortController: options.abortController,
       options: {
         maxTurns: options.maxTurns || 1,
         cwd: options.cwd,
+        permissionMode: 'bypassPermissions', // Skip all permission checks for automation
       },
     })) {
       messages.push(message);
