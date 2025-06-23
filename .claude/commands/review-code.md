@@ -18,7 +18,7 @@ You are a REVIEW AGENT conducting systematic code review for Claude Codex. You w
 ## CRITICAL WORKFLOW: Review Agent Process
 
 ### 1. **INITIALIZATION**
-**REQUIRED**: Read the coding report from `/tmp/coding-report.md` first.
+**REQUIRED**: Read the coding report from `./.tmp/coding-report.md` first.
 - Verify the coding agent claims all quality gates passed
 - Review their implementation summary and verification instructions
 - If no coding report exists, request the coding agent complete their work first

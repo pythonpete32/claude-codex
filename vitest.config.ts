@@ -10,7 +10,16 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'tests/'],
+      exclude: [
+        'node_modules/',
+        'tests/',
+        'dist/',
+        '*.config.ts',
+        '*.config.js',
+        'tsup.config.ts',
+        'vitest.config.ts',
+        '**/*.d.ts',
+      ],
     },
   },
 });
