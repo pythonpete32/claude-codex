@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "snap-happy": {
+      "command": "npx",
+      "args": ["@mariozechner/snap-happy"],
+      "env": {
+        "SNAP_HAPPY_SCREENSHOT_PATH": "~/Screenshots"
+      }
+    }
+  },
+  "teams": {
+    "standard": { "mcps": ["snap-happy"] },
+    "tdd": { "mcps": ["snap-happy"] },
+    "frontend": { "mcps": ["snap-happy"] },
+    "smart-contract": { "mcps": [] }
+  },
+  "defaults": {
+    "team": "standard",
+    "maxReviews": 3,
+    "cleanup": true
+  }
+}
