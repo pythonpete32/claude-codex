@@ -27,7 +27,28 @@ src/
 │   ├── types.ts (all interfaces and types)
 │   ├── errors.ts (custom error classes)
 │   └── preflight.ts (environment validation)
-└── index.ts (existing entry point)
+├── index.ts (existing entry point)
+└── lib.ts (subscription authentication)
+
+tests/
+├── cli/
+│   ├── commands/
+│   │   └── tdd.test.ts (TDD command handler tests)
+│   ├── args.test.ts (argument parsing tests)
+│   └── index.test.ts (CLI integration tests)
+├── core/
+│   ├── operations/
+│   │   ├── worktree.test.ts (git worktree operation tests)
+│   │   ├── github.test.ts (GitHub API integration tests)
+│   │   ├── prompts.test.ts (prompt formatting tests)
+│   │   └── state.test.ts (state management tests)
+│   └── claude.test.ts (Claude SDK wrapper tests)
+├── shared/
+│   ├── types.test.ts (type definition tests)
+│   ├── errors.test.ts (error class tests)
+│   └── preflight.test.ts (environment validation tests)
+└── workflows/
+    └── tdd.test.ts (TDD workflow orchestrator tests)
 ```
 
 ### **Data Flow Overview**

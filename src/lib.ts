@@ -9,7 +9,7 @@ export function forceSubscriptionAuth(): void {
   let removed = false;
   for (const varName of apiKeyVars) {
     if (process.env[varName]) {
-      console.log(`${colors.yellow('→')} Removing ${varName} from environment`);
+      console.log(`${colors.warning('→')} Removing ${varName} from environment`);
       delete process.env[varName];
       removed = true;
     }
@@ -19,6 +19,91 @@ export function forceSubscriptionAuth(): void {
   process.env.CLAUDE_USE_SUBSCRIPTION = 'true';
 
   if (removed) {
-    console.log(`${colors.green('✓')} Environment cleaned for subscription auth\n`);
+    console.log(`${colors.success('✓')} Environment cleaned for subscription auth\n`);
   }
 }
+
+// Re-export core functionality for library usage
+export {
+  extractMessageText,
+  runAgent,
+} from './core/claude.js';
+
+// Re-export utilities
+export {
+  colors,
+  logDim,
+  logError,
+  logInfo,
+  logSuccess,
+  logWarning,
+} from './core/messaging.js';
+
+export {
+  checkPRExists,
+  getGitHubConfig,
+  listPRsForBranch,
+} from './core/operations/github.js';
+
+export {
+  extractFinalMessage,
+  formatCoderPrompt,
+  formatReviewerPrompt,
+} from './core/operations/prompts.js';
+
+export {
+  addCoderResponse,
+  addReviewerResponse,
+  cleanupTaskState,
+  getTaskState,
+  initializeTaskState,
+  updateTaskState,
+} from './core/operations/state.js';
+
+// Re-export operations
+export {
+  cleanupWorktree,
+  createWorktree,
+  getCurrentBranch,
+  isGitRepository,
+  listWorktrees,
+} from './core/operations/worktree.js';
+// Re-export error classes
+export {
+  AgentExecutionError,
+  ConfigurationError,
+  FileSystemError,
+  GitCommandError,
+  GitHubAPIError,
+  GitHubAuthError,
+  GitRepositoryNotFoundError,
+  MessageExtractionError,
+  PromptFormattingError,
+  RepositoryNotFoundError,
+  SpecFileNotFoundError,
+  StateManagementError,
+  StateParseError,
+  TaskNotFoundError,
+  ValidationError,
+  WorktreeCleanupError,
+  WorktreeCreationError,
+} from './shared/errors.js';
+// Re-export types for external use
+export type {
+  AgentOptions,
+  AgentResult,
+  CoderPromptOptions,
+  GitHubConfig,
+  PRInfo,
+  PreflightResult,
+  ReviewerPromptOptions,
+  SDKMessage,
+  SDKResult,
+  TaskState,
+  TDDCommandArgs,
+  TDDOptions,
+  TDDResult,
+  WorktreeInfo,
+} from './shared/types.js';
+// Re-export workflow
+export { executeTDDWorkflow } from './workflows/tdd.js';
