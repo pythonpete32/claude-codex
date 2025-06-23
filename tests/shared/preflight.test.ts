@@ -91,7 +91,7 @@ describe('Environment Validation', () => {
         expect(mockWorktree.isGitRepository).toHaveBeenCalledOnce();
         expect(mockExecAsync).toHaveBeenCalledWith('git remote get-url origin');
         expect(mockExecAsync).toHaveBeenCalledWith('git status --porcelain');
-        expect(mockExecAsync).toHaveBeenCalledWith('claude-code --version', { timeout: 5000 });
+        expect(mockExecAsync).toHaveBeenCalledWith('claude --version', { timeout: 5000 });
       });
 
       it('should pass with warnings for non-critical issues', async () => {
@@ -100,7 +100,7 @@ describe('Environment Validation', () => {
           if (cmd === 'git remote get-url origin') {
             return Promise.reject(new Error('No remote'));
           }
-          if (cmd === 'claude-code --version') {
+          if (cmd === 'claude --version') {
             return Promise.reject(new Error('Command not found'));
           }
           if (cmd === 'git config user.name') {
@@ -279,7 +279,7 @@ describe('Environment Validation', () => {
     describe('claude-code CLI validation', () => {
       it('should warn when claude-code command fails', async () => {
         mockExecAsync.mockImplementation((cmd: string, _options?: ExecOptions) => {
-          if (cmd === 'claude-code --version') {
+          if (cmd === 'claude --version') {
             return Promise.reject(new Error('Command not found'));
           }
           return Promise.resolve({ stdout: '', stderr: '' });
