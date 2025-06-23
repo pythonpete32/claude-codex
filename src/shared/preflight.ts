@@ -2,6 +2,7 @@ import { exec } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import { promisify } from 'node:util';
 import { isGitRepository } from '../core/operations/worktree.js';
+import { loadEnvironmentVariables } from './env-loader.js';
 
 const execAsync = promisify(exec);
 
@@ -15,6 +16,9 @@ export interface PreflightResult {
  * Validate environment requirements before TDD workflow execution
  */
 export async function validateEnvironment(): Promise<PreflightResult> {
+  // Load environment variables from .env files first
+  await loadEnvironmentVariables();
+
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -46,7 +50,7 @@ export async function validateEnvironment(): Promise<PreflightResult> {
 
   // 2. GitHub token validation
   const githubToken = process.env.GITHUB_TOKEN;
-  if (!githubToken) {
+  if (!githubToken || githubToken.trim().length === 0) {
     errors.push(
       'GITHUB_TOKEN environment variable not set. ' +
         'Create a personal access token at https://github.com/settings/tokens and export it as GITHUB_TOKEN.'
@@ -127,6 +131,9 @@ export async function validateEnvironment(): Promise<PreflightResult> {
  */
 export async function quickValidation(): Promise<boolean> {
   try {
+    // Load environment variables first
+    await loadEnvironmentVariables();
+
     // Only check the most critical requirements
     return (
       (await isGitRepository()) &&
