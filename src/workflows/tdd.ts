@@ -24,6 +24,18 @@ function generateTaskId(): string {
 }
 
 /**
+ * Extract agent response using simple fallback chain
+ */
+function extractAgentResponse(agentResult: Awaited<ReturnType<typeof runAgent>>): string {
+  const resultMessage = agentResult.messages.find((m) => m.type === 'result');
+  return (
+    agentResult.finalResponse ||
+    resultMessage?.result ||
+    '[Agent conversation incomplete - no response content available]'
+  );
+}
+
+/**
  * Main TDD workflow orchestrator that coordinates agent execution
  * from specification to pull request creation
  */
@@ -120,37 +132,8 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
       console.log(`📁 Complete message structure saved to: ${debugFile}`);
       console.log(`🔍 You can examine the raw data with: cat "${debugFile}"`);
 
-      // Use simple, robust extraction: finalResponse first, then fallback to result message, then last assistant text
-      const resultMessage = coderResult.messages.find((m) => m.type === 'result') as any;
-
-      let coderHandoff = coderResult.finalResponse || resultMessage?.result || '';
-
-      // If no finalResponse or result, extract the last meaningful assistant text
-      if (!coderHandoff.trim()) {
-        const assistantMessages = coderResult.messages.filter((m) => m.type === 'assistant');
-        for (let i = assistantMessages.length - 1; i >= 0; i--) {
-          const assistantMsg = assistantMessages[i] as any;
-          const content = assistantMsg.message?.content;
-
-          if (Array.isArray(content)) {
-            const textBlocks = content
-              .filter((block) => block.type === 'text' && block.text?.trim())
-              .map((block) => block.text);
-            if (textBlocks.length > 0) {
-              coderHandoff = textBlocks.join('\n');
-              break;
-            }
-          } else if (typeof content === 'string' && content.trim()) {
-            coderHandoff = content;
-            break;
-          }
-        }
-      }
-
-      // Final fallback
-      if (!coderHandoff.trim()) {
-        coderHandoff = '[Agent conversation incomplete - no response content available]';
-      }
+      // Extract agent response using simple fallback chain
+      const coderHandoff = extractAgentResponse(coderResult);
 
       console.log('🔍 Extracted coder handoff:', JSON.stringify(coderHandoff, null, 2));
       await addCoderResponse(taskId, coderHandoff);
@@ -204,37 +187,8 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
 
       console.log(`📁 Reviewer message structure saved to: ${reviewerDebugFile}`);
 
-      // Use simple, robust extraction: finalResponse first, then fallback to result message, then last assistant text
-      const reviewerResultMessage = reviewerResult.messages.find((m) => m.type === 'result') as any;
-
-      let reviewerResponse = reviewerResult.finalResponse || reviewerResultMessage?.result || '';
-
-      // If no finalResponse or result, extract the last meaningful assistant text
-      if (!reviewerResponse.trim()) {
-        const assistantMessages = reviewerResult.messages.filter((m) => m.type === 'assistant');
-        for (let i = assistantMessages.length - 1; i >= 0; i--) {
-          const assistantMsg = assistantMessages[i] as any;
-          const content = assistantMsg.message?.content;
-
-          if (Array.isArray(content)) {
-            const textBlocks = content
-              .filter((block) => block.type === 'text' && block.text?.trim())
-              .map((block) => block.text);
-            if (textBlocks.length > 0) {
-              reviewerResponse = textBlocks.join('\n');
-              break;
-            }
-          } else if (typeof content === 'string' && content.trim()) {
-            reviewerResponse = content;
-            break;
-          }
-        }
-      }
-
-      // Final fallback
-      if (!reviewerResponse.trim()) {
-        reviewerResponse = '[Agent conversation incomplete - no response content available]';
-      }
+      // Extract agent response using simple fallback chain
+      const reviewerResponse = extractAgentResponse(reviewerResult);
 
       console.log('🔍 Extracted reviewer response:', JSON.stringify(reviewerResponse, null, 2));
       await addReviewerResponse(taskId, reviewerResponse);
