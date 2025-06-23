@@ -198,3 +198,6 @@ if (user.isAdmin && hasPermission) {
 ### Document Storage Guidelines
 - Temporary documents are saved in the .temp file
 - Permanent documents are saved in docs
+
+### Git Workflow Guidelines
+- NEVER make PRs into main only dev
