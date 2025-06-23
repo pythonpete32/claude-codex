@@ -428,6 +428,8 @@ bun run release         # Complete release workflow (build + publish)
 
 ## 🔄 Development Workflow
 
+Claude Codex uses **automated releases** via GitHub Actions and Changesets. No more manual `npm publish` or 2FA hassles!
+
 ### **1. Making Changes**
 
 ```bash
@@ -458,7 +460,7 @@ bun run test           # Ensure tests pass
 
 ### **3. Creating a Changeset**
 
-When you're ready to release your changes:
+When you're ready to describe your changes for release:
 
 ```bash
 # Create a changeset describing your changes
@@ -475,25 +477,44 @@ bun run changeset
 bun run changeset
 # ? Which packages would you like to include? › claude-codex
 # ? Which type of change is this for claude-codex? › minor
-# ? Please enter a summary for this change: Add TDD workflow implementation
+# ? Please enter a summary for this change: Add new TDD workflow features
 ```
 
-### **4. Version & Release**
+### **4. Automated Release Process**
+
+**🚀 No manual steps required!** Our GitHub Actions workflow handles everything:
+
+```bash
+# 1. Push your changes to main (via PR)
+git push origin main
+
+# 2. GitHub Actions automatically:
+#    - Creates a "Release PR" with version bump + changelog
+#    - Shows exactly what will be published
+
+# 3. Review and merge the Release PR
+#    - GitHub Actions automatically publishes to NPM
+#    - Creates GitHub release
+#    - No 2FA prompts or manual commands!
+```
+
+**🎯 Your release workflow:**
+1. **Make changes** → Create changeset → Push to main
+2. **Release PR appears** → Review the changes
+3. **Merge Release PR** → Automatic NPM publish! 🎉
+
+### **4. Manual Release (Fallback)**
+
+If you need to publish manually for any reason:
 
 ```bash
 # Update version and generate changelog
 bun run changeset:version
 
-# This will:
-# - Bump version in package.json
-# - Generate/update CHANGELOG.md
-# - Remove consumed changesets
-
 # Commit the version changes
-git add .
-git commit -m "chore: release version bump"
+git add . && git commit -m "chore: release version bump"
 
-# Publish to npm
+# Publish to npm (requires NPM authentication)
 bun run release
 ```
 
@@ -502,6 +523,10 @@ bun run release
 ```
 claude-codex/
 ├── .changeset/              # Changesets for version management
+├── .github/
+│   └── workflows/
+│       ├── ci.yml           # Continuous integration (tests, linting, build)
+│       └── release.yml      # Automated NPM releases via Changesets
 ├── .vscode/                 # VS Code settings
 ├── dist/                    # Built output (created by tsup)
 ├── docs/                    # Architecture documentation
@@ -519,7 +544,22 @@ claude-codex/
 └── package.json            # Package metadata and scripts
 ```
 
-## 🚀 Git Hooks & Automation
+## 🚀 CI/CD & Automation
+
+### **GitHub Actions Workflows**
+
+**📋 Continuous Integration (`ci.yml`)**
+- Runs on every push and pull request
+- Format checking, linting, testing, and build validation
+- Ensures code quality before merging
+
+**🚀 Automated Releases (`release.yml`)**
+- Triggered when changesets are pushed to main
+- Creates Release PRs with version bumps and changelog
+- Automatically publishes to NPM when Release PR is merged
+- No manual `npm publish` or 2FA required!
+
+### **Git Hooks (Local Development)**
 
 ### **Pre-commit Hook**
 Automatically formats your code when you commit:
