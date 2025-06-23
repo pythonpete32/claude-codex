@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs';
 import { resolve } from 'node:path';
-import { runAgent } from '../core/claude.js';
+import { runClaudeAgent } from '../core/messaging/sdk-wrapper.js';
 import { checkPRExists } from '../core/operations/github.js';
 import { formatCoderPrompt, formatReviewerPrompt } from '../core/operations/prompts.js';
 import {
@@ -23,19 +23,6 @@ function generateTaskId(): string {
   return `task-${timestamp}-${random}`;
 }
 
-/**
- * Extract agent response using simple fallback chain
- */
-function extractAgentResponse(agentResult: Awaited<ReturnType<typeof runAgent>>): string {
-  const resultMessage = agentResult.messages.find((m) => m.type === 'result');
-  const resultText = resultMessage && 'result' in resultMessage ? resultMessage.result : undefined;
-
-  return (
-    agentResult.finalResponse ||
-    resultText ||
-    '[Agent conversation incomplete - no response content available]'
-  );
-}
 
 /**
  * Main TDD workflow orchestrator that coordinates agent execution
@@ -87,12 +74,17 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         reviewerFeedback,
       });
 
-      let coderResult: Awaited<ReturnType<typeof runAgent>>;
+      let coderResult: Awaited<ReturnType<typeof runClaudeAgent>>;
       try {
-        coderResult = await runAgent({
+        coderResult = await runClaudeAgent({
           prompt: coderPrompt,
           cwd: worktreeInfo.path,
-          maxTurns: 10,
+          // No maxTurns - allow natural completion
+          displayOptions: {
+            showToolCalls: true,
+            showTimestamps: false,
+            verbose: false,
+          },
         });
       } catch (error) {
         throw new AgentExecutionError(
@@ -105,39 +97,9 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         throw new AgentExecutionError('Coder agent execution was not successful');
       }
 
-      // Extract and save coder response
-      console.log('💾 Saving complete message structure to debug files...');
-
-      // Save the entire result structure to disk for analysis
-      const debugDir = '.codex/debug';
-      await fs.mkdir(debugDir, { recursive: true });
-
-      const debugFile = `${debugDir}/${taskId}-coder-messages.json`;
-      await fs.writeFile(
-        debugFile,
-        JSON.stringify(
-          {
-            taskId,
-            timestamp: new Date().toISOString(),
-            finalResponse: coderResult.finalResponse,
-            success: coderResult.success,
-            cost: coderResult.cost,
-            duration: coderResult.duration,
-            messagesCount: coderResult.messages.length,
-            messages: coderResult.messages,
-          },
-          null,
-          2
-        )
-      );
-
-      console.log(`📁 Complete message structure saved to: ${debugFile}`);
-      console.log(`🔍 You can examine the raw data with: cat "${debugFile}"`);
-
-      // Extract agent response using simple fallback chain
-      const coderHandoff = extractAgentResponse(coderResult);
-
-      console.log('🔍 Extracted coder handoff:', JSON.stringify(coderHandoff, null, 2));
+      // Use finalResponse directly from SDK (not extracted from messages)
+      const coderHandoff =
+        coderResult.finalResponse || '[No final response - task may have been interrupted]';
       await addCoderResponse(taskId, coderHandoff);
 
       // 3b. Run Reviewer Agent
@@ -147,12 +109,17 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         coderHandoff,
       });
 
-      let reviewerResult: Awaited<ReturnType<typeof runAgent>>;
+      let reviewerResult: Awaited<ReturnType<typeof runClaudeAgent>>;
       try {
-        reviewerResult = await runAgent({
+        reviewerResult = await runClaudeAgent({
           prompt: reviewerPrompt,
           cwd: worktreeInfo.path,
-          maxTurns: 5,
+          // No maxTurns - allow natural completion
+          displayOptions: {
+            showToolCalls: true,
+            showTimestamps: false,
+            verbose: false,
+          },
         });
       } catch (error) {
         throw new AgentExecutionError(
@@ -165,34 +132,9 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         throw new AgentExecutionError('Reviewer agent execution was not successful');
       }
 
-      // Extract and save reviewer response
-      console.log('💾 Saving reviewer message structure to debug files...');
-
-      const reviewerDebugFile = `${debugDir}/${taskId}-reviewer-messages.json`;
-      await fs.writeFile(
-        reviewerDebugFile,
-        JSON.stringify(
-          {
-            taskId,
-            timestamp: new Date().toISOString(),
-            finalResponse: reviewerResult.finalResponse,
-            success: reviewerResult.success,
-            cost: reviewerResult.cost,
-            duration: reviewerResult.duration,
-            messagesCount: reviewerResult.messages.length,
-            messages: reviewerResult.messages,
-          },
-          null,
-          2
-        )
-      );
-
-      console.log(`📁 Reviewer message structure saved to: ${reviewerDebugFile}`);
-
-      // Extract agent response using simple fallback chain
-      const reviewerResponse = extractAgentResponse(reviewerResult);
-
-      console.log('🔍 Extracted reviewer response:', JSON.stringify(reviewerResponse, null, 2));
+      // Use finalResponse directly from SDK (not extracted from messages)
+      const reviewerResponse =
+        reviewerResult.finalResponse || '[No final response - task may have been interrupted]';
       await addReviewerResponse(taskId, reviewerResponse);
 
       // 3c. Check for PR creation (success condition)

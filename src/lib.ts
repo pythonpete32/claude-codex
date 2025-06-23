@@ -23,11 +23,12 @@ export function forceSubscriptionAuth(): void {
   }
 }
 
-// Re-export core functionality for library usage
+// Re-export new messaging functionality
 export {
-  extractMessageText,
-  runAgent,
-} from './core/claude.js';
+  type AgentResult as NewAgentResult,
+  type ClaudeAgentOptions,
+  runClaudeAgent,
+} from './core/messaging/index.js';
 
 // Re-export utilities
 export {
@@ -89,8 +90,6 @@ export {
 } from './shared/errors.js';
 // Re-export types for external use
 export type {
-  AgentOptions,
-  AgentResult,
   CoderPromptOptions,
   GitHubConfig,
   PRInfo,
