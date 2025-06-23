@@ -57,31 +57,39 @@ describe('Messaging Utilities', () => {
     it('should log success messages with green check', () => {
       logSuccess('Operation completed');
 
-      expect(mockConsole.log).toHaveBeenCalledWith('✓ Operation completed');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.success(colors.check)} Operation completed`
+      );
     });
 
     it('should log error messages with red cross', () => {
       logError('Something went wrong');
 
-      expect(mockConsole.error).toHaveBeenCalledWith('✗ Something went wrong');
+      expect(mockConsole.error).toHaveBeenCalledWith(
+        `${colors.error(colors.cross)} Something went wrong`
+      );
     });
 
     it('should log warning messages with yellow arrow', () => {
       logWarning('This is a warning');
 
-      expect(mockConsole.warn).toHaveBeenCalledWith('→ This is a warning');
+      expect(mockConsole.warn).toHaveBeenCalledWith(
+        `${colors.warning(colors.arrow)} This is a warning`
+      );
     });
 
     it('should log info messages with cyan bullet', () => {
       logInfo('Some information');
 
-      expect(mockConsole.log).toHaveBeenCalledWith('• Some information');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.info(colors.bullet)} Some information`
+      );
     });
 
     it('should log dim messages', () => {
       logDim('Dimmed message');
 
-      expect(mockConsole.log).toHaveBeenCalledWith('Dimmed message');
+      expect(mockConsole.log).toHaveBeenCalledWith(colors.dim('Dimmed message'));
     });
 
     it('should handle empty messages', () => {
@@ -101,7 +109,9 @@ describe('Messaging Utilities', () => {
 
       logSuccess(multilineMessage);
 
-      expect(mockConsole.log).toHaveBeenCalledWith('✓ Line 1\nLine 2\nLine 3');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.success(colors.check)} Line 1\nLine 2\nLine 3`
+      );
     });
 
     it('should handle special characters', () => {
@@ -109,7 +119,9 @@ describe('Messaging Utilities', () => {
 
       logInfo(specialMessage);
 
-      expect(mockConsole.log).toHaveBeenCalledWith('• Message with émojis 🎉 and symbols ★');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.info(colors.bullet)} Message with émojis 🎉 and symbols ★`
+      );
     });
   });
 });
