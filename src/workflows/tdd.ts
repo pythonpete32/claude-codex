@@ -1,12 +1,8 @@
 import { promises as fs } from 'node:fs';
 import { resolve } from 'node:path';
-import { runAgent } from '../core/claude.js';
+import { runClaudeAgent } from '../core/messaging/sdk-wrapper.js';
 import { checkPRExists } from '../core/operations/github.js';
-import {
-  extractFinalMessage,
-  formatCoderPrompt,
-  formatReviewerPrompt,
-} from '../core/operations/prompts.js';
+import { formatCoderPrompt, formatReviewerPrompt } from '../core/operations/prompts.js';
 import {
   addCoderResponse,
   addReviewerResponse,
@@ -73,12 +69,17 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         reviewerFeedback,
       });
 
-      let coderResult: Awaited<ReturnType<typeof runAgent>>;
+      let coderResult: Awaited<ReturnType<typeof runClaudeAgent>>;
       try {
-        coderResult = await runAgent({
+        coderResult = await runClaudeAgent({
           prompt: coderPrompt,
           cwd: worktreeInfo.path,
-          maxTurns: 5,
+          // No maxTurns - allow natural completion
+          displayOptions: {
+            showToolCalls: true,
+            showTimestamps: false,
+            verbose: false,
+          },
         });
       } catch (error) {
         throw new AgentExecutionError(
@@ -91,8 +92,9 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         throw new AgentExecutionError('Coder agent execution was not successful');
       }
 
-      // Extract and save coder response
-      const coderHandoff = await extractFinalMessage(coderResult.messages);
+      // Use finalResponse directly from SDK (not extracted from messages)
+      const coderHandoff =
+        coderResult.finalResponse || '[No final response - task may have been interrupted]';
       await addCoderResponse(taskId, coderHandoff);
 
       // 3b. Run Reviewer Agent
@@ -102,12 +104,17 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         coderHandoff,
       });
 
-      let reviewerResult: Awaited<ReturnType<typeof runAgent>>;
+      let reviewerResult: Awaited<ReturnType<typeof runClaudeAgent>>;
       try {
-        reviewerResult = await runAgent({
+        reviewerResult = await runClaudeAgent({
           prompt: reviewerPrompt,
           cwd: worktreeInfo.path,
-          maxTurns: 3,
+          // No maxTurns - allow natural completion
+          displayOptions: {
+            showToolCalls: true,
+            showTimestamps: false,
+            verbose: false,
+          },
         });
       } catch (error) {
         throw new AgentExecutionError(
@@ -120,8 +127,9 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         throw new AgentExecutionError('Reviewer agent execution was not successful');
       }
 
-      // Extract and save reviewer response
-      const reviewerResponse = await extractFinalMessage(reviewerResult.messages);
+      // Use finalResponse directly from SDK (not extracted from messages)
+      const reviewerResponse =
+        reviewerResult.finalResponse || '[No final response - task may have been interrupted]';
       await addReviewerResponse(taskId, reviewerResponse);
 
       // 3c. Check for PR creation (success condition)

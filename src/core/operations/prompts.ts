@@ -1,10 +1,5 @@
-import { MessageExtractionError, PromptFormattingError } from '../../shared/errors.js';
-import type {
-  CoderPromptOptions,
-  ReviewerPromptOptions,
-  SDKAssistantMessage,
-  SDKMessage,
-} from '../../shared/types.js';
+import { PromptFormattingError } from '../../shared/errors.js';
+import type { CoderPromptOptions, ReviewerPromptOptions } from '../../shared/types.js';
 
 // Coder Agent Handoff Template (based on PRD)
 const CODER_HANDOFF_TEMPLATE = `
@@ -79,59 +74,4 @@ Leverage your intelligence to adapt to any project structure (React, Node, Pytho
   }
 }
 
-/**
- * Extracts the final assistant message content from Claude SDK response
- */
-export async function extractFinalMessage(messages: SDKMessage[]): Promise<string> {
-  try {
-    if (!messages || messages.length === 0) {
-      throw new MessageExtractionError('No messages provided');
-    }
-
-    // Find the last message where type === 'assistant'
-    let lastAssistantMessage: SDKAssistantMessage | undefined;
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].type === 'assistant') {
-        lastAssistantMessage = messages[i] as SDKAssistantMessage;
-        break;
-      }
-    }
-
-    if (!lastAssistantMessage) {
-      throw new MessageExtractionError('No assistant message found in response');
-    }
-
-    // Extract content from the assistant message
-    const content = lastAssistantMessage.message.content;
-
-    // Extract content based on type
-    if (typeof content === 'string') {
-      return content;
-    }
-
-    // Handle complex content structure (array of content blocks)
-    if (Array.isArray(content)) {
-      const textBlocks: string[] = [];
-
-      for (const block of content) {
-        if (block && typeof block === 'object' && 'type' in block) {
-          if (block.type === 'text' && 'text' in block && typeof block.text === 'string') {
-            textBlocks.push(block.text);
-          }
-        }
-      }
-
-      return textBlocks.join('');
-    }
-
-    // Fallback for unexpected content structure
-    return String(content || '');
-  } catch (error) {
-    if (error instanceof MessageExtractionError) {
-      throw error;
-    }
-    throw new MessageExtractionError(
-      `Failed to extract message content: ${error instanceof Error ? error.message : 'Unknown error'}`
-    );
-  }
-}
+// extractFinalMessage function removed - now using SDK's finalResponse directly
