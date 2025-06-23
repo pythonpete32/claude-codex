@@ -103,7 +103,7 @@ gh pr create --title "Implement [task name]" --body "Implementation of [task nam
 ```
 
 #### **❌ IF ANY CRITERIA FAIL → PROVIDE FEEDBACK**
-If ANY criterion fails, write detailed feedback to `/tmp/review-report.md`:
+If ANY criterion fails, write detailed feedback to `./.tmp/review-report.md`:
 
 ```markdown
 # Review Agent Feedback Report
@@ -146,7 +146,7 @@ If ANY criterion fails, write detailed feedback to `/tmp/review-report.md`:
 1. Address ALL critical issues listed above
 2. Verify ALL quality gates pass before claiming completion
 3. Update tests to cover identified gaps
-4. Save new completion report to `/tmp/coding-report.md`
+4. Save new completion report to `./.tmp/coding-report.md`
 
 ## Iteration Count
 This is iteration #[X]. Max iterations before escalation: 3.

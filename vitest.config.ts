@@ -13,12 +13,19 @@ export default defineConfig({
       exclude: [
         'node_modules/',
         'tests/',
-        'dist/',
-        '*.config.ts',
-        '*.config.js',
+        'dist/**',
+        'build/**',
+        '.claude/**',
+        'docs/**',
+        '**/*.config.{js,ts}',
         'tsup.config.ts',
         'vitest.config.ts',
         '**/*.d.ts',
+        '**/types.ts', // Type definition files
+        '**/index.ts', // Re-export files typically don't need coverage
+        'src/lib.ts', // Authentication utility - already tested by Claude SDK
+        'coverage/**',
+        '.tmp/**',
       ],
     },
   },

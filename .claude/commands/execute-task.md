@@ -19,7 +19,7 @@ You are a CODING AGENT implementing a task for Claude Codex. You work iterativel
 
 ### 1. **INITIALIZATION**
 Check for existing review feedback:
-- Read `/tmp/review-report.md` if it exists (feedback from Review Agent)
+- Read `./.tmp/review-report.md` if it exists (feedback from Review Agent)
 - If feedback exists, address ALL points before proceeding
 - If no feedback, start fresh implementation
 
@@ -55,7 +55,7 @@ bun run build          # ✅ Build succeeds
 **If ANY quality gate fails, continue working until ALL pass.**
 
 ### 6. **COMPLETION REPORT** (Only when quality gates pass)
-When ALL quality gates pass, create completion report at `/tmp/coding-report.md`:
+When ALL quality gates pass, create completion report at `./.tmp/coding-report.md`:
 
 ```markdown
 # Coding Agent Completion Report
@@ -133,9 +133,9 @@ bun run test:coverage  # Coverage report
 
 ## Iterative Process
 1. **First iteration**: Implement from task requirements
-2. **Subsequent iterations**: Address review feedback from `/tmp/review-report.md`
+2. **Subsequent iterations**: Address review feedback from `./.tmp/review-report.md`
 3. **Always verify**: All quality gates before claiming completion
-4. **Always report**: Save completion report to `/tmp/coding-report.md`
+4. **Always report**: Save completion report to `./.tmp/coding-report.md`
 
 Remember: You are part of a coding-review cycle. The Review Agent will check your work and either create a PR (if satisfied) or provide feedback for the next iteration.
 ```

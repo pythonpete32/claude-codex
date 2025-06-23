@@ -117,3 +117,78 @@ When implementing features:
 - Use dependency injection for testability
 - Test error scenarios comprehensively
 - Achieve ≥90% test coverage with behavioral verification
+
+## Coding Style Guidelines
+
+### **Control Flow: Switch vs If-Else Chains**
+
+❌ **Bad: Long if-else chains**
+```typescript
+function handleTaskStatus(status: string): string {
+  if (status === 'pending') {
+    return 'Task is waiting to be processed';
+  } else if (status === 'in_progress') {
+    return 'Task is currently being worked on';
+  } else if (status === 'completed') {
+    return 'Task has been successfully completed';
+  } else if (status === 'failed') {
+    return 'Task encountered an error and failed';
+  } else if (status === 'cancelled') {
+    return 'Task was cancelled by user';
+  } else {
+    return 'Unknown task status';
+  }
+}
+```
+
+✅ **Good: Switch statements for multiple conditions**
+```typescript
+function handleTaskStatus(status: string): string {
+  switch (status) {
+    case 'pending':
+      return 'Task is waiting to be processed';
+    case 'in_progress':
+      return 'Task is currently being worked on';
+    case 'completed':
+      return 'Task has been successfully completed';
+    case 'failed':
+      return 'Task encountered an error and failed';
+    case 'cancelled':
+      return 'Task was cancelled by user';
+    default:
+      return 'Unknown task status';
+  }
+}
+```
+
+**Why switch is better:**
+- More readable and scannable
+- Easier to add/remove cases
+- Better performance for multiple conditions
+- TypeScript provides better exhaustiveness checking
+- Clear intent for enum-like value handling
+
+### **When to Use Each**
+
+**Use switch when:**
+- Comparing a single variable against multiple specific values
+- Handling enums or union types
+- 3+ conditions on the same variable
+- You need fall-through behavior
+
+**Use if-else when:**
+- Complex boolean conditions
+- Different variables in each condition
+- Only 1-2 simple conditions
+- Conditions involve ranges or complex logic
+
+```typescript
+// Good use of if-else (different conditions)
+if (user.isAdmin && hasPermission) {
+  return AdminDashboard;
+} else if (user.isAuthenticated) {
+  return UserDashboard;
+} else {
+  return LoginPage;
+}
+```
