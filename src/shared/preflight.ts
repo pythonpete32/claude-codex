@@ -58,7 +58,7 @@ export async function validateEnvironment(): Promise<PreflightResult> {
   // 3. Claude Code authentication check
   try {
     // Check if Claude Code is available by running a simple command
-    await execAsync('claude-code --version', { timeout: 5000 });
+    await execAsync('claude --version', { timeout: 5000 });
   } catch {
     warnings.push(
       'Claude Code CLI not found or not working. ' +

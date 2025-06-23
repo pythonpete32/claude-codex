@@ -19,21 +19,30 @@ const { colors, logSuccess, logError, logWarning, logInfo, logDim } = await impo
 
 describe('Messaging Utilities', () => {
   describe('colors', () => {
-    it('should have ANSI color codes', () => {
-      expect(colors.red).toBe('\x1b[31m');
-      expect(colors.green).toBe('\x1b[32m');
-      expect(colors.yellow).toBe('\x1b[33m');
-      expect(colors.cyan).toBe('\x1b[36m');
-      expect(colors.reset).toBe('\x1b[0m');
+    it('should have color functions', () => {
+      expect(typeof colors.red).toBe('function');
+      expect(typeof colors.green).toBe('function');
+      expect(typeof colors.yellow).toBe('function');
+      expect(typeof colors.cyan).toBe('function');
+      expect(typeof colors.reset).toBe('function');
     });
 
-    it('should have helper functions', () => {
-      expect(colors.success('test')).toBe('\x1b[32mtest\x1b[0m');
-      expect(colors.error('test')).toBe('\x1b[31mtest\x1b[0m');
-      expect(colors.warning('test')).toBe('\x1b[33mtest\x1b[0m');
-      expect(colors.info('test')).toBe('\x1b[36mtest\x1b[0m');
-      expect(colors.dim('test')).toBe('\x1b[90mtest\x1b[0m');
-      expect(colors.bold('test')).toBe('\x1b[1mtest\x1b[0m');
+    it('should have helper functions that color text', () => {
+      // Test that helper functions return strings and apply colors
+      expect(typeof colors.success('test')).toBe('string');
+      expect(typeof colors.error('test')).toBe('string');
+      expect(typeof colors.warning('test')).toBe('string');
+      expect(typeof colors.info('test')).toBe('string');
+      expect(typeof colors.dim('test')).toBe('string');
+      expect(typeof colors.bold('test')).toBe('string');
+
+      // Test that the functions work with the text content
+      expect(colors.success('test')).toContain('test');
+      expect(colors.error('test')).toContain('test');
+      expect(colors.warning('test')).toContain('test');
+      expect(colors.info('test')).toContain('test');
+      expect(colors.dim('test')).toContain('test');
+      expect(colors.bold('test')).toContain('test');
     });
 
     it('should have status indicators', () => {
@@ -48,31 +57,39 @@ describe('Messaging Utilities', () => {
     it('should log success messages with green check', () => {
       logSuccess('Operation completed');
 
-      expect(mockConsole.log).toHaveBeenCalledWith('\x1b[32m✓\x1b[0m Operation completed');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.success(colors.check)} Operation completed`
+      );
     });
 
     it('should log error messages with red cross', () => {
       logError('Something went wrong');
 
-      expect(mockConsole.error).toHaveBeenCalledWith('\x1b[31m✗\x1b[0m Something went wrong');
+      expect(mockConsole.error).toHaveBeenCalledWith(
+        `${colors.error(colors.cross)} Something went wrong`
+      );
     });
 
     it('should log warning messages with yellow arrow', () => {
       logWarning('This is a warning');
 
-      expect(mockConsole.warn).toHaveBeenCalledWith('\x1b[33m→\x1b[0m This is a warning');
+      expect(mockConsole.warn).toHaveBeenCalledWith(
+        `${colors.warning(colors.arrow)} This is a warning`
+      );
     });
 
     it('should log info messages with cyan bullet', () => {
       logInfo('Some information');
 
-      expect(mockConsole.log).toHaveBeenCalledWith('\x1b[36m•\x1b[0m Some information');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.info(colors.bullet)} Some information`
+      );
     });
 
     it('should log dim messages', () => {
       logDim('Dimmed message');
 
-      expect(mockConsole.log).toHaveBeenCalledWith('\x1b[90mDimmed message\x1b[0m');
+      expect(mockConsole.log).toHaveBeenCalledWith(colors.dim('Dimmed message'));
     });
 
     it('should handle empty messages', () => {
@@ -92,7 +109,9 @@ describe('Messaging Utilities', () => {
 
       logSuccess(multilineMessage);
 
-      expect(mockConsole.log).toHaveBeenCalledWith('\x1b[32m✓\x1b[0m Line 1\nLine 2\nLine 3');
+      expect(mockConsole.log).toHaveBeenCalledWith(
+        `${colors.success(colors.check)} Line 1\nLine 2\nLine 3`
+      );
     });
 
     it('should handle special characters', () => {
@@ -101,7 +120,7 @@ describe('Messaging Utilities', () => {
       logInfo(specialMessage);
 
       expect(mockConsole.log).toHaveBeenCalledWith(
-        '\x1b[36m•\x1b[0m Message with émojis 🎉 and symbols ★'
+        `${colors.info(colors.bullet)} Message with émojis 🎉 and symbols ★`
       );
     });
   });

@@ -6,10 +6,11 @@ import type { TDDOptions } from '../../src/shared/types.js';
 import { executeTDDWorkflow } from '../../src/workflows/tdd.js';
 
 // Mock external dependencies
-vi.mock('../../src/core/claude.js', () => ({
-  runAgent: vi.fn().mockResolvedValue({
+vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
+  runClaudeAgent: vi.fn().mockResolvedValue({
     messages: [{ role: 'assistant', content: 'Mock agent response' }],
     success: true,
+    finalResponse: 'Mock agent response',
   }),
 }));
 

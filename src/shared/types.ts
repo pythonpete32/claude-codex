@@ -1,6 +1,4 @@
 // Re-export Claude Code SDK types
-import type { SDKMessage } from '@anthropic-ai/claude-code';
-
 export type {
   SDKAssistantMessage,
   SDKMessage,
@@ -42,20 +40,6 @@ export interface PRInfo {
 }
 
 // Agent execution types for Claude SDK wrapper
-export interface AgentOptions {
-  prompt: string;
-  maxTurns?: number;
-  cwd?: string;
-  abortController?: AbortController;
-}
-
-export interface AgentResult {
-  messages: SDKMessage[];
-  finalResponse: string;
-  success: boolean;
-  cost: number;
-  duration: number;
-}
 
 // Configuration types
 export interface TDDOptions {

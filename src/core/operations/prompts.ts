@@ -73,3 +73,5 @@ Leverage your intelligence to adapt to any project structure (React, Node, Pytho
     );
   }
 }
+
+// extractFinalMessage function removed - now using SDK's finalResponse directly
