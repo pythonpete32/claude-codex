@@ -49,8 +49,8 @@ describe('Environment Validation', () => {
           return Promise.resolve({ stdout: 'https://github.com/test/repo.git', stderr: '' });
         case 'git status --porcelain':
           return Promise.resolve({ stdout: '', stderr: '' });
-        case 'claude-code --version':
-          return Promise.resolve({ stdout: 'claude-code v1.0.0', stderr: '' });
+        case 'claude --version':
+          return Promise.resolve({ stdout: 'claude v1.0.0', stderr: '' });
         case 'git config user.name':
           return Promise.resolve({ stdout: 'Test User', stderr: '' });
         case 'git config user.email':
