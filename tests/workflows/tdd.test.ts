@@ -206,13 +206,13 @@ describe('TDD Workflow Orchestrator', () => {
     it('should fail when worktree creation fails', async () => {
       // Clear all mocks and set only the specific failure
       vi.clearAllMocks();
-      
+
       // Create a fresh task state object for this test to avoid cross-contamination
       const freshTaskState: TaskState = {
         ...mockTaskState,
         currentIteration: 0,
       };
-      
+
       vi.mocked(readFile).mockResolvedValue('Test specification content');
       vi.mocked(initializeTaskState).mockResolvedValue(freshTaskState);
       vi.mocked(createWorktree).mockRejectedValue(new Error('Worktree creation failed'));
