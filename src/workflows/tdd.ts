@@ -28,9 +28,11 @@ function generateTaskId(): string {
  */
 function extractAgentResponse(agentResult: Awaited<ReturnType<typeof runAgent>>): string {
   const resultMessage = agentResult.messages.find((m) => m.type === 'result');
+  const resultText = resultMessage && 'result' in resultMessage ? resultMessage.result : undefined;
+
   return (
     agentResult.finalResponse ||
-    resultMessage?.result ||
+    resultText ||
     '[Agent conversation incomplete - no response content available]'
   );
 }
