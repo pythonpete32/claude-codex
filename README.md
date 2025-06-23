@@ -6,9 +6,9 @@
 
 [![npm version](https://badge.fury.io/js/claude-codex.svg)](https://badge.fury.io/js/claude-codex) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Claude AI](https://img.shields.io/badge/Claude%20AI-FF6B35?logo=anthropic&logoColor=white)](https://claude.ai) [![Local First](https://img.shields.io/badge/Local%20First-00C851?logo=homeassistant&logoColor=white)](https://localfirstweb.dev/)
 
-*The only background agent system that runs entirely on your machine*
+*Background agents with local orchestration using your Claude Code subscription*
 
-[🚀 Quick Start](#quick-start) • [🔄 Workflows](#available-workflows) • [💰 Cost Comparison](#cost-comparison) • [🏗️ Architecture](#architecture) • [🛠️ Advanced Usage](#advanced-usage)
+[🚀 Quick Start](#quick-start) • [🔄 Workflows](#available-workflows) • [🏗️ Architecture](#architecture) • [🛠️ Advanced Usage](#advanced-usage)
 
 </div>
 
@@ -16,27 +16,16 @@
 
 ## ✨ What is Claude Codex?
 
-Claude Codex is the **first local background agent system** for software development. Unlike ChatGPT Codex, Google Jules, Augment, or Cursor that run expensive cloud-based agents, Claude Codex runs entirely on your machine using your existing **Claude Code subscription**.
+Claude Codex is a **background agent system** for software development that orchestrates workflows locally while leveraging your existing **Claude Code subscription**. Unlike other solutions that require additional API fees, Claude Codex uses your Claude Code investment with local workflow coordination.
 
-## 🆚 Why Choose Local Background Agents?
-
-| Feature | Claude Codex (Local) | ChatGPT Codex | Google Jules | Augment Code | Cursor |
-|---------|---------------------|---------------|--------------|--------------|--------|
-| **💻 Runs Locally** | ✅ Yes | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud |
-| **🔒 Code Privacy** | ✅ Never leaves machine | ❌ Sent to OpenAI | ❌ Sent to Google | ❌ Sent to Augment | ❌ Sent to Cursor |
-| **💰 Extra Costs** | ❌ None | ✅ $20+/month | ✅ TBD | ✅ $50-250/month | ✅ $20-40/month |
-| **⚡ Zero Latency** | ✅ Instant | ❌ Network dependent | ❌ Network dependent | ❌ Network dependent | ❌ Network dependent |
-| **🌐 Works Offline** | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
-| **🔧 Multiple Workflows** | ✅ Yes | ✅ Limited | ✅ Limited | ✅ Limited | ✅ Limited |
+## 🆚 Why Choose Background Agents?
 
 ### 🎯 Core Advantages
 
-- **🏠 Runs Locally**: Your code never leaves your machine - ultimate privacy and security
 - **💰 No Extra Costs**: Uses your existing Claude Code subscription - no additional API fees
-- **⚡ Zero Latency**: Instant responses without network delays
-- **🌐 Works Offline**: Continue coding even without internet connection
 - **🔧 Multiple Workflows**: TDD, code review, feature implementation, bug fixes, and more
-- **🎛️ Full Control**: You own the entire stack - no vendor lock-in
+- **🎛️ Local Orchestration**: Workflow coordination runs on your machine
+- **🔗 Direct Integration**: Built specifically for Claude Code users
 
 ## 🚀 Quick Start
 
@@ -106,9 +95,9 @@ claude-codex fix --issue 123
 🤖 Claude Codex - Local Background Agents
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-⚡ Running locally on your machine
-🔒 Your code never leaves this device
-💰 Using your Claude Code subscription
+⚡ Local workflow orchestration
+🔗 Using your Claude Code subscription
+💰 No additional API costs
 
 ✨ Initializing isolated workspace...
 🌿 Created worktree: tdd/task-20241201-1734
@@ -126,7 +115,7 @@ claude-codex fix --issue 123
   └─ Creating pull request
 
 ✅ Success! PR created: https://github.com/user/repo/pull/42
-🎉 Workflow completed locally - no API costs incurred
+🎉 Workflow completed - no additional API costs
 ```
 
 ---
@@ -162,83 +151,6 @@ Claude Codex supports multiple background agent workflows:
 
 ---
 
-## 💰 Cost Comparison
-
-**Annual cost comparison for a 10-developer team:**
-
-| Solution | Cost per Developer | Team Cost (10 devs) | Notes |
-|----------|-------------------|---------------------|-------|
-| **Claude Codex** | **$0** | **$0** | Uses existing Claude Code subscription |
-| ChatGPT Codex | $240/year | $2,400/year | Plus Claude Code subscription |
-| Google Jules | TBD | TBD | Currently free beta |
-| Augment Code | $600-3,000/year | $6,000-30,000/year | Plus Claude Code subscription |
-| Cursor | $240-480/year | $2,400-4,800/year | Plus Claude Code subscription |
-| GitHub Copilot | $228/year | $2,280/year | Plus Claude Code subscription |
-
-**💡 Key Insight**: Other solutions require you to pay for **both** their service **and** Claude Code. Claude Codex leverages your existing Claude Code investment with zero additional costs.
-
----
-
-## 📖 Documentation
-
-### Command Reference
-
-#### `claude-codex tdd <spec-file>`
-Launches the Test-Driven Development background agent workflow.
-
-```bash
-# Basic TDD workflow
-claude-codex tdd tasks/payment-system.md
-
-# Custom configuration
-claude-codex tdd tasks/auth-system.md --max-reviews 5 --branch feature/auth
-
-# Debug mode (keep workspace files)
-claude-codex tdd tasks/api-endpoints.md --no-cleanup
-```
-
-#### `claude-codex review <branch>` *(Coming Soon)*
-Launches the code review background agent workflow.
-
-#### `claude-codex implement <spec-file>` *(Coming Soon)*
-Launches the feature implementation background agent workflow.
-
-#### `claude-codex fix --issue <number>` *(Coming Soon)*
-Launches the bug fix background agent workflow.
-
-### Common Options
-
-- `--max-iterations <number>` - Maximum agent iterations (default: 3)
-- `--branch <name>` - Custom branch name (default: auto-generated)
-- `--no-cleanup` - Keep worktree and state files for debugging
-- `--verbose` - Show detailed agent execution logs
-- `--help` - Show command help
-
-### Task Specification Format
-
-Claude Codex agents work best with well-structured task specifications:
-
-```markdown
-# Task Title
-
-## Overview
-Clear description of what needs to be accomplished
-
-## Requirements
-- Specific, actionable requirements
-- Technical constraints and preferences
-- Quality standards and expectations
-
-## Acceptance Criteria
-- [ ] Testable success criteria
-- [ ] Edge cases to handle
-- [ ] Integration requirements
-
-## Context (Optional)
-- Related issues or documentation
-- Existing code patterns to follow
-- Performance considerations
-```
 
 ### Environment Setup
 
@@ -247,49 +159,13 @@ Clear description of what needs to be accomplished
 | `GITHUB_TOKEN` | GitHub personal access token with repo permissions | ✅ Yes |
 | `CLAUDE_CODE_AUTH` | Handled automatically by Claude Code CLI | ✅ Yes |
 
-**💡 Note**: Unlike other background agent systems, Claude Codex doesn't require separate API keys or additional authentication beyond your existing Claude Code setup.
+**💡 Note**: Claude Codex leverages your existing Claude Code subscription without requiring additional API keys or authentication.
 
 ---
 
 ## 🏗️ Architecture
 
-Claude Codex runs entirely on your local machine using a sophisticated multi-agent architecture:
-
-### 🏠 Local-First Design
-
-Unlike cloud-based competitors, Claude Codex operates completely locally:
-
-```mermaid
-graph TB
-    A[💻 Your Machine] --> B[🤖 Local Agent Runtime]
-    B --> C[📁 Your Codebase]
-    B --> D[🔧 Claude Code CLI]
-    D --> E[🧠 Claude AI Models]
-    C --> F[✅ Local Processing]
-    F --> G[📤 GitHub PR]
-
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#e8f5e8
-    style D fill:#fff3e0
-```
-
-### 🤖 Multi-Agent System
-
-#### **Specialized Agents for Different Workflows:**
-
-- **🧪 TDD Agents**: Coder + Reviewer for test-driven development
-- **🔍 Review Agents**: Code quality and security analysis *(coming soon)*
-- **⚙️ Implementation Agents**: Feature development and integration *(coming soon)*
-- **🐛 Debug Agents**: Bug detection and resolution *(coming soon)*
-- **📝 Documentation Agents**: Automated documentation generation *(coming soon)*
-
-#### **Agent Coordination:**
-Each workflow uses specialized agent pairs that collaborate locally:
-1. **Task Analysis**: Understanding requirements and codebase context
-2. **Parallel Processing**: Multiple agents working on different aspects
-3. **Quality Validation**: Automated testing and review cycles
-4. **Integration**: Seamless GitHub integration and PR creation
+Claude Codex orchestrates background agent workflows locally while leveraging your Claude Code subscription:
 
 ### 🏗️ Technical Stack
 
@@ -299,14 +175,6 @@ Each workflow uses specialized agent pairs that collaborate locally:
 - **🔗 Claude Code Integration**: Direct integration with your Claude Code subscription
 - **🐙 GitHub Operations**: PR creation and repository management
 - **🎨 Intelligent Prompting**: Context-aware agent prompt generation
-
-### 🔒 Privacy & Security
-
-**Your Code Never Leaves Your Machine:**
-- All processing happens locally using Claude Code's local inference
-- Only final results (PRs) are sent to GitHub
-- Complete privacy and security control
-- No data mining or training on your code
 
 For detailed technical documentation, see [`docs/claude-codex-tdd-architecture.md`](docs/claude-codex-tdd-architecture.md).
 
@@ -643,39 +511,6 @@ claude-code status
 claude-code usage
 ```
 
-### Enterprise Integration
-
-Unlike cloud-based solutions, Claude Codex can be deployed entirely within your infrastructure:
-
-```yaml
-# .github/workflows/local-agent-automation.yml
-name: Local Agent Automation
-on:
-  push:
-    paths: ['tasks/**/*.md']
-
-jobs:
-  agents:
-    runs-on: self-hosted  # Runs on your infrastructure
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install -g claude-codex
-      - run: claude-codex tdd ${{ github.event.head_commit.modified[0] }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # No API keys needed - uses local Claude Code
-```
-
-**🔒 Enterprise Benefits:**
-- **Complete Data Control**: Code never leaves your infrastructure
-- **Compliance Ready**: Meets strict security requirements
-- **Cost Predictable**: No surprise API bills or usage limits
-- **Offline Capable**: Works without internet connectivity
-
----
 
 ## 🤝 Contributing
 
@@ -769,19 +604,6 @@ We welcome contributions to the first local background agent system for develope
 
 ---
 
-## 🔗 Comparison with Alternatives
-
-| Capability | Claude Codex | ChatGPT Codex | Google Jules | Augment Code | Cursor | GitHub Copilot |
-|------------|--------------|---------------|--------------|--------------|--------|----------------|
-| **Local Execution** | ✅ Yes | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud | ❌ Cloud |
-| **Privacy Protection** | ✅ Complete | ❌ Limited | ❌ Limited | ❌ Limited | ❌ Limited | ❌ Limited |
-| **Cost (10 devs/year)** | **$0** | $2,400 | TBD | $6K-30K | $2.4K-4.8K | $2,280 |
-| **Offline Capability** | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
-| **Background Agents** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| **Multi-Workflow** | ✅ Yes | ✅ Limited | ✅ Limited | ✅ Limited | ✅ Limited | ❌ No |
-| **Enterprise Ready** | ✅ Yes | ✅ Yes | ⚠️ TBD | ✅ Yes | ✅ Yes | ✅ Yes |
-
----
 
 ## 📄 License
 
