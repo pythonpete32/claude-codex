@@ -52,13 +52,14 @@ tests/
 ```
 
 ### **Data Flow Overview**
-1. **CLI** → Parse `tdd` command + spec file path
-2. **TDD Workflow** → Initialize state, create worktree
-3. **TDD Workflow** → Format Coder prompt → runClaudeWithSDK → Extract handoff
-4. **State Manager** → Save coder handoff
-5. **TDD Workflow** → Format Reviewer prompt → runClaudeWithSDK → Extract result
-6. **GitHub Client** → Check for PR creation
-7. **TDD Workflow** → Loop or cleanup based on results
+1. **CLI** → Parse `tdd` command + (spec file path OR GitHub issue number)
+2. **TDD Workflow** → Load specification content (from file or GitHub API)
+3. **TDD Workflow** → Initialize state, create worktree
+4. **TDD Workflow** → Format Coder prompt → runClaudeWithSDK → Extract handoff
+5. **State Manager** → Save coder handoff
+6. **TDD Workflow** → Format Reviewer prompt → runClaudeWithSDK → Extract result
+7. **GitHub Client** → Check for PR creation (with automatic issue linking if applicable)
+8. **TDD Workflow** → Loop or cleanup based on results
 
 ### **Key Design Principles**
 - **Intelligent Agent Coordination**: The orchestration coordinates intelligent agents, trusting them to do their jobs well while ensuring proper handoffs
@@ -86,7 +87,8 @@ Main coordinator that handles the complete TDD task lifecycle from spec file to 
 
 ```typescript
 interface TDDOptions {
-  specPath: string
+  specPath?: string      // Mutually exclusive with issueNumber
+  issueNumber?: number   // Mutually exclusive with specPath
   maxReviews: number
   branchName?: string
   cleanup: boolean
@@ -97,6 +99,7 @@ interface TDDResult {
   prUrl?: string
   iterations: number
   taskId: string
+  issueNumber?: number   // Included when workflow was issue-driven
   error?: string
 }
 
@@ -108,14 +111,18 @@ async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>
 **`executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>`**
 - **Purpose**: Orchestrates the complete TDD workflow from start to finish
 - **Parameters**: 
-  - `options.specPath`: Path to the specification markdown file
+  - `options.specPath`: Path to the specification markdown file (mutually exclusive with issueNumber)
+  - `options.issueNumber`: GitHub issue number to use as specification (mutually exclusive with specPath)
   - `options.maxReviews`: Maximum number of review iterations (default: 3)
   - `options.branchName`: Optional custom branch name (auto-generated if not provided)
   - `options.cleanup`: Whether to cleanup worktree on failure (default: true)
-- **Returns**: TDDResult with success status, PR URL if created, iteration count, and task ID
+- **Returns**: TDDResult with success status, PR URL if created, iteration count, task ID, and optional issue number
 - **Behavior**:
-  1. Generate unique task ID 
-  2. Read and validate spec file exists
+  1. Generate unique task ID
+  2. **Load specification content**:
+     - If `specPath` provided: Read and validate spec file exists
+     - If `issueNumber` provided: Fetch issue content from GitHub API
+     - Validate specification content is non-empty
   3. Create isolated git worktree with new branch
   4. Initialize task state file (`.codex/task-{id}.json`) with worktree info
   5. **Agent Loop** (max iterations):
@@ -135,9 +142,11 @@ async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult>
 
 #### **Error Handling**
 - **SpecFileNotFoundError**: When spec file doesn't exist or isn't readable
+- **IssueNotFoundError**: When GitHub issue doesn't exist or isn't accessible
+- **InvalidInputError**: When neither specPath nor issueNumber is provided, or both are provided
 - **WorktreeCreationError**: When git worktree creation fails
 - **AgentExecutionError**: When `runClaudeWithSDK` fails
-- **GitHubAPIError**: When PR detection fails
+- **GitHubAPIError**: When PR detection or issue fetching fails
 - **StateManagementError**: When task state operations fail
 
 #### **Types/Interfaces Needed**
@@ -154,6 +163,9 @@ Manages `.codex/task-{id}.json` files that coordinate data flow between workflow
 #### **Dependencies**
 - Node.js `fs/promises` for file operations
 - `shared/types.ts` for type definitions
+- `shared/errors.ts` for error classes
+
+**Note**: State manager receives pre-loaded specification content from the workflow orchestrator, which handles both file reading and GitHub issue fetching.
 
 #### **Function Signatures**
 
@@ -161,8 +173,9 @@ Manages `.codex/task-{id}.json` files that coordinate data flow between workflow
 // All interfaces defined in shared/types.ts
 interface TaskState {
   taskId: string
-  specPath: string
-  originalSpec: string
+  specPath?: string          // Optional when using issue
+  issueNumber?: number       // Optional when using spec file
+  originalSpec: string       // Content from file or issue
   currentIteration: number
   maxIterations: number
   branchName: string
@@ -180,7 +193,7 @@ interface WorktreeInfo {
   baseBranch: string
 }
 
-async function initializeTaskState(specPath: string, options: Partial<TaskState>): Promise<TaskState>
+async function initializeTaskState(taskId: string, content: string, options: Partial<TaskState>): Promise<TaskState>
 async function getTaskState(taskId: string): Promise<TaskState>
 async function updateTaskState(taskState: TaskState): Promise<void>
 async function addCoderResponse(taskId: string, response: string): Promise<void>
@@ -190,19 +203,19 @@ async function cleanupTaskState(taskId: string): Promise<void>
 
 #### **Behavioral Description**
 
-**`initializeTaskState(specPath: string, options: Partial<TaskState>): Promise<TaskState>`**
+**`initializeTaskState(taskId: string, content: string, options: Partial<TaskState>): Promise<TaskState>`**
 - **Purpose**: Creates new task state file and returns initialized TaskState
 - **Parameters**: 
-  - `specPath`: Path to the spec file
-  - `options`: Optional overrides for default task state values
-- **Returns**: Complete TaskState object with generated taskId and timestamps
+  - `taskId`: Unique task identifier (generated by workflow orchestrator)
+  - `content`: Specification content (loaded from file or GitHub issue)
+  - `options`: Optional overrides for default task state values (including specPath or issueNumber)
+- **Returns**: Complete TaskState object with timestamps
 - **Behavior**:
-  1. Generate unique task ID (timestamp + random suffix)
-  2. Read and store original spec content
-  3. Create `.codex/` directory if it doesn't exist
-  4. Initialize TaskState with defaults and provided options
-  5. Write state file to `.codex/task-{id}.json`
-  6. Return complete TaskState object
+  1. Store provided specification content as originalSpec
+  2. Create `.codex/` directory if it doesn't exist
+  3. Initialize TaskState with defaults and provided options
+  4. Write state file to `.codex/task-{taskId}.json`
+  5. Return complete TaskState object
 
 **`getTaskState(taskId: string): Promise<TaskState>`**
 - **Purpose**: Retrieves existing task state from file
@@ -243,6 +256,7 @@ async function cleanupTaskState(taskId: string): Promise<void>
 - **StateParseError**: When task state JSON is malformed
 - **FileSystemError**: When file operations fail (permissions, disk space)
 - **ValidationError**: When task state structure is invalid
+- **InvalidInputError**: When both specPath and issueNumber are provided, or neither is provided
 
 #### **Testing Considerations**
 - File operations must be mockable for unit tests
@@ -339,7 +353,7 @@ async function listWorktrees(): Promise<WorktreeInfo[]>
 ### **GitHub Operations** (`core/operations/github.ts`)
 
 #### **Purpose**
-Handles GitHub REST API integration for PR detection and repository operations, enabling workflow success detection.
+Handles GitHub REST API integration for PR detection, issue fetching, and repository operations, enabling workflow success detection and issue-driven development.
 
 #### **Dependencies**
 - Node.js `https` or `fetch` for HTTP requests
@@ -358,6 +372,18 @@ interface PRInfo {
   baseBranch: string
 }
 
+interface IssueInfo {
+  number: number
+  title: string
+  body: string
+  labels: string[]
+  assignees: string[]
+  state: 'open' | 'closed'
+  url: string
+  createdAt: string
+  updatedAt: string
+}
+
 interface GitHubConfig {
   token: string
   owner: string
@@ -367,6 +393,7 @@ interface GitHubConfig {
 async function getGitHubConfig(): Promise<GitHubConfig>
 async function checkPRExists(branchName: string): Promise<PRInfo | null>
 async function listPRsForBranch(branchName: string): Promise<PRInfo[]>
+async function fetchIssue(issueNumber: number): Promise<IssueInfo>
 ```
 
 #### **Behavioral Description**
@@ -397,10 +424,21 @@ async function listPRsForBranch(branchName: string): Promise<PRInfo[]>
 - **Returns**: Array of all PRInfo for the branch
 - **Behavior**: Call GitHub API with `state=all` parameter and return all matches
 
+**`fetchIssue(issueNumber: number): Promise<IssueInfo>`**
+- **Purpose**: Fetches complete issue information from GitHub API
+- **Parameters**: `issueNumber` - The GitHub issue number to fetch
+- **Returns**: Complete IssueInfo with title, body, labels, and metadata
+- **Behavior**:
+  1. Get GitHub config (token, owner, repo)
+  2. Call GitHub API: `GET /repos/{owner}/{repo}/issues/{issueNumber}`
+  3. Transform API response to IssueInfo interface
+  4. Return structured issue data for use as specification content
+
 #### **Error Handling**
 - **GitHubAuthError**: When `GITHUB_TOKEN` is missing or invalid
 - **GitHubAPIError**: When API requests fail (rate limits, network issues)
 - **RepositoryNotFoundError**: When git remote origin is not a GitHub repository
+- **IssueNotFoundError**: When GitHub issue doesn't exist or isn't accessible
 - **ConfigurationError**: When unable to parse repository info from git remote
 
 #### **Testing Considerations**
@@ -420,7 +458,7 @@ async function listPRsForBranch(branchName: string): Promise<PRInfo[]>
 ### **Prompt Utilities** (`core/operations/prompts.ts`)
 
 #### **Purpose**
-Provides prompt templating utilities for formatting Coder and Reviewer agent prompts with proper context and structure.
+Provides prompt templating utilities for formatting Coder and Reviewer agent prompts with proper context and structure, supporting both spec file and GitHub issue content.
 
 #### **Dependencies**
 - `shared/types.ts` for interface definitions
@@ -433,11 +471,13 @@ Provides prompt templating utilities for formatting Coder and Reviewer agent pro
 interface CoderPromptOptions {
   specContent: string
   reviewerFeedback?: string
+  issueNumber?: number    // Optional - included when workflow is issue-driven
 }
 
 interface ReviewerPromptOptions {
   originalSpec: string
   coderHandoff: string
+  issueNumber?: number    // Optional - included when workflow is issue-driven
 }
 
 async function formatCoderPrompt(options: CoderPromptOptions): Promise<string>
@@ -468,27 +508,31 @@ async function runClaudeWithSDK(options: ClaudeMaxOptions): Promise<SDKResult>
 **`formatCoderPrompt(options: CoderPromptOptions): Promise<string>`**
 - **Purpose**: Formats the prompt for the Coder Agent with spec and optional feedback
 - **Parameters**: 
-  - `options.specContent`: The specification file content
+  - `options.specContent`: The specification content (from file or GitHub issue)
   - `options.reviewerFeedback`: Optional feedback from previous review iteration (if present, this is a revision run)
+  - `options.issueNumber`: Optional issue number for GitHub issue linking context
 - **Returns**: Formatted prompt string ready for `runClaudeWithSDK`
 - **Behavior**:
   1. Choose prompt template: initial run if no feedback, revision run if feedback provided
   2. Inject spec content into template
   3. Include reviewer feedback if provided
-  4. Add structured handoff template requirement
-  5. Return complete prompt string
+  4. Add issue context if issueNumber provided (for PR linking instructions)
+  5. Add structured handoff template requirement
+  6. Return complete prompt string
 
 **`formatReviewerPrompt(options: ReviewerPromptOptions): Promise<string>`**
 - **Purpose**: Formats the prompt for the Reviewer Agent with full context
 - **Parameters**: 
-  - `options.originalSpec`: The original specification content
+  - `options.originalSpec`: The original specification content (from file or GitHub issue)
   - `options.coderHandoff`: The final message content from Coder Agent
+  - `options.issueNumber`: Optional issue number for automatic PR linking
 - **Returns**: Formatted prompt string ready for `runClaudeWithSDK`
 - **Behavior**:
   1. Use reviewer prompt template from PRD
   2. Inject original specification and coder handoff
-  3. Add clear outcome instructions (PR creation vs feedback)
-  4. Return complete prompt string
+  3. Add issue linking instructions if issueNumber provided (e.g., "Fixes #123" in PR description)
+  4. Add clear outcome instructions (PR creation vs feedback)
+  5. Return complete prompt string
 
 **`extractFinalMessage(messages: SDKMessage[]): Promise<string>`**
 - **Purpose**: Extracts the final assistant message content from Claude SDK response
@@ -502,7 +546,7 @@ async function runClaudeWithSDK(options: ClaudeMaxOptions): Promise<SDKResult>
 #### **Error Handling**
 - **PromptFormattingError**: When template rendering fails
 - **MessageExtractionError**: When no assistant message found in SDK response
-- **SpecFileError**: When spec file cannot be read or is empty
+- **ValidationError**: When specification content is empty or invalid
 
 #### **Testing Considerations**
 - Template rendering should be tested with various input combinations
@@ -523,8 +567,9 @@ async function runClaudeWithSDK(options: ClaudeMaxOptions): Promise<SDKResult>
 // Core workflow types
 export interface TaskState {
   taskId: string
-  specPath: string
-  originalSpec: string
+  specPath?: string          // Optional when using issue
+  issueNumber?: number       // Optional when using spec file
+  originalSpec: string       // Content from file or issue
   currentIteration: number
   maxIterations: number
   branchName: string
@@ -551,6 +596,18 @@ export interface PRInfo {
   baseBranch: string
 }
 
+export interface IssueInfo {
+  number: number
+  title: string
+  body: string
+  labels: string[]
+  assignees: string[]
+  state: 'open' | 'closed'
+  url: string
+  createdAt: string
+  updatedAt: string
+}
+
 // Claude SDK types
 export interface SDKMessage {
   role: 'user' | 'assistant' | 'system'
@@ -564,7 +621,8 @@ export interface SDKResult {
 
 // Configuration types
 export interface TDDOptions {
-  specPath: string
+  specPath?: string      // Mutually exclusive with issueNumber
+  issueNumber?: number   // Mutually exclusive with specPath
   maxReviews: number
   branchName?: string
   cleanup: boolean
@@ -575,6 +633,7 @@ export interface TDDResult {
   prUrl?: string
   iterations: number
   taskId: string
+  issueNumber?: number   // Included when workflow was issue-driven
   error?: string
 }
 
@@ -588,11 +647,13 @@ export interface GitHubConfig {
 export interface CoderPromptOptions {
   specContent: string
   reviewerFeedback?: string
+  issueNumber?: number    // Optional - included when workflow is issue-driven
 }
 
 export interface ReviewerPromptOptions {
   originalSpec: string
   coderHandoff: string
+  issueNumber?: number    // Optional - included when workflow is issue-driven
 }
 ```
 
@@ -601,6 +662,8 @@ export interface ReviewerPromptOptions {
 ```typescript
 // Standardized error classes with consistent naming
 export class SpecFileNotFoundError extends Error {}
+export class IssueNotFoundError extends Error {}
+export class InvalidInputError extends Error {}
 export class WorktreeCreationError extends Error {}
 export class AgentExecutionError extends Error {}
 export class GitHubAPIError extends Error {}
