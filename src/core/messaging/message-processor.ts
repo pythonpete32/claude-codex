@@ -6,13 +6,16 @@ import type {
   SDKUserMessage,
 } from '@anthropic-ai/claude-code';
 
+import { type ComponentDisplayOptions, formatMessage } from './ui/formatters/MessageFormatter.js';
+
 /**
- * Display options for real-time message processing
+ * Enhanced display options supporting both legacy and component-based rendering
  */
-export interface DisplayOptions {
+export interface DisplayOptions extends ComponentDisplayOptions {
   showToolCalls?: boolean;
   showTimestamps?: boolean;
   verbose?: boolean;
+  // New component options inherited from ComponentDisplayOptions
 }
 
 /**
@@ -52,19 +55,30 @@ export async function processMessagesWithDisplay(
 }
 
 /**
- * Format different message types for console display
+ * Enhanced message formatter supporting both legacy and component-based display
  *
  * Handles:
  * - Assistant messages (text content and tool calls)
  * - User messages (tool results)
  * - System messages (initialization info)
  * - Result messages (execution summary)
+ *
+ * Uses new component-based UI by default, with fallback to legacy formatting
  */
 export function formatMessageForDisplay(
   message: SDKMessage,
   index: number,
   options: DisplayOptions = {}
 ): string | null {
+  // Use component-based formatting by default
+  if (options.useComponents !== false) {
+    const componentFormatted = formatMessage(message, options);
+    if (componentFormatted) {
+      return componentFormatted;
+    }
+  }
+
+  // Fallback to legacy formatting
   const timestamp = options.showTimestamps ? `[${new Date().toISOString()}] ` : '';
   const prefix = `${timestamp}${index + 1}. `;
 

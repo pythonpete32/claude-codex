@@ -167,15 +167,41 @@ describe('Environment Validation', () => {
 
     describe('GitHub token validation', () => {
       it('should fail when GITHUB_TOKEN is not set', async () => {
-        delete process.env.GITHUB_TOKEN;
+        // Create temporary directory to avoid project .env files affecting test
+        const { mkdtemp, writeFile, rm } = await import('node:fs/promises');
+        const { join } = await import('node:path');
+        const { tmpdir } = await import('node:os');
+        const { exec } = await import('node:child_process');
+        const { promisify } = await import('node:util');
+        const execAsync = promisify(exec);
 
-        const result = await validateEnvironment();
+        const tempDir = await mkdtemp(join(tmpdir(), 'preflight-test-'));
+        const originalCwd = process.cwd();
 
-        expect(result.success).toBe(false);
-        expect(result.errors).toContain(
-          'GITHUB_TOKEN environment variable not set. ' +
-            'Create a personal access token at https://github.com/settings/tokens and export it as GITHUB_TOKEN.'
-        );
+        try {
+          process.chdir(tempDir);
+
+          // Set up minimal git repo
+          await execAsync('git init');
+          await execAsync('git config user.email "test@example.com"');
+          await execAsync('git config user.name "Test User"');
+          await writeFile('README.md', '# Test');
+          await execAsync('git add README.md');
+          await execAsync('git commit -m "Initial commit"');
+
+          delete process.env.GITHUB_TOKEN;
+
+          const result = await validateEnvironment();
+
+          expect(result.success).toBe(false);
+          expect(result.errors).toContain(
+            'GITHUB_TOKEN environment variable not set. ' +
+              'Create a personal access token at https://github.com/settings/tokens and export it as GITHUB_TOKEN.'
+          );
+        } finally {
+          process.chdir(originalCwd);
+          await rm(tempDir, { recursive: true, force: true });
+        }
       });
 
       it('should fail when GITHUB_TOKEN is too short', async () => {
@@ -319,11 +345,37 @@ describe('Environment Validation', () => {
     });
 
     it('should return false when GITHUB_TOKEN is missing', async () => {
-      delete process.env.GITHUB_TOKEN;
+      // Create temporary directory to avoid project .env files affecting test
+      const { mkdtemp, writeFile, rm } = await import('node:fs/promises');
+      const { join } = await import('node:path');
+      const { tmpdir } = await import('node:os');
+      const { exec } = await import('node:child_process');
+      const { promisify } = await import('node:util');
+      const execAsync = promisify(exec);
 
-      const result = await quickValidation();
+      const tempDir = await mkdtemp(join(tmpdir(), 'quick-validation-test-'));
+      const originalCwd = process.cwd();
 
-      expect(result).toBe(false);
+      try {
+        process.chdir(tempDir);
+
+        // Set up minimal git repo
+        await execAsync('git init');
+        await execAsync('git config user.email "test@example.com"');
+        await execAsync('git config user.name "Test User"');
+        await writeFile('README.md', '# Test');
+        await execAsync('git add README.md');
+        await execAsync('git commit -m "Initial commit"');
+
+        delete process.env.GITHUB_TOKEN;
+
+        const result = await quickValidation();
+
+        expect(result).toBe(false);
+      } finally {
+        process.chdir(originalCwd);
+        await rm(tempDir, { recursive: true, force: true });
+      }
     });
 
     it('should return false for Node.js version < 18', async () => {
