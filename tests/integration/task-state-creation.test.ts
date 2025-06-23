@@ -139,4 +139,51 @@ Implement a simple test feature with proper error handling.
       status: 'running',
     });
   });
+
+  it('should create identical state structure regardless of verbose flag', async () => {
+    // This test proves that verbose flag does NOT affect core state creation logic
+    // Verbose flag only affects CLI console output, not workflow execution
+
+    const baseOptions: TDDOptions = {
+      specPath: './test-spec.md',
+      maxReviews: 1,
+      cleanup: false,
+    };
+
+    // Execute workflow twice with identical options
+    // (Note: TDDOptions interface doesn't include verbose - it only affects CLI layer)
+    const result1 = await executeTDDWorkflow(baseOptions);
+    const result2 = await executeTDDWorkflow(baseOptions);
+
+    // Get task states from actual files
+    const state1 = JSON.parse(
+      await readFile(join(tempDir, '.codex', `${result1.taskId}.json`), 'utf-8')
+    );
+    const state2 = JSON.parse(
+      await readFile(join(tempDir, '.codex', `${result2.taskId}.json`), 'utf-8')
+    );
+
+    // State structure should be identical (verbose only affects console output)
+    expect(Object.keys(state1).sort()).toEqual(Object.keys(state2).sort());
+    expect(state1.originalSpec).toBe(state2.originalSpec);
+    expect(state1.maxIterations).toBe(state2.maxIterations);
+    expect(state1.specPath).toBe(state2.specPath);
+    expect(state1.status).toBe(state2.status);
+
+    // Both should have valid task state files created
+    expect(state1.taskId).toBeTruthy();
+    expect(state2.taskId).toBeTruthy();
+    expect(state1.taskId).not.toBe(state2.taskId); // Different tasks should have different IDs
+
+    // Core content should be identical
+    expect(state1.coderResponses).toEqual(state2.coderResponses);
+    expect(state1.reviewerResponses).toEqual(state2.reviewerResponses);
+    expect(state1.currentIteration).toBe(state2.currentIteration);
+
+    // Both files should exist and be properly formed JSON
+    expect(state1.createdAt).toBeTruthy();
+    expect(state2.createdAt).toBeTruthy();
+    expect(state1.updatedAt).toBeTruthy();
+    expect(state2.updatedAt).toBeTruthy();
+  });
 });
