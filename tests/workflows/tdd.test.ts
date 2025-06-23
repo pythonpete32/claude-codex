@@ -32,6 +32,7 @@ vi.mock('../../src/core/operations/state.js', () => ({
   addReviewerResponse: vi.fn(),
   cleanupTaskState: vi.fn(),
   initializeTaskState: vi.fn(),
+  updateWorktreeInfo: vi.fn(),
 }));
 
 vi.mock('../../src/core/operations/worktree.js', () => ({

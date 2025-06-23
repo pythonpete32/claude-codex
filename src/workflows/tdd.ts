@@ -23,7 +23,6 @@ function generateTaskId(): string {
   return `task-${timestamp}-${random}`;
 }
 
-
 /**
  * Main TDD workflow orchestrator that coordinates agent execution
  * from specification to pull request creation

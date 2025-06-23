@@ -1,7 +1,7 @@
-import { exec } from "node:child_process";
-import { promises as fs } from "node:fs";
-import { promisify } from "node:util";
-import { isGitRepository } from "../core/operations/worktree.js";
+import { exec } from 'node:child_process';
+import { promises as fs } from 'node:fs';
+import { promisify } from 'node:util';
+import { isGitRepository } from '../core/operations/worktree.js';
 
 const execAsync = promisify(exec);
 
@@ -20,13 +20,11 @@ export async function validateEnvironment(): Promise<PreflightResult> {
 
   // 1. Git repository validation
   if (!(await isGitRepository())) {
-    errors.push(
-      'Current directory is not a git repository. Run "git init" to initialize one.'
-    );
+    errors.push('Current directory is not a git repository. Run "git init" to initialize one.');
   } else {
     // Check if we have a remote origin configured
     try {
-      await execAsync("git remote get-url origin");
+      await execAsync('git remote get-url origin');
     } catch {
       warnings.push(
         'No remote "origin" configured. You may need to set up GitHub integration manually.'
@@ -35,18 +33,14 @@ export async function validateEnvironment(): Promise<PreflightResult> {
 
     // Check for uncommitted changes that might conflict
     try {
-      const { stdout: statusOutput } = await execAsync(
-        "git status --porcelain"
-      );
+      const { stdout: statusOutput } = await execAsync('git status --porcelain');
       if (statusOutput.trim()) {
         warnings.push(
-          "Working directory has uncommitted changes. Consider committing or stashing them first."
+          'Working directory has uncommitted changes. Consider committing or stashing them first.'
         );
       }
     } catch {
-      warnings.push(
-        "Unable to check git status. Repository may be in an inconsistent state."
-      );
+      warnings.push('Unable to check git status. Repository may be in an inconsistent state.');
     }
   }
 
@@ -54,30 +48,28 @@ export async function validateEnvironment(): Promise<PreflightResult> {
   const githubToken = process.env.GITHUB_TOKEN;
   if (!githubToken) {
     errors.push(
-      "GITHUB_TOKEN environment variable not set. " +
-        "Create a personal access token at https://github.com/settings/tokens and export it as GITHUB_TOKEN."
+      'GITHUB_TOKEN environment variable not set. ' +
+        'Create a personal access token at https://github.com/settings/tokens and export it as GITHUB_TOKEN.'
     );
   } else if (githubToken.length < 10) {
-    errors.push(
-      "GITHUB_TOKEN appears to be invalid (too short). Please check your token value."
-    );
+    errors.push('GITHUB_TOKEN appears to be invalid (too short). Please check your token value.');
   }
 
   // 3. Claude Code authentication check
   try {
     // Check if Claude Code is available by running a simple command
-    await execAsync("claude --version", { timeout: 5000 });
+    await execAsync('claude --version', { timeout: 5000 });
   } catch {
     warnings.push(
-      "Claude Code CLI not found or not working. " +
-        "Install it with: npm install -g @anthropic-ai/claude-code"
+      'Claude Code CLI not found or not working. ' +
+        'Install it with: npm install -g @anthropic-ai/claude-code'
     );
   }
 
   // 4. Directory permissions validation
   try {
     // Check if we can create the .codex directory
-    const codexDir = ".codex";
+    const codexDir = '.codex';
     try {
       await fs.access(codexDir);
     } catch {
@@ -88,7 +80,7 @@ export async function validateEnvironment(): Promise<PreflightResult> {
         await fs.rmdir(codexDir);
       } catch {
         errors.push(
-          "Cannot create .codex directory. Check write permissions in current directory."
+          'Cannot create .codex directory. Check write permissions in current directory.'
         );
       }
     }
@@ -96,31 +88,29 @@ export async function validateEnvironment(): Promise<PreflightResult> {
     // Check write permissions in current directory
     try {
       const testFile = `.codex-test-${Date.now()}`;
-      await fs.writeFile(testFile, "test");
+      await fs.writeFile(testFile, 'test');
       await fs.unlink(testFile);
     } catch {
-      errors.push("No write permissions in current directory.");
+      errors.push('No write permissions in current directory.');
     }
   } catch {
-    errors.push("Unable to validate directory permissions.");
+    errors.push('Unable to validate directory permissions.');
   }
 
   // 5. Node.js version check
   const nodeVersion = process.version;
-  const majorVersion = Number.parseInt(nodeVersion.slice(1).split(".")[0], 10);
+  const majorVersion = Number.parseInt(nodeVersion.slice(1).split('.')[0], 10);
   if (majorVersion < 18) {
-    errors.push(
-      `Node.js ${nodeVersion} is not supported. Please upgrade to Node.js 18 or later.`
-    );
+    errors.push(`Node.js ${nodeVersion} is not supported. Please upgrade to Node.js 18 or later.`);
   }
 
   // 6. Check for required git configuration
   try {
-    await execAsync("git config user.name");
-    await execAsync("git config user.email");
+    await execAsync('git config user.name');
+    await execAsync('git config user.email');
   } catch {
     warnings.push(
-      "Git user.name or user.email not configured. " +
+      'Git user.name or user.email not configured. ' +
         'Set them with: git config --global user.name "Your Name" && git config --global user.email "your@email.com"'
     );
   }
@@ -141,7 +131,7 @@ export async function quickValidation(): Promise<boolean> {
     return (
       (await isGitRepository()) &&
       !!process.env.GITHUB_TOKEN &&
-      process.version.startsWith("v1") &&
+      process.version.startsWith('v1') &&
       Number.parseInt(process.version.slice(1), 10) >= 18
     );
   } catch {
