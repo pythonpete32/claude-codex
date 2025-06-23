@@ -1,16 +1,16 @@
-import { colors } from '../src/core/messaging.js';
-import { getAdaptiveWidth } from '../src/core/messaging/ui/layout/TerminalLayout.js';
 import {
   displayAssistantMessage,
-  displayToolCallCard,
-  displayToolResultSummary,
   displaySessionSummary,
   displayTodoTable,
+  displayToolCallCard,
+  displayToolResultSummary,
 } from '../src/core/messaging/ui/index.js';
+import { getAdaptiveWidth } from '../src/core/messaging/ui/layout/TerminalLayout.js';
+import { colors } from '../src/core/messaging.js';
 
 /**
  * Simple demo script to test component-based UI rendering
- * 
+ *
  * Creates sample data to showcase all component types
  * and verify visual appearance across different terminal widths.
  */
@@ -48,7 +48,8 @@ export async function runComponentDemo(): Promise<void> {
     {
       type: 'tool_result',
       tool_use_id: 'toolu_ls1',
-      content: '- /app/src/\n  - components/\n    - TodoList.tsx\n    - TodoItem.tsx\n  - utils/\n    - helpers.ts\n  - App.tsx\n  - index.ts',
+      content:
+        '- /app/src/\n  - components/\n    - TodoList.tsx\n    - TodoItem.tsx\n  - utils/\n    - helpers.ts\n  - App.tsx\n  - index.ts',
     },
     'LS'
   );
@@ -113,26 +114,36 @@ export async function testComponentTypes(): Promise<void> {
   const testComponents = [
     {
       name: 'Assistant Message Component',
-      test: () => displayAssistantMessage('This is a test message to verify the assistant message component works correctly with proper word wrapping and formatting.'),
+      test: () =>
+        displayAssistantMessage(
+          'This is a test message to verify the assistant message component works correctly with proper word wrapping and formatting.'
+        ),
     },
     {
       name: 'Tool Call Card Component',
-      test: () => displayToolCallCard({
-        type: 'tool_use',
-        id: 'test_tool',
-        name: 'Read',
-        input: {
-          file_path: '/very/long/path/to/some/file/that/needs/truncation.ts',
-          limit: 100,
-        },
-      }),
+      test: () =>
+        displayToolCallCard({
+          type: 'tool_use',
+          id: 'test_tool',
+          name: 'Read',
+          input: {
+            file_path: '/very/long/path/to/some/file/that/needs/truncation.ts',
+            limit: 100,
+          },
+        }),
     },
     {
       name: 'Todo Table Component',
-      test: () => displayTodoTable([
-        { id: '1', content: 'Test todo item', status: 'pending', priority: 'high' },
-        { id: '2', content: 'Another test item with longer content', status: 'completed', priority: 'medium' },
-      ]),
+      test: () =>
+        displayTodoTable([
+          { id: '1', content: 'Test todo item', status: 'pending', priority: 'high' },
+          {
+            id: '2',
+            content: 'Another test item with longer content',
+            status: 'completed',
+            priority: 'medium',
+          },
+        ]),
     },
   ];
 

@@ -38,7 +38,7 @@ export function displayToolResultSummary(result: ToolResultBlock, toolName?: str
   if (content.length > maxContentLength) {
     const lines = content.split('\n');
     if (lines.length > 10) {
-      content = lines.slice(0, 8).join('\n') + `\n... and ${lines.length - 8} more lines`;
+      content = `${lines.slice(0, 8).join('\n')}\n... and ${lines.length - 8} more lines`;
     } else {
       content = smartTruncate(content, maxContentLength);
     }

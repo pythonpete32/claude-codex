@@ -10,7 +10,7 @@ export type BoxColor = 'blue' | 'green' | 'yellow' | 'red' | 'cyan' | 'magenta';
  */
 export function smartTruncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength - 3) + '...';
+  return `${text.substring(0, maxLength - 3)}...`;
 }
 
 /**
@@ -50,8 +50,8 @@ export function createPerfectBox(
       let currentLine = '';
 
       for (const word of words) {
-        if ((currentLine + ' ' + word).trim().length <= contentWidth) {
-          currentLine = currentLine ? currentLine + ' ' + word : word;
+        if (`${currentLine} ${word}`.trim().length <= contentWidth) {
+          currentLine = currentLine ? `${currentLine} ${word}` : word;
         } else {
           if (currentLine) {
             wrappedLines.push(`│ ${currentLine.padEnd(contentWidth)} │`);

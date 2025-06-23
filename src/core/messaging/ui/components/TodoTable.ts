@@ -1,4 +1,16 @@
 import { colors } from '../../../messaging.js';
+import { getAdaptiveWidth } from '../layout/TerminalLayout.js';
+import { smartTruncate } from './BoxComponent.js';
+
+/**
+ * Remove ANSI color codes from string for accurate length calculation
+ */
+function stripAnsiCodes(text: string): string {
+  // Use String.fromCharCode to avoid control character warning
+  const esc = String.fromCharCode(27); // ESC character
+  const ansiRegex = new RegExp(`${esc}\\[[0-9;]*m`, 'g');
+  return text.replace(ansiRegex, '');
+}
 
 /**
  * Todo item interface for table display
@@ -8,38 +20,6 @@ interface TodoItem {
   content: string;
   status: 'pending' | 'in_progress' | 'completed';
   priority: 'low' | 'medium' | 'high';
-}
-
-/**
- * Get clean status icon without colors for width calculation
- */
-function getStatusIconClean(status: string): string {
-  switch (status) {
-    case 'completed':
-      return '✅';
-    case 'in_progress':
-      return '🔄';
-    case 'pending':
-      return '⏳';
-    default:
-      return '❓';
-  }
-}
-
-/**
- * Get clean priority icon without colors for width calculation
- */
-function getPriorityIconClean(priority: string): string {
-  switch (priority) {
-    case 'high':
-      return '🔴';
-    case 'medium':
-      return '🟡';
-    case 'low':
-      return '🟢';
-    default:
-      return '⚪';
-  }
 }
 
 /**
@@ -82,28 +62,33 @@ function getPriorityIcon(priority: string): string {
  * to ensure all todo information is visible.
  */
 export function displayTodoTable(todos: TodoItem[]): string {
+  const width = getAdaptiveWidth();
+
   if (!todos || todos.length === 0) {
-    const boxContent = [
-      '┌─ 📋 Todo List ─────────────────────────────────────────┐',
-      '│ No todos found                                         │',
-      '└───────────────────────────────────────────────────────┘',
-    ].join('\n');
-    return colors.yellow(colors.bold(boxContent));
+    const title = '📋 Todo List';
+    const content = 'No todos found';
+    const contentWidth = width - 4; // Account for borders and padding
+
+    const topBorder = `┌${'─'.repeat(width - 2)}┐`;
+    const titleLine = `│ ${title.padEnd(contentWidth)} │`;
+    const separator = `├${'─'.repeat(width - 2)}┤`;
+    const contentLine = `│ ${content.padEnd(contentWidth)} │`;
+    const bottomBorder = `└${'─'.repeat(width - 2)}┘`;
+
+    const box = [topBorder, titleLine, separator, contentLine, bottomBorder].join('\n');
+    return colors.yellow(colors.bold(box));
   }
 
-  // Calculate exact visual widths (emojis count as 1 char visually)
-  const idWidth = Math.max(2, ...todos.map((t) => t.id.toString().length));
-  const taskWidth = Math.max(4, ...todos.map((t) => t.content.length));
-
-  // For status and priority, calculate based on actual display text without color codes
-  const statusTexts = todos.map((t) => `${getStatusIconClean(t.status)} ${t.status}`);
-  const priorityTexts = todos.map((t) => `${getPriorityIconClean(t.priority)} ${t.priority}`);
-  const statusWidth = Math.max(6, ...statusTexts.map((s) => s.length));
-  const priorityWidth = Math.max(8, ...priorityTexts.map((p) => p.length));
+  // Use fixed column widths that fit within the dynamic width constraint
+  // Calculate based on content and available space
+  const idWidth = 3; // ID column: 3 chars
+  const statusWidth = 14; // Status column: 14 chars (icon + text)
+  const priorityWidth = 10; // Priority column: 10 chars (icon + text)
+  const taskWidth = width - 4 - (idWidth + 2) - (statusWidth + 2) - (priorityWidth + 2) - 3; // Remaining space for task
 
   // Helper function to create perfectly aligned borders
   const makeBorder = (left: string, cross: string, right: string, line: string) => {
-    const idPart = line.repeat(idWidth + 2); // +2 for spaces around content
+    const idPart = line.repeat(idWidth + 2);
     const taskPart = line.repeat(taskWidth + 2);
     const statusPart = line.repeat(statusWidth + 2);
     const priorityPart = line.repeat(priorityWidth + 2);
@@ -113,10 +98,27 @@ export function displayTodoTable(todos: TodoItem[]): string {
 
   // Helper function to create perfectly aligned content rows
   const makeRow = (id: string, task: string, status: string, priority: string) => {
+    const truncatedTask = smartTruncate(task, taskWidth);
     const idCell = ` ${id.padEnd(idWidth)} `;
-    const taskCell = ` ${task.padEnd(taskWidth)} `;
-    const statusCell = ` ${status.padEnd(statusWidth)} `;
-    const priorityCell = ` ${priority.padEnd(priorityWidth)} `;
+    const taskCell = ` ${truncatedTask.padEnd(taskWidth)} `;
+
+    // For status and priority, calculate visual length (emojis count as 1 char visually)
+    // Remove ANSI color codes for length calculation
+    const statusPlain = stripAnsiCodes(status);
+    const priorityPlain = stripAnsiCodes(priority);
+
+    // Calculate how many spaces we need to pad to the full column width
+    const statusVisualLength = statusPlain.length;
+    const priorityVisualLength = priorityPlain.length;
+
+    const statusPadding = Math.max(0, statusWidth - statusVisualLength);
+    const priorityPadding = Math.max(0, priorityWidth - priorityVisualLength);
+
+    // Build cells with content + padding spaces
+    // Add one extra space to account for cell padding
+    const statusCell = ` ${status}${' '.repeat(statusPadding)} `;
+    // For priority, right-align the content within the column
+    const priorityCell = ` ${' '.repeat(priorityPadding)}${priority} `;
 
     return `│${idCell}│${taskCell}│${statusCell}│${priorityCell}│`;
   };
