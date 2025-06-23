@@ -102,3 +102,19 @@ export interface CreateWorktreeOptions {
   branchName?: string;
   baseBranch?: string;
 }
+
+// Environment validation result
+export interface PreflightResult {
+  success: boolean;
+  errors: string[];
+  warnings: string[];
+}
+
+// CLI argument types
+export interface TDDCommandArgs {
+  specPath: string;
+  reviews?: number;
+  branch?: string;
+  cleanup?: boolean;
+  verbose?: boolean;
+}
