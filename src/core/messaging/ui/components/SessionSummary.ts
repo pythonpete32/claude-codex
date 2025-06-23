@@ -56,7 +56,8 @@ export function displaySessionSummary(message: SDKSystemMessage | SDKResultMessa
 
   const details = [];
   if (!isError && message.subtype === 'success') {
-    details.push(`Result: ${smartTruncate((message as any).result || 'Success', width - 12)}`);
+    const resultMsg = message as typeof message & { result?: string };
+    details.push(`Result: ${smartTruncate(resultMsg.result || 'Success', width - 12)}`);
   }
   details.push(`⏱️  ${(message.duration_ms / 1000).toFixed(2)}s`);
   details.push(`🔄 ${message.num_turns} turns`);

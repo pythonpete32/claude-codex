@@ -1,3 +1,4 @@
+import type { SDKMessage } from '@anthropic-ai/claude-code';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   type DisplayOptions,
@@ -5,7 +6,6 @@ import {
   processMessagesWithDisplay,
 } from '../../../src/core/messaging/message-processor.js';
 import { SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
-import type { SDKMessage } from '@anthropic-ai/claude-code';
 
 // Mock console.log to capture output
 const mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});

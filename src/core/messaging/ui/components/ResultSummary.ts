@@ -8,7 +8,7 @@ import { createPerfectBox, smartTruncate } from './BoxComponent.js';
 interface ToolResultBlock {
   type: 'tool_result';
   tool_use_id: string;
-  content: string | Record<string, any>[];
+  content: string | Record<string, unknown>[];
   is_error?: boolean;
 }
 
