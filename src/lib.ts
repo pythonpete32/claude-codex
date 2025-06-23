@@ -46,7 +46,6 @@ export {
 } from './core/operations/github.js';
 
 export {
-  extractFinalMessage,
   formatCoderPrompt,
   formatReviewerPrompt,
 } from './core/operations/prompts.js';

@@ -2,16 +2,13 @@ import { promises as fs } from 'node:fs';
 import { resolve } from 'node:path';
 import { runAgent } from '../core/claude.js';
 import { checkPRExists } from '../core/operations/github.js';
-import {
-  extractFinalMessage,
-  formatCoderPrompt,
-  formatReviewerPrompt,
-} from '../core/operations/prompts.js';
+import { formatCoderPrompt, formatReviewerPrompt } from '../core/operations/prompts.js';
 import {
   addCoderResponse,
   addReviewerResponse,
   cleanupTaskState,
   initializeTaskState,
+  updateWorktreeInfo,
 } from '../core/operations/state.js';
 import { cleanupWorktree, createWorktree } from '../core/operations/worktree.js';
 import { AgentExecutionError, SpecFileNotFoundError, ValidationError } from '../shared/errors.js';
@@ -59,6 +56,9 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
       branchName: options.branchName,
     });
 
+    // Save worktree information to task state
+    await updateWorktreeInfo(taskId, worktreeInfo);
+
     // 3. Agent iteration loop (max iterations)
     for (let iteration = 1; iteration <= options.maxReviews; iteration++) {
       console.log(`🔄 Starting iteration ${iteration}/${options.maxReviews}`);
@@ -78,7 +78,7 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         coderResult = await runAgent({
           prompt: coderPrompt,
           cwd: worktreeInfo.path,
-          maxTurns: 5,
+          maxTurns: 10,
         });
       } catch (error) {
         throw new AgentExecutionError(
@@ -92,7 +92,67 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
       }
 
       // Extract and save coder response
-      const coderHandoff = await extractFinalMessage(coderResult.messages);
+      console.log('💾 Saving complete message structure to debug files...');
+
+      // Save the entire result structure to disk for analysis
+      const debugDir = '.codex/debug';
+      await fs.mkdir(debugDir, { recursive: true });
+
+      const debugFile = `${debugDir}/${taskId}-coder-messages.json`;
+      await fs.writeFile(
+        debugFile,
+        JSON.stringify(
+          {
+            taskId,
+            timestamp: new Date().toISOString(),
+            finalResponse: coderResult.finalResponse,
+            success: coderResult.success,
+            cost: coderResult.cost,
+            duration: coderResult.duration,
+            messagesCount: coderResult.messages.length,
+            messages: coderResult.messages,
+          },
+          null,
+          2
+        )
+      );
+
+      console.log(`📁 Complete message structure saved to: ${debugFile}`);
+      console.log(`🔍 You can examine the raw data with: cat "${debugFile}"`);
+
+      // Use simple, robust extraction: finalResponse first, then fallback to result message, then last assistant text
+      const resultMessage = coderResult.messages.find((m) => m.type === 'result') as any;
+
+      let coderHandoff = coderResult.finalResponse || resultMessage?.result || '';
+
+      // If no finalResponse or result, extract the last meaningful assistant text
+      if (!coderHandoff.trim()) {
+        const assistantMessages = coderResult.messages.filter((m) => m.type === 'assistant');
+        for (let i = assistantMessages.length - 1; i >= 0; i--) {
+          const assistantMsg = assistantMessages[i] as any;
+          const content = assistantMsg.message?.content;
+
+          if (Array.isArray(content)) {
+            const textBlocks = content
+              .filter((block) => block.type === 'text' && block.text?.trim())
+              .map((block) => block.text);
+            if (textBlocks.length > 0) {
+              coderHandoff = textBlocks.join('\n');
+              break;
+            }
+          } else if (typeof content === 'string' && content.trim()) {
+            coderHandoff = content;
+            break;
+          }
+        }
+      }
+
+      // Final fallback
+      if (!coderHandoff.trim()) {
+        coderHandoff = '[Agent conversation incomplete - no response content available]';
+      }
+
+      console.log('🔍 Extracted coder handoff:', JSON.stringify(coderHandoff, null, 2));
       await addCoderResponse(taskId, coderHandoff);
 
       // 3b. Run Reviewer Agent
@@ -107,7 +167,7 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
         reviewerResult = await runAgent({
           prompt: reviewerPrompt,
           cwd: worktreeInfo.path,
-          maxTurns: 3,
+          maxTurns: 5,
         });
       } catch (error) {
         throw new AgentExecutionError(
@@ -121,7 +181,62 @@ export async function executeTDDWorkflow(options: TDDOptions): Promise<TDDResult
       }
 
       // Extract and save reviewer response
-      const reviewerResponse = await extractFinalMessage(reviewerResult.messages);
+      console.log('💾 Saving reviewer message structure to debug files...');
+
+      const reviewerDebugFile = `${debugDir}/${taskId}-reviewer-messages.json`;
+      await fs.writeFile(
+        reviewerDebugFile,
+        JSON.stringify(
+          {
+            taskId,
+            timestamp: new Date().toISOString(),
+            finalResponse: reviewerResult.finalResponse,
+            success: reviewerResult.success,
+            cost: reviewerResult.cost,
+            duration: reviewerResult.duration,
+            messagesCount: reviewerResult.messages.length,
+            messages: reviewerResult.messages,
+          },
+          null,
+          2
+        )
+      );
+
+      console.log(`📁 Reviewer message structure saved to: ${reviewerDebugFile}`);
+
+      // Use simple, robust extraction: finalResponse first, then fallback to result message, then last assistant text
+      const reviewerResultMessage = reviewerResult.messages.find((m) => m.type === 'result') as any;
+
+      let reviewerResponse = reviewerResult.finalResponse || reviewerResultMessage?.result || '';
+
+      // If no finalResponse or result, extract the last meaningful assistant text
+      if (!reviewerResponse.trim()) {
+        const assistantMessages = reviewerResult.messages.filter((m) => m.type === 'assistant');
+        for (let i = assistantMessages.length - 1; i >= 0; i--) {
+          const assistantMsg = assistantMessages[i] as any;
+          const content = assistantMsg.message?.content;
+
+          if (Array.isArray(content)) {
+            const textBlocks = content
+              .filter((block) => block.type === 'text' && block.text?.trim())
+              .map((block) => block.text);
+            if (textBlocks.length > 0) {
+              reviewerResponse = textBlocks.join('\n');
+              break;
+            }
+          } else if (typeof content === 'string' && content.trim()) {
+            reviewerResponse = content;
+            break;
+          }
+        }
+      }
+
+      // Final fallback
+      if (!reviewerResponse.trim()) {
+        reviewerResponse = '[Agent conversation incomplete - no response content available]';
+      }
+
+      console.log('🔍 Extracted reviewer response:', JSON.stringify(reviewerResponse, null, 2));
       await addReviewerResponse(taskId, reviewerResponse);
 
       // 3c. Check for PR creation (success condition)

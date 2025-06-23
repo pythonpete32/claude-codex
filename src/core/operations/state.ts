@@ -7,7 +7,7 @@ import {
   TaskNotFoundError,
   ValidationError,
 } from '../../shared/errors.js';
-import type { TaskState } from '../../shared/types.js';
+import type { TaskState, WorktreeInfo } from '../../shared/types.js';
 
 const CODEX_DIR = '.codex';
 
@@ -268,6 +268,28 @@ export async function addReviewerResponse(taskId: string, response: string): Pro
     }
     throw new StateManagementError(
       `Failed to add reviewer response: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error instanceof Error ? error : undefined
+    );
+  }
+}
+
+/**
+ * Update worktree information in existing task state
+ */
+export async function updateWorktreeInfo(
+  taskId: string,
+  worktreeInfo: WorktreeInfo
+): Promise<void> {
+  try {
+    const taskState = await getTaskState(taskId);
+    taskState.worktreeInfo = worktreeInfo;
+    await updateTaskState(taskState);
+  } catch (error) {
+    if (error instanceof TaskNotFoundError || error instanceof StateParseError) {
+      throw error;
+    }
+    throw new StateManagementError(
+      `Failed to update worktree info: ${error instanceof Error ? error.message : 'Unknown error'}`,
       error instanceof Error ? error : undefined
     );
   }

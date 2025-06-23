@@ -78,6 +78,7 @@ describe('Claude SDK Wrapper', () => {
         options: {
           maxTurns: 3,
           cwd: '/test/path',
+          permissionMode: 'bypassPermissions',
         },
       });
     });
@@ -213,7 +214,11 @@ describe('Claude SDK Wrapper', () => {
       expect(mockQuery).toHaveBeenCalledWith({
         prompt: 'Test',
         abortController,
-        options: { maxTurns: 1 },
+        options: {
+          maxTurns: 1,
+          cwd: undefined,
+          permissionMode: 'bypassPermissions',
+        },
       });
     });
 
@@ -258,7 +263,11 @@ describe('Claude SDK Wrapper', () => {
       expect(mockQuery).toHaveBeenCalledWith({
         prompt: 'Test prompt',
         abortController: undefined,
-        options: { maxTurns: 1 },
+        options: {
+          maxTurns: 1,
+          cwd: undefined,
+          permissionMode: 'bypassPermissions',
+        },
       });
     });
 
