@@ -1,3 +1,4 @@
+import { cp } from 'node:fs/promises';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -29,7 +30,11 @@ export default defineConfig({
     '@anthropic-ai/claude-code', // Keep external for user's claude-code installation
   ],
 
-  // No banner needed - the entry file already has shebang
+  // Copy templates after build
+  onSuccess: async () => {
+    await cp('src/templates', 'dist/templates', { recursive: true });
+    console.log('✅ Templates copied to dist/templates');
+  },
 
   // Platform
   platform: 'node',
