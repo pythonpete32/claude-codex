@@ -11,6 +11,10 @@ vi.mock('../../src/cli/commands/team.js', () => ({
   handleTeamCommand: vi.fn(),
 }));
 
+vi.mock('../../src/cli/commands/ping.js', () => ({
+  handlePingCommand: vi.fn(),
+}));
+
 // Mock package.json
 vi.mock('node:module', () => ({
   createRequire: vi.fn(() => ({
@@ -26,6 +30,7 @@ const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => {
 // Import mocked modules
 const mockInitCommand = await import('../../src/cli/commands/init.js');
 const mockTeamCommand = await import('../../src/cli/commands/team.js');
+const mockPingCommand = await import('../../src/cli/commands/ping.js');
 
 describe('CLI Index with Commander.js', () => {
   beforeEach(() => {
@@ -38,6 +43,7 @@ describe('CLI Index with Commander.js', () => {
     // Setup default mocks
     vi.mocked(mockInitCommand.handleInitCommand).mockResolvedValue(undefined);
     vi.mocked(mockTeamCommand.handleTeamCommand).mockResolvedValue(undefined);
+    vi.mocked(mockPingCommand.handlePingCommand).mockResolvedValue(undefined);
   });
 
   describe('help and version handling', () => {
@@ -102,6 +108,11 @@ describe('CLI Index with Commander.js', () => {
         expect.any(Object)
       );
     });
+
+    it('should route ping command to ping handler', async () => {
+      await runCLI(['node', 'script', 'ping']);
+      expect(mockPingCommand.handlePingCommand).toHaveBeenCalled();
+    });
   });
 
   describe('error handling', () => {
@@ -135,6 +146,15 @@ describe('CLI Index with Commander.js', () => {
       );
 
       expect(console.error).toHaveBeenCalledWith('❌ Error:', 'String error');
+    });
+
+    it('should handle ping command errors', async () => {
+      vi.mocked(mockPingCommand.handlePingCommand).mockRejectedValue(new Error('Ping failed'));
+
+      await expect(runCLI(['node', 'script', 'ping'])).rejects.toThrow('process.exit');
+
+      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'Ping failed');
+      expect(mockExit).toHaveBeenCalledWith(1);
     });
   });
 

@@ -9,6 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
 import { handleInitCommand } from '~/cli/commands/init.js';
+import { handlePingCommand } from '~/cli/commands/ping.js';
 import { handleTeamCommand } from '~/cli/commands/team.js';
 
 // Get version from package.json
@@ -69,6 +70,9 @@ export async function runCLI(argv: string[] = process.argv): Promise<void> {
     .option('-b, --branch-name <name>', 'Custom branch name for the feature')
     .option('--no-cleanup', 'Skip cleanup of worktree and task state after completion')
     .action(handleTeamCommand);
+
+  // Ping command
+  program.command('ping').description('Test command that returns "pong"').action(handlePingCommand);
 
   try {
     await program.parseAsync(argv);
