@@ -34,7 +34,7 @@ export async function runCLI(argv: string[] = process.argv): Promise<void> {
     .argument('<spec-or-issue>', 'Path to specification file or GitHub issue URL')
     .option('-r, --max-reviews <number>', 'Maximum number of review iterations', '3')
     .option('-b, --branch-name <name>', 'Custom branch name for the feature')
-    .option('--no-cleanup', 'Skip cleanup of worktree and task state after completion')
+    .option('-nc, --no-cleanup', 'Skip cleanup of worktree and task state after completion')
     .action(handleTeamCommand);
 
   try {
