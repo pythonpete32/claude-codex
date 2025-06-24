@@ -6,7 +6,10 @@ import type {
   SDKUserMessage,
 } from '@anthropic-ai/claude-code';
 
-import { type ComponentDisplayOptions, formatMessage } from '~/messaging/ui/formatters/MessageFormatter.js';
+import {
+  type ComponentDisplayOptions,
+  formatMessage,
+} from '~/messaging/ui/formatters/MessageFormatter.js';
 
 /**
  * Enhanced display options supporting both legacy and component-based rendering
