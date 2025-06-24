@@ -85,7 +85,7 @@ export async function getMCPConfigForTeam(
   }
 
   // Filter MCP servers to only include those enabled for this team
-  const enabledMCPServers: Record<string, unknown> = {};
+  const enabledMCPServers: Record<string, z.infer<typeof MCPServerSchema>> = {};
 
   for (const mcpName of teamConfig.mcps) {
     if (config.mcpServers?.[mcpName]) {

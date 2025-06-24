@@ -90,7 +90,7 @@ export class ComponentMessageStreamRenderer {
               },
               session_id: message.session_id,
               parent_tool_use_id: null,
-            } as unknown,
+            } as SDKMessage,
             this.options
           );
 

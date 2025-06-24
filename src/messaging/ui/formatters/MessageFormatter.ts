@@ -107,7 +107,8 @@ function formatAssistantMessage(
           // Special handling for TodoWrite/TodoRead - display table instead of card
           if (
             (toolBlock.name === 'TodoWrite' || toolBlock.name === 'TodoRead') &&
-            toolBlock.input.todos
+            toolBlock.input.todos &&
+            Array.isArray(toolBlock.input.todos)
           ) {
             const formatted = displayTodoTable(toolBlock.input.todos);
             if (formatted) parts.push(formatted);
