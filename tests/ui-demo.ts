@@ -4,9 +4,9 @@ import {
   displayTodoTable,
   displayToolCallCard,
   displayToolResultSummary,
-} from '../src/core/messaging/ui/index.js';
-import { getAdaptiveWidth } from '../src/core/messaging/ui/layout/TerminalLayout.js';
-import { colors } from '../src/core/messaging.js';
+} from '../src/messaging/ui/index.js';
+import { getAdaptiveWidth } from '../src/messaging/ui/layout/TerminalLayout.js';
+import { colors } from '../src/shared/colors.js';
 
 /**
  * Simple demo script to test component-based UI rendering

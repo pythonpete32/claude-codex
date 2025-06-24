@@ -1,5 +1,5 @@
 import type { SDKMessage } from '@anthropic-ai/claude-code';
-import type { DebugLog } from '../../src/core/messaging/debug-logger.js';
+import type { DebugLog } from '../../src/messaging/debug-logger.js';
 
 /**
  * Create a mock query function that yields debug messages

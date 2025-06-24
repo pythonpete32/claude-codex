@@ -14,6 +14,18 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
+    // Path mapping for cleaner imports
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "~/cli/*": ["src/cli/*"],
+      "~/config/*": ["src/config/*"],
+      "~/messaging/*": ["src/messaging/*"],
+      "~/operations/*": ["src/operations/*"],
+      "~/shared/*": ["src/shared/*"],
+      "~/teams/*": ["src/teams/*"]
+    },
+
     // Best practices
     "strict": true,
     "skipLibCheck": true,

@@ -1,8 +1,8 @@
 import { exec } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import { promisify } from 'node:util';
-import { isGitRepository } from '../core/operations/worktree.js';
-import { loadEnvironmentVariables } from './env-loader.js';
+import { isGitRepository } from '~/operations/worktree.js';
+import { loadEnvironmentVariables } from '~/shared/env-loader.js';
 
 const execAsync = promisify(exec);
 

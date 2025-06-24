@@ -2,11 +2,13 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { TDDOptions } from '../../src/shared/types.js';
-import { executeTDDWorkflow } from '../../src/workflows/tdd.js';
+import type { CoordinationOptions } from '../../src/shared/types.js';
+import { executeTeamWorkflow } from '../../src/teams/coordinator.js';
+
+// Test using team workflow with tdd team
 
 // Mock external dependencies
-vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
+vi.mock('../../src/messaging/sdk-wrapper.js', () => ({
   runClaudeAgent: vi.fn().mockResolvedValue({
     messages: [{ role: 'assistant', content: 'Mock agent response' }],
     success: true,
@@ -14,7 +16,7 @@ vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
   }),
 }));
 
-vi.mock('../../src/core/operations/github.js', () => ({
+vi.mock('../../src/operations/github.js', () => ({
   checkPRExists: vi.fn().mockResolvedValue({
     number: 123,
     url: 'https://github.com/test/repo/pull/123',
@@ -24,13 +26,29 @@ vi.mock('../../src/core/operations/github.js', () => ({
   }),
 }));
 
-vi.mock('../../src/core/operations/worktree.js', () => ({
+vi.mock('../../src/operations/worktree.js', () => ({
   createWorktree: vi.fn().mockResolvedValue({
     path: '/tmp/test-worktree',
     branchName: 'test-branch',
     baseBranch: 'main',
   }),
   cleanupWorktree: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('../../src/teams/loader.js', () => ({
+  loadTeam: vi.fn().mockResolvedValue({
+    CODER: vi.fn((spec: string) => `Mock coder prompt for: ${spec}`),
+    REVIEWER: vi.fn((spec: string) => `Mock reviewer prompt for: ${spec}`),
+  }),
+}));
+
+vi.mock('../../src/config/config.js', () => ({
+  loadCodexConfig: vi.fn().mockResolvedValue({
+    teams: { tdd: { mcps: [] } },
+    mcpServers: {},
+    defaults: { team: 'tdd', maxReviews: 3, cleanup: true },
+  }),
+  getMCPConfigForTeam: vi.fn().mockResolvedValue({ mcpServers: {} }),
 }));
 
 describe('Bug Fix: Task state JSON file creation', () => {
@@ -64,14 +82,15 @@ Implement a simple test feature with proper error handling.
   it('reproduces bug: task state file not created without verbose flag', async () => {
     // This test should FAIL before the bug is fixed
 
-    const options: TDDOptions = {
-      specPath: './test-spec.md',
+    const options: CoordinationOptions = {
+      specOrIssue: './test-spec.md',
+      teamType: 'tdd',
       maxReviews: 1,
       cleanup: false,
     };
 
     // Execute workflow (simulating non-verbose mode)
-    const result = await executeTDDWorkflow(options);
+    const result = await executeTeamWorkflow(options);
 
     // Verify task ID was generated
     expect(result.taskId).toBeTruthy();
@@ -94,9 +113,8 @@ Implement a simple test feature with proper error handling.
 
       // Verify task state structure
       expect(taskState.taskId).toBe(result.taskId);
-      expect(taskState.originalSpec).toContain('Test Feature Implementation');
-      expect(taskState.coderResponses).toBeDefined();
-      expect(taskState.reviewerResponses).toBeDefined();
+      expect(taskState.specOrIssue).toContain('test-spec.md');
+      expect(taskState.teamType).toBe('tdd');
 
       // This should pass - task state file should exist
     } catch (error) {
@@ -108,13 +126,14 @@ Implement a simple test feature with proper error handling.
   });
 
   it('should create task state file with consistent task ID', async () => {
-    const options: TDDOptions = {
-      specPath: './test-spec.md',
+    const options: CoordinationOptions = {
+      specOrIssue: './test-spec.md',
+      teamType: 'tdd',
       maxReviews: 1,
       cleanup: false,
     };
 
-    const result = await executeTDDWorkflow(options);
+    const result = await executeTeamWorkflow(options);
 
     // Read the actual task state file
     const taskStateFile = join(tempDir, '.codex', `${result.taskId}.json`);
@@ -127,14 +146,12 @@ Implement a simple test feature with proper error handling.
     // Verify file structure
     expect(taskState).toMatchObject({
       taskId: result.taskId,
-      specPath: expect.stringContaining('test-spec.md'),
-      originalSpec: expect.stringContaining('Test Feature Implementation'),
+      specOrIssue: expect.stringContaining('test-spec.md'),
+      teamType: 'tdd',
       currentIteration: expect.any(Number),
       maxIterations: 1,
       branchName: expect.stringMatching(/^tdd\//),
       worktreeInfo: expect.any(Object),
-      coderResponses: expect.any(Array),
-      reviewerResponses: expect.any(Array),
       createdAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
       updatedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
       status: 'running',
@@ -145,16 +162,17 @@ Implement a simple test feature with proper error handling.
     // This test proves that verbose flag does NOT affect core state creation logic
     // Verbose flag only affects CLI console output, not workflow execution
 
-    const baseOptions: TDDOptions = {
-      specPath: './test-spec.md',
+    const baseOptions: CoordinationOptions = {
+      specOrIssue: './test-spec.md',
+      teamType: 'tdd',
       maxReviews: 1,
       cleanup: false,
     };
 
     // Execute workflow twice with identical options
     // (Note: TDDOptions interface doesn't include verbose - it only affects CLI layer)
-    const result1 = await executeTDDWorkflow(baseOptions);
-    const result2 = await executeTDDWorkflow(baseOptions);
+    const result1 = await executeTeamWorkflow(baseOptions);
+    const result2 = await executeTeamWorkflow(baseOptions);
 
     // Get task states from actual files
     const state1 = JSON.parse(
@@ -166,9 +184,9 @@ Implement a simple test feature with proper error handling.
 
     // State structure should be identical (verbose only affects console output)
     expect(Object.keys(state1).sort()).toEqual(Object.keys(state2).sort());
-    expect(state1.originalSpec).toBe(state2.originalSpec);
+    expect(state1.specOrIssue).toBe(state2.specOrIssue);
     expect(state1.maxIterations).toBe(state2.maxIterations);
-    expect(state1.specPath).toBe(state2.specPath);
+    expect(state1.teamType).toBe(state2.teamType);
     expect(state1.status).toBe(state2.status);
 
     // Both should have valid task state files created
@@ -177,9 +195,9 @@ Implement a simple test feature with proper error handling.
     expect(state1.taskId).not.toBe(state2.taskId); // Different tasks should have different IDs
 
     // Core content should be identical
-    expect(state1.coderResponses).toEqual(state2.coderResponses);
-    expect(state1.reviewerResponses).toEqual(state2.reviewerResponses);
     expect(state1.currentIteration).toBe(state2.currentIteration);
+    expect(state1.branchName).toMatch(/^tdd\//);
+    expect(state2.branchName).toMatch(/^tdd\//);
 
     // Both files should exist and be properly formed JSON
     expect(state1.createdAt).toBeTruthy();

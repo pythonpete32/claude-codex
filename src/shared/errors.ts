@@ -2,8 +2,8 @@
 
 // Workflow orchestration errors
 export class SpecFileNotFoundError extends Error {
-  constructor(specPath: string) {
-    super(`Specification file not found: ${specPath}`);
+  constructor(specOrIssue: string) {
+    super(`Specification file not found: ${specOrIssue}`);
     this.name = 'SpecFileNotFoundError';
   }
 }

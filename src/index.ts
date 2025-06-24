@@ -4,7 +4,7 @@
  * Claude Codex TDD CLI - Main entry point
  */
 
-import { runCLI } from './cli/index.js';
+import { runCLI } from '~/cli/index.js';
 
 // Run CLI if this file is executed directly
 runCLI().catch((error) => {
