@@ -6,7 +6,29 @@ import { pathExists } from '~/shared/utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const TEMPLATES_DIR = join(__dirname, '..', 'templates');
+
+// Try different possible template locations for different build/runtime contexts
+const possibleTemplatePaths = [
+  join(__dirname, '..', 'templates'), // Development: src/templates
+  join(__dirname, 'templates'), // Production: dist/templates
+  join(__dirname, '..', 'dist', 'templates'), // Alternative production path
+];
+
+let TEMPLATES_DIR: string | null = null;
+
+// Find the correct templates directory
+async function findTemplatesDir(): Promise<string> {
+  if (TEMPLATES_DIR) return TEMPLATES_DIR;
+
+  for (const templatePath of possibleTemplatePaths) {
+    if (await pathExists(templatePath)) {
+      TEMPLATES_DIR = templatePath;
+      return TEMPLATES_DIR;
+    }
+  }
+
+  throw new Error('Templates directory not found. Please reinstall claude-codex.');
+}
 
 export interface InitOptions {
   force?: boolean;
@@ -23,20 +45,23 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
   const commandsDir = join(claudeDir, 'commands');
   const configPath = join(claudeDir, '.codex.config.json');
 
+  // Get the correct templates directory
+  const templatesDir = await findTemplatesDir();
+
   // Create directories
   await mkdir(teamsDir, { recursive: true });
   await mkdir(commandsDir, { recursive: true });
 
   // Create default config (if doesn't exist or force)
   if (!options.teamsOnly && (!(await pathExists(configPath)) || options.force)) {
-    const templateConfigPath = join(TEMPLATES_DIR, '.codex.config.json');
+    const templateConfigPath = join(templatesDir, '.codex.config.json');
     await copyFile(templateConfigPath, configPath);
     console.log('✅ Created config:', configPath);
   }
 
   // Create default teams
   if (!options.configOnly) {
-    const teamsTemplateDir = join(TEMPLATES_DIR, 'teams');
+    const teamsTemplateDir = join(templatesDir, 'teams');
     const teamFiles = await readdir(teamsTemplateDir);
 
     for (const teamFile of teamFiles) {
@@ -53,7 +78,7 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
 
   // Create example commands
   if (!options.configOnly) {
-    const commandsTemplateDir = join(TEMPLATES_DIR, 'commands');
+    const commandsTemplateDir = join(templatesDir, 'commands');
     const commandFiles = await readdir(commandsTemplateDir);
 
     for (const commandFile of commandFiles) {
