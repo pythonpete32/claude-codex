@@ -3,7 +3,7 @@ import {
   type DisplayOptions,
   formatMessageForDisplay,
   processMessagesWithDisplay,
-} from '../../../src/core/messaging/message-processor.js';
+} from '../../../src/messaging/message-processor.js';
 import { SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
 
 // Mock console.log to capture output

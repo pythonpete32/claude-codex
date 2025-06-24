@@ -33,7 +33,7 @@ const {
   // addCoderResponse, // REMOVED - teams use files now
   // addReviewerResponse, // REMOVED - teams use files now
   cleanupTaskState,
-} = await import('../../../src/core/operations/state.js');
+} = await import('../../../src/messaging/index.js');
 
 describe('Task State Management', () => {
   beforeEach(() => {

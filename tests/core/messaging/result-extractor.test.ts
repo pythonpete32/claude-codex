@@ -3,8 +3,8 @@ import {
   extractAgentResults,
   formatExecutionSummary,
   logFinalResponse,
-} from '../../../src/core/messaging/result-extractor.js';
-import type { AgentResult } from '../../../src/core/messaging/sdk-wrapper.js';
+} from '../../../src/messaging/result-extractor.js';
+import type { AgentResult } from '../../../src/messaging/sdk-wrapper.js';
 import { SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
 
 // Mock console.log to capture output

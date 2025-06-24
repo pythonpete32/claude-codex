@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { CodexConfig } from '../../src/core/config.js';
-import { getMCPConfigForTeam } from '../../src/core/config.js';
+import type { CodexConfig } from '../../src/config/config.js';
+import { getMCPConfigForTeam } from '../../src/config/config.js';
 
 describe('MCP Configuration Integration', () => {
   const mockConfig: CodexConfig = {

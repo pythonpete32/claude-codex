@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { listAvailableTeams, loadAllTeams, loadTeam } from '../../src/core/teams.js';
+import { listAvailableTeams, loadAllTeams, loadTeam } from '../../src/teams/loader.js';
 
 describe('Team Loading System', () => {
   let tempDir: string;

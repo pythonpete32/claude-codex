@@ -14,7 +14,7 @@ beforeEach(() => {
 
 // Import after mocking console
 const { colors, logSuccess, logError, logWarning, logInfo, logDim } = await import(
-  '../../src/core/messaging.js'
+  '../../src/messaging.js'
 );
 
 describe('Messaging Utilities', () => {

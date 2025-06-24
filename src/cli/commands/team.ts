@@ -2,7 +2,7 @@
  * Team command handler for Claude Codex CLI
  */
 
-import { executeTeamWorkflow } from '../../core/team-coordinator.js';
+import { executeTeamWorkflow } from '~/teams/coordinator.js';
 
 export interface TeamOptions {
   maxReviews?: string;

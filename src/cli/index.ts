@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * CLI entry point for Claude Codex multi-team workflow
+ * CLI entry point for Claude Codex AI team automation
  */
 
 import { Command } from 'commander';
-import { handleInitCommand } from './commands/init.js';
-import { handleTDDCommand } from './commands/tdd.js';
-import { handleTeamCommand } from './commands/team.js';
+import { handleInitCommand } from '~/cli/commands/init.js';
+import { handleTeamCommand } from '~/cli/commands/team.js';
 
 // Version from package.json
 const version = '0.4.0';
@@ -18,10 +17,7 @@ const version = '0.4.0';
 export async function runCLI(argv: string[] = process.argv): Promise<void> {
   const program = new Command();
 
-  program
-    .name('claude-codex')
-    .description('Claude Codex - Multi-team AI workflow automation')
-    .version(version);
+  program.name('claude-codex').description('Claude Codex - AI team automation').version(version);
 
   // Init command
   program
@@ -30,20 +26,10 @@ export async function runCLI(argv: string[] = process.argv): Promise<void> {
     .option('--force', 'Overwrite existing configuration')
     .action(handleInitCommand);
 
-  // TDD command (deprecated)
-  program
-    .command('tdd')
-    .description('🚨 DEPRECATED: Run TDD workflow (use "team tdd" instead)')
-    .argument('<spec-path>', 'Path to specification file or GitHub issue URL')
-    .option('-r, --max-reviews <number>', 'Maximum number of review iterations', '3')
-    .option('-b, --branch-name <name>', 'Custom branch name for the feature')
-    .option('--no-cleanup', 'Skip cleanup of worktree and task state after completion')
-    .action(handleTDDCommand);
-
-  // Team command (new multi-team system)
+  // Team command
   program
     .command('team')
-    .description('Run multi-team workflow')
+    .description('Run AI team execution')
     .argument('<team-type>', 'Team type (standard, tdd, frontend, smart-contract)')
     .argument('<spec-or-issue>', 'Path to specification file or GitHub issue URL')
     .option('-r, --max-reviews <number>', 'Maximum number of review iterations', '3')

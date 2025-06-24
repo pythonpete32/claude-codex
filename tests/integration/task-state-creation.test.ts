@@ -3,13 +3,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CoordinationOptions } from '../../src/shared/types.js';
-import { executeTDDWorkflow } from '../../src/workflows/tdd.js';
+import { executeTeamWorkflow } from '../../src/teams/coordinator.js';
 
-// Temporary alias for backward compatibility
-type TDDOptions = CoordinationOptions;
+// Test using team workflow with tdd team
 
 // Mock external dependencies
-vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
+vi.mock('../../src/messaging/sdk-wrapper.js', () => ({
   runClaudeAgent: vi.fn().mockResolvedValue({
     messages: [{ role: 'assistant', content: 'Mock agent response' }],
     success: true,
@@ -17,7 +16,7 @@ vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
   }),
 }));
 
-vi.mock('../../src/core/operations/github.js', () => ({
+vi.mock('../../src/operations/github.js', () => ({
   checkPRExists: vi.fn().mockResolvedValue({
     number: 123,
     url: 'https://github.com/test/repo/pull/123',
@@ -27,7 +26,7 @@ vi.mock('../../src/core/operations/github.js', () => ({
   }),
 }));
 
-vi.mock('../../src/core/operations/worktree.js', () => ({
+vi.mock('../../src/operations/worktree.js', () => ({
   createWorktree: vi.fn().mockResolvedValue({
     path: '/tmp/test-worktree',
     branchName: 'test-branch',
@@ -36,14 +35,14 @@ vi.mock('../../src/core/operations/worktree.js', () => ({
   cleanupWorktree: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../../src/core/teams.js', () => ({
+vi.mock('../../src/teams/loader.js', () => ({
   loadTeam: vi.fn().mockResolvedValue({
     CODER: vi.fn((spec: string) => `Mock coder prompt for: ${spec}`),
     REVIEWER: vi.fn((spec: string) => `Mock reviewer prompt for: ${spec}`),
   }),
 }));
 
-vi.mock('../../src/core/config.js', () => ({
+vi.mock('../../src/config/config.js', () => ({
   loadCodexConfig: vi.fn().mockResolvedValue({
     teams: { tdd: { mcps: [] } },
     mcpServers: {},
@@ -83,7 +82,7 @@ Implement a simple test feature with proper error handling.
   it('reproduces bug: task state file not created without verbose flag', async () => {
     // This test should FAIL before the bug is fixed
 
-    const options: TDDOptions = {
+    const options: CoordinationOptions = {
       specOrIssue: './test-spec.md',
       teamType: 'tdd',
       maxReviews: 1,
@@ -91,7 +90,7 @@ Implement a simple test feature with proper error handling.
     };
 
     // Execute workflow (simulating non-verbose mode)
-    const result = await executeTDDWorkflow(options);
+    const result = await executeTeamWorkflow(options);
 
     // Verify task ID was generated
     expect(result.taskId).toBeTruthy();
@@ -127,14 +126,14 @@ Implement a simple test feature with proper error handling.
   });
 
   it('should create task state file with consistent task ID', async () => {
-    const options: TDDOptions = {
+    const options: CoordinationOptions = {
       specOrIssue: './test-spec.md',
       teamType: 'tdd',
       maxReviews: 1,
       cleanup: false,
     };
 
-    const result = await executeTDDWorkflow(options);
+    const result = await executeTeamWorkflow(options);
 
     // Read the actual task state file
     const taskStateFile = join(tempDir, '.codex', `${result.taskId}.json`);
@@ -163,7 +162,7 @@ Implement a simple test feature with proper error handling.
     // This test proves that verbose flag does NOT affect core state creation logic
     // Verbose flag only affects CLI console output, not workflow execution
 
-    const baseOptions: TDDOptions = {
+    const baseOptions: CoordinationOptions = {
       specOrIssue: './test-spec.md',
       teamType: 'tdd',
       maxReviews: 1,
@@ -172,8 +171,8 @@ Implement a simple test feature with proper error handling.
 
     // Execute workflow twice with identical options
     // (Note: TDDOptions interface doesn't include verbose - it only affects CLI layer)
-    const result1 = await executeTDDWorkflow(baseOptions);
-    const result2 = await executeTDDWorkflow(baseOptions);
+    const result1 = await executeTeamWorkflow(baseOptions);
+    const result2 = await executeTeamWorkflow(baseOptions);
 
     // Get task states from actual files
     const state1 = JSON.parse(

@@ -2,7 +2,7 @@
  * Init command handler for Claude Codex CLI
  */
 
-import { initializeClaudeCodex } from '../../core/initialization.js';
+import { initializeClaudeCodex } from '~/config/initialization.js';
 
 export interface InitOptions {
   force?: boolean;

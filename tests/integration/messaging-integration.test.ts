@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { loadDebugMessages } from '../../src/core/messaging/debug-logger.js';
-import { runClaudeAgent } from '../../src/core/messaging/sdk-wrapper.js';
+import { loadDebugMessages } from '../../src/messaging/debug-logger.js';
+import { runClaudeAgent } from '../../src/messaging/sdk-wrapper.js';
 import { createMockQueryFromDebugLog } from '../helpers/mock-sdk.js';
 
 // Mock the lib module

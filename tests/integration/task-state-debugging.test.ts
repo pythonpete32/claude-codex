@@ -2,15 +2,14 @@ import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { initializeTaskState } from '../../src/core/operations/state.js';
+import { initializeTaskState } from '../../src/operations/state.js';
 import type { CoordinationOptions } from '../../src/shared/types.js';
-import { executeTDDWorkflow } from '../../src/workflows/tdd.js';
+import { executeTeamWorkflow } from '../../src/teams/coordinator.js';
 
-// Temporary alias for backward compatibility
-type TDDOptions = CoordinationOptions;
+// Test using team workflow with tdd team
 
 // Mock external dependencies
-vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
+vi.mock('../../src/messaging/sdk-wrapper.js', () => ({
   runClaudeAgent: vi.fn().mockResolvedValue({
     messages: [{ role: 'assistant', content: 'Mock agent response' }],
     success: true,
@@ -77,7 +76,7 @@ Implement a simple test feature with proper error handling.
   });
 
   it('should debug task ID consistency issue', async () => {
-    const options: TDDOptions = {
+    const options: CoordinationOptions = {
       specOrIssue: './test-spec.md',
       teamType: 'tdd',
       maxReviews: 1,
@@ -85,7 +84,7 @@ Implement a simple test feature with proper error handling.
     };
 
     console.log('Starting workflow execution...');
-    const result = await executeTDDWorkflow(options);
+    const result = await executeTeamWorkflow(options);
 
     console.log(`Workflow returned task ID: ${result.taskId}`);
 

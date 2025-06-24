@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  type ClaudeAgentOptions,
-  runClaudeAgent,
-} from '../../../src/core/messaging/sdk-wrapper.js';
+import { type ClaudeAgentOptions, runClaudeAgent } from '../../../src/messaging/sdk-wrapper.js';
 import { createMockQuery, SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
 
 // Mock the lib module
@@ -11,16 +8,16 @@ vi.mock('../../../src/lib.js', () => ({
 }));
 
 // Mock the other modules
-vi.mock('../../../src/core/messaging/message-processor.js', () => ({
+vi.mock('../../../src/messaging/message-processor.js', () => ({
   processMessagesWithDisplay: vi.fn(),
 }));
 
-vi.mock('../../../src/core/messaging/result-extractor.js', () => ({
+vi.mock('../../../src/messaging/result-extractor.js', () => ({
   extractAgentResults: vi.fn(),
   logFinalResponse: vi.fn(),
 }));
 
-vi.mock('../../../src/core/messaging/debug-logger.js', () => ({
+vi.mock('../../../src/messaging/debug-logger.js', () => ({
   logDebugMessages: vi.fn(),
 }));
 
@@ -30,12 +27,12 @@ describe('SDK Wrapper', () => {
 
     // Setup mocks with proper implementations
     const { processMessagesWithDisplay } = await import(
-      '../../../src/core/messaging/message-processor.js'
+      '../../../src/messaging/message-processor.js'
     );
     const { extractAgentResults, logFinalResponse } = await import(
-      '../../../src/core/messaging/result-extractor.js'
+      '../../../src/messaging/result-extractor.js'
     );
-    const { logDebugMessages } = await import('../../../src/core/messaging/debug-logger.js');
+    const { logDebugMessages } = await import('../../../src/messaging/debug-logger.js');
 
     vi.mocked(processMessagesWithDisplay).mockResolvedValue(SAMPLE_DEBUG_MESSAGES);
     vi.mocked(extractAgentResults).mockReturnValue({
@@ -160,7 +157,7 @@ describe('SDK Wrapper', () => {
     });
 
     it('should enable debug logging when debug flag is set', async () => {
-      const { logDebugMessages } = await import('../../../src/core/messaging/debug-logger.js');
+      const { logDebugMessages } = await import('../../../src/messaging/debug-logger.js');
       const mockQuery = createMockQuery(SAMPLE_DEBUG_MESSAGES);
 
       const options: ClaudeAgentOptions = {
