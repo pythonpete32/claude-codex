@@ -15,16 +15,16 @@ import { handleTeamCommand } from '~/cli/commands/team.js';
 function getVersion(): string {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  
+
   // Try multiple possible paths for package.json
   const possiblePaths = [
     join(__dirname, '..', '..', 'package.json'), // From src/cli/
-    join(__dirname, '..', 'package.json'),       // From dist/
-    join(process.cwd(), 'package.json'),         // From project root
+    join(__dirname, '..', 'package.json'), // From dist/
+    join(process.cwd(), 'package.json'), // From project root
   ];
-  
+
   const errors: string[] = [];
-  
+
   for (const path of possiblePaths) {
     try {
       const packageJson = JSON.parse(readFileSync(path, 'utf-8'));
@@ -36,9 +36,9 @@ function getVersion(): string {
       errors.push(`${path}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
-  
+
   throw new Error(
-    `Failed to find package.json or read version. Tried paths:\n${errors.map(e => `  - ${e}`).join('\n')}`
+    `Failed to find package.json or read version. Tried paths:\n${errors.map((e) => `  - ${e}`).join('\n')}`
   );
 }
 

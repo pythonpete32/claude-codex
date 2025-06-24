@@ -66,8 +66,6 @@ describe('CLI Index with Commander.js', () => {
       );
     });
 
-
-
     it('should route team command to team handler', async () => {
       await runCLI(['node', 'script', 'team', 'tdd', './spec.md']);
       expect(mockTeamCommand.handleTeamCommand).toHaveBeenCalledWith(
@@ -107,7 +105,6 @@ describe('CLI Index with Commander.js', () => {
   });
 
   describe('error handling', () => {
-
     it('should handle init command errors', async () => {
       vi.mocked(mockInitCommand.handleInitCommand).mockRejectedValue(new Error('Init failed'));
 
@@ -133,7 +130,9 @@ describe('CLI Index with Commander.js', () => {
     it('should handle non-Error objects', async () => {
       vi.mocked(mockTeamCommand.handleTeamCommand).mockRejectedValue('String error');
 
-      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow('process.exit');
+      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow(
+        'process.exit'
+      );
 
       expect(console.error).toHaveBeenCalledWith('❌ Error:', 'String error');
     });
@@ -155,7 +154,6 @@ describe('CLI Index with Commander.js', () => {
   });
 
   describe('integration flow', () => {
-
     it('should execute complete flow for team command', async () => {
       await runCLI([
         'node',

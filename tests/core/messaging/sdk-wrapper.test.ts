@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type ClaudeAgentOptions, runClaudeAgent } from '../../../src/messaging/sdk-wrapper.js';
 import { createMockQuery, SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
 
-// Mock the auth module  
+// Mock the auth module
 vi.mock('../../../src/shared/auth.js', () => ({
   forceSubscriptionAuth: vi.fn(),
 }));
