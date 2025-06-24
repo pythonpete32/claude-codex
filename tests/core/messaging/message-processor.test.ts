@@ -1,3 +1,4 @@
+import type { SDKMessage } from '@anthropic-ai/claude-code';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   type DisplayOptions,

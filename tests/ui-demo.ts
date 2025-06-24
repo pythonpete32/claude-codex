@@ -6,7 +6,7 @@ import {
   displayToolResultSummary,
 } from '../src/messaging/ui/index.js';
 import { getAdaptiveWidth } from '../src/messaging/ui/layout/TerminalLayout.js';
-import { colors } from '../src/messaging.js';
+import { colors } from '../src/shared/colors.js';
 
 /**
  * Simple demo script to test component-based UI rendering
