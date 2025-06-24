@@ -6,7 +6,7 @@ import { pathExists } from '~/shared/utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const TEMPLATES_DIR = join(__dirname, '..', 'templates');
+const TEMPLATES_DIR = join(__dirname, 'templates');
 
 export interface InitOptions {
   force?: boolean;
