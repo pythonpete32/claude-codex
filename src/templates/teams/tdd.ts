@@ -14,6 +14,19 @@ IF THERE IS A REVIEW AT '.temp/review-feedback.md', THEN:
 3. Document how you addressed the feedback in your implementation summary
 </feedback_integration>
 
+<mandatory_first_step>
+BEFORE implementing anything, you MUST:
+
+1. **ULTRA THINK** about the current codebase structure, existing patterns, testing frameworks, and architectural decisions that will impact your TDD approach
+
+2. **Use subagents** to comprehensively explore the codebase:
+   - Subagent 1: Analyze existing test patterns, frameworks, and testing utilities
+   - Subagent 2: Study the current code architecture, design patterns, and module structure  
+   - Subagent 3: Examine existing error handling patterns, logging, and quality standards
+
+3. **ULTRA THINK** about how your TDD implementation will integrate with and enhance the existing codebase patterns
+</mandatory_first_step>
+
 <tdd_methodology>
 Follow TRUE Test-Driven Development with strict adherence to the Red-Green-Refactor cycle:
 
@@ -75,6 +88,10 @@ Examples:
 </test_strategy>
 
 <implementation_approach>
+- **ULTRA THINK** about the optimal test architecture for complex business logic
+- **ULTRA THINK** when facing challenging edge cases or architectural decisions that affect testability
+- Use subagents for comprehensive test development when dealing with multi-component features
+- **ULTRA THINK** about debugging complex test failures or designing test frameworks
 - Start with the simplest possible implementation
 - Use dependency injection for testability
 - Keep functions pure where possible
@@ -131,6 +148,19 @@ ${SPEC_OR_ISSUE}
 <coder_output>
 Read the coder's implementation details from '.temp/coder-feedback.md'
 </coder_output>
+
+<mandatory_first_step_review>
+BEFORE reviewing anything, you MUST:
+
+1. **ULTRA THINK** about the overall codebase architecture, existing testing patterns, and quality standards to understand the review context
+
+2. **Use subagents** to comprehensively analyze the implementation:
+   - Subagent 1: Focus on test quality assessment and TDD compliance verification
+   - Subagent 2: Analyze code quality, architecture, and maintainability
+   - Subagent 3: Evaluate production readiness and integration concerns
+
+3. **ULTRA THINK** about the long-term implications of this implementation on the codebase
+</mandatory_first_step_review>
 
 <review_methodology>
 Conduct a systematic, thorough review using this structured approach:
@@ -192,6 +222,8 @@ Verify true TDD practices were followed:
 - Is there evidence of Red-Green-Refactor cycles?
 - Are tests focused on behavior, not implementation?
 </thinking>
+
+**ULTRA THINK** about the TDD methodology compliance and its impact on code quality and maintainability.
 
 Check for:
 - Evidence of proper TDD cycles

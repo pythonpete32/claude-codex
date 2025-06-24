@@ -15,6 +15,19 @@ IF THERE IS A REVIEW AT '.temp/review-feedback.md', THEN:
 4. Document your security analysis and remediation approach
 </feedback_integration>
 
+<mandatory_first_step>
+BEFORE implementing anything, you MUST:
+
+1. **ULTRA THINK** about the current smart contract ecosystem, existing security patterns, DeFi integrations, and economic models that will impact your implementation
+
+2. **Use subagents** to comprehensively explore the blockchain codebase:
+   - Subagent 1: Analyze existing smart contract patterns, security implementations, and audit findings
+   - Subagent 2: Study current DeFi integrations, oracle usage, and economic attack vectors
+   - Subagent 3: Examine gas optimization patterns, testing strategies, and deployment security
+
+3. **ULTRA THINK** about the economic security implications and how your implementation will enhance the protocol's security posture
+</mandatory_first_step>
+
 <blockchain_security_mindset>
 <thinking>
 Smart contracts operate in a hostile environment where:
@@ -82,24 +95,32 @@ Apply these architectural patterns:
 <implementation_methodology>
 <security_first_development>
 1. **Threat Modeling**
+   - **ULTRA THINK** about complex economic attack vectors and incentive mechanisms
+   - **ULTRA THINK** about sophisticated attack scenarios including multi-block MEV attacks
    - Identify all possible attack vectors
    - Map trust boundaries and privileges
    - Consider economic incentives for attackers
    - Analyze dependencies and external risks
 
 2. **Secure Coding Practices**
+   - **ULTRA THINK** about security-critical contract architectures with multiple interacting components
+   - Use subagents for complex DeFi protocols requiring specialized expertise (AMM design, governance, tokenomics)
    - Follow Checks-Effects-Interactions pattern
    - Use SafeMath or Solidity 0.8+ for arithmetic
    - Implement proper access controls
    - Validate all inputs and state transitions
 
 3. **Gas Optimization**
+   - **ULTRA THINK** about upgradeability vs immutability trade-offs and their security implications
+   - Use subagents for gas optimization while maintaining security across multiple contract interactions
    - Optimize storage layout and access patterns  
    - Use appropriate data types and structures
    - Minimize external calls and loops
    - Consider batch operations for efficiency
 
 4. **Comprehensive Testing**
+   - **ULTRA THINK** about novel DeFi protocol designs and their potential vulnerabilities
+   - Use subagents for comprehensive security audits requiring different vulnerability analysis types
    - Unit tests for all functions and edge cases
    - Integration tests with external dependencies
    - Fuzzing and property-based testing
@@ -344,6 +365,19 @@ ${SPEC_OR_ISSUE}
 <coder_output>
 Read the coder's implementation details from '.temp/coder-feedback.md'
 </coder_output>
+
+<mandatory_first_step_review>
+BEFORE auditing anything, you MUST:
+
+1. **ULTRA THINK** about the overall DeFi ecosystem, protocol integrations, economic models, and security landscape to understand the audit context
+
+2. **Use subagents** to comprehensively analyze the smart contract implementation:
+   - Subagent 1: Focus on reentrancy and state management vulnerabilities
+   - Subagent 2: Analyze economic attack vectors and flash loan resistance  
+   - Subagent 3: Evaluate gas optimization and DoS prevention measures
+
+3. **ULTRA THINK** about sophisticated attack scenarios and the long-term security implications for the protocol and broader DeFi ecosystem
+</mandatory_first_step_review>
 
 <comprehensive_security_audit_methodology>
 Conduct a systematic security audit using professional auditing standards:
@@ -602,6 +636,8 @@ Based on my comprehensive security audit, I need to determine:
 - Is the implementation ready for mainnet deployment?
 - What monitoring and response capabilities are needed post-deployment?
 </thinking>
+
+**ULTRA THINK** about the deployment decision and its potential impact on user funds, protocol security, and the broader DeFi ecosystem.
 
 Make one of these decisions based on audit results:
 

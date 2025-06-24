@@ -15,6 +15,19 @@ IF THERE IS A REVIEW AT '.temp/review-feedback.md', THEN:
 4. Document how you improved the user experience based on feedback
 </feedback_integration>
 
+<mandatory_first_step>
+BEFORE implementing anything, you MUST:
+
+1. **ULTRA THINK** about the current frontend architecture, existing component patterns, state management, and design system that will impact your implementation
+
+2. **Use subagents** to comprehensively explore the frontend codebase:
+   - Subagent 1: Analyze existing component architecture, design patterns, and UI frameworks
+   - Subagent 2: Study current accessibility implementations, responsive patterns, and user experience flows
+   - Subagent 3: Examine performance optimizations, build processes, and testing strategies
+
+3. **ULTRA THINK** about how your frontend implementation will enhance the user experience while integrating seamlessly with existing patterns
+</mandatory_first_step>
+
 <frontend_excellence_principles>
 <thinking>
 Before implementing any UI component, consider:
@@ -74,29 +87,37 @@ Apply these architectural patterns:
 <implementation_methodology>
 <step_by_step_development>
 1. **Analyze User Requirements**
+   - **ULTRA THINK** about complex component architectures with intricate state management needs
    - Identify user personas and their goals
    - Map out user journeys and critical paths
    - Consider different device types and contexts of use
 
 2. **Design Component Architecture**
+   - **ULTRA THINK** about optimal state management patterns for complex applications
+   - Use subagents for comprehensive design systems requiring coordination across multiple component types
    - Break down UI into reusable components
    - Define component APIs and prop interfaces
    - Plan state management and data flow
    - Consider component lifecycle and performance
 
 3. **Implement Responsive Foundation**
+   - **ULTRA THINK** when making critical technology decisions (frameworks, state management patterns)
    - Start with mobile-first CSS
    - Use flexible layouts (Grid, Flexbox)
    - Implement fluid typography and spacing
    - Test across breakpoints throughout development
 
 4. **Build Accessible Interactions**
+   - **ULTRA THINK** about complex accessibility challenges for users with diverse abilities
+   - Use subagents for comprehensive accessibility audits requiring different testing methodologies
    - Implement semantic HTML structure
    - Add ARIA labels and roles where needed
    - Ensure keyboard navigation works properly
    - Test with screen readers and other assistive technologies
 
 5. **Optimize Performance**
+   - **ULTRA THINK** about performance optimization for large-scale applications with thousands of components
+   - Use subagents for complex features spanning UI, state management, and backend integration
    - Implement code splitting and lazy loading
    - Optimize images and other media assets
    - Minimize and optimize CSS and JavaScript bundles
@@ -316,6 +337,19 @@ ${SPEC_OR_ISSUE}
 <coder_output>
 Read the coder's implementation details from '.temp/coder-feedback.md'
 </coder_output>
+
+<mandatory_first_step_review>
+BEFORE reviewing anything, you MUST:
+
+1. **ULTRA THINK** about the overall frontend architecture, design system, user experience patterns, and performance standards to understand the review context
+
+2. **Use subagents** to comprehensively analyze the frontend implementation:
+   - Subagent 1: Focus on accessibility compliance and user experience evaluation
+   - Subagent 2: Conduct performance analysis and optimization assessment
+   - Subagent 3: Evaluate cross-browser compatibility and responsive design quality
+
+3. **ULTRA THINK** about the holistic user experience and long-term design system implications
+</mandatory_first_step_review>
 
 <comprehensive_review_methodology>
 Conduct a thorough frontend review using this systematic approach:
@@ -547,6 +581,8 @@ After comprehensive testing, I need to assess:
 - Are performance requirements satisfied?
 - Is the code maintainable and follows best practices?
 </thinking>
+
+**ULTRA THINK** about the overall user experience quality and the decision's impact on users across different abilities and contexts.
 
 Make one of these decisions based on your review:
 

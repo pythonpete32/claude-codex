@@ -15,6 +15,19 @@ IF THERE IS A REVIEW AT '.temp/review-feedback.md', THEN:
 4. Ensure no regression in previously working functionality
 </feedback_integration>
 
+<mandatory_first_step>
+BEFORE implementing anything, you MUST:
+
+1. **ULTRA THINK** about the current codebase architecture, existing patterns, frameworks, and design decisions that will impact your implementation approach
+
+2. **Use subagents** to comprehensively explore the codebase:
+   - Subagent 1: Analyze existing architectural patterns, design principles, and code organization
+   - Subagent 2: Study current error handling, logging, and operational patterns
+   - Subagent 3: Examine testing strategies, security practices, and performance patterns
+
+3. **ULTRA THINK** about how your implementation will enhance and integrate with the existing system architecture
+</mandatory_first_step>
+
 <development_philosophy>
 <thinking>
 Before writing any code, I need to think about:
@@ -72,26 +85,32 @@ Apply these patterns where appropriate:
 <implementation_strategy>
 <step_by_step_process>
 1. **Analyze Requirements**
+   - **ULTRA THINK** about complex system architectures and integration challenges
    - Break down the specification into clear, actionable tasks
    - Identify dependencies and integration points
    - Consider edge cases and error scenarios
 
 2. **Design Architecture**
+   - **ULTRA THINK** about critical technology decisions and their long-term implications
+   - Use subagents for large features requiring multiple perspectives (backend, database, API design)
    - Define clear interfaces and contracts
    - Plan data flow and state management
    - Consider testability from the start
 
 3. **Implement Core Logic**
+   - **ULTRA THINK** when debugging complex multi-component issues
    - Start with the most critical functionality
    - Write clean, readable code with appropriate comments
    - Handle errors gracefully with informative messages
 
 4. **Add Comprehensive Error Handling**
+   - Use subagents for comprehensive security audits spanning different vulnerability types
    - Validate inputs and provide clear error messages
    - Handle edge cases and boundary conditions
    - Implement proper logging and monitoring hooks
 
 5. **Write Tests**
+   - Use subagents for coordinated documentation covering technical, user, and operational perspectives
    - Cover happy path, edge cases, and error conditions
    - Test interfaces and contracts, not just implementation
    - Ensure tests are maintainable and serve as documentation
@@ -215,6 +234,19 @@ ${SPEC_OR_ISSUE}
 Read the coder's implementation details from '.temp/coder-feedback.md'
 </coder_output>
 
+<mandatory_first_step_review>
+BEFORE reviewing anything, you MUST:
+
+1. **ULTRA THINK** about the overall system architecture, existing patterns, and quality standards to understand the review context
+
+2. **Use subagents** to comprehensively analyze the implementation:
+   - Subagent 1: Focus on architectural quality and system design evaluation
+   - Subagent 2: Conduct security analysis and performance review
+   - Subagent 3: Assess maintainability, documentation, and operational readiness
+
+3. **ULTRA THINK** about the long-term architectural implications and system evolution patterns
+</mandatory_first_step_review>
+
 <review_framework>
 Conduct a comprehensive review using this systematic approach:
 
@@ -336,6 +368,8 @@ Based on my analysis, I need to categorize issues by severity:
 - Medium: Should be improved (code quality, minor issues)
 - Low: Nice to have (optimizations, style improvements)
 </thinking>
+
+**ULTRA THINK** about the production readiness decision and its long-term implications for the system.
 
 After completing your review, make a decision:
 
