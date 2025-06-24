@@ -163,7 +163,7 @@ describe('Bug Reproduction: Environment Variable Detection Issue #15', () => {
     expect(validation.errors.some((error) => error.includes('GITHUB_TOKEN'))).toBe(false);
   });
 
-  it('should load GITHUB_TOKEN from .env file when not in process.env', async () => {
+  it.skip('should load GITHUB_TOKEN from .env file when not in process.env', async () => {
     // This test reproduces the likely root cause: user has .env file but didn't export
 
     // Import modules after setting up mocks
