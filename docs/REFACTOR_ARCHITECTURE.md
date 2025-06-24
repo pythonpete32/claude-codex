@@ -1039,21 +1039,23 @@ program
 1. **Create config system** - Zod schema, loading, validation from ~/.claude/.codex.config.json
 2. **Update types** - Remove TDD-specific types, add team types
 3. **Create team loading system** - Dynamic loading from ~/.claude/teams/
+4. **Create team coordinator** - Replace TDD workflow with generic team workflow
+5. **Implement file-based communication** - Teams communicate via .temp/ files
 
 ### Phase 3: CLI Refactor
 1. **Refactor CLI parsing** - Replace manual parsing with commander
 2. **Update command handler** - Generic team command instead of TDD-specific
 3. **Update help system** - New usage patterns and examples
 
-### Phase 4: Team System
-1. **Create team builder interface** - TypeScript function signatures
-2. **Implement team coordinator** - Orchestrates coder → reviewer execution
-3. **Add MCP integration** - Team-specific MCP configuration
-
-### Phase 5: State Management & Integration
-1. **Update state management** - Team-agnostic task state
+### Phase 4: MCP Integration
+1. **Add MCP integration** - Team-specific MCP configuration to Claude SDK
 2. **Update SDK wrapper** - Add MCP config support
-3. **Update all tests** - New CLI structure and team patterns
+3. **Test team MCP configurations** - Verify each team gets correct tools
+
+### Phase 5: Testing & Integration
+1. **Update all tests** - New CLI structure and team patterns
+2. **Add integration tests** - Test full team workflows
+3. **Performance testing** - Ensure team loading is fast
 
 ## Migration Strategy
 

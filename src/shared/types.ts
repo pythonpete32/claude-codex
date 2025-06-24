@@ -8,17 +8,15 @@ export type {
   SDKUserMessage,
 } from '@anthropic-ai/claude-code';
 
-// Core workflow types
+// Core team workflow types
 export interface TaskState {
   taskId: string;
-  specPath: string;
-  originalSpec: string;
+  specOrIssue: string; // Spec file or GitHub issue reference
+  teamType: string; // Team type
   currentIteration: number;
   maxIterations: number;
   branchName: string;
   worktreeInfo: WorktreeInfo;
-  coderResponses: string[];
-  reviewerResponses: string[];
   createdAt: string;
   updatedAt: string;
   status: 'running' | 'completed' | 'failed';
@@ -41,15 +39,16 @@ export interface PRInfo {
 
 // Agent execution types for Claude SDK wrapper
 
-// Configuration types
-export interface TDDOptions {
-  specPath: string;
+// Team coordination types
+export interface CoordinationOptions {
+  specOrIssue: string; // Spec file or GitHub issue reference
+  teamType: string; // Any team name (loaded dynamically)
   maxReviews: number;
   branchName?: string;
   cleanup: boolean;
 }
 
-export interface TDDResult {
+export interface TeamResult {
   success: boolean;
   prUrl?: string;
   iterations: number;
@@ -63,15 +62,12 @@ export interface GitHubConfig {
   repo: string;
 }
 
-// Prompt utility types
-export interface CoderPromptOptions {
-  specContent: string;
-  reviewerFeedback?: string;
-}
+// Team builder types
+export type PromptBuilder = (specOrIssue: string) => string;
 
-export interface ReviewerPromptOptions {
-  originalSpec: string;
-  coderHandoff: string;
+export interface Team {
+  CODER: PromptBuilder;
+  REVIEWER: PromptBuilder;
 }
 
 // Git command execution result
@@ -95,10 +91,18 @@ export interface PreflightResult {
 }
 
 // CLI argument types
-export interface TDDCommandArgs {
-  specPath: string;
-  reviews?: number;
+export interface TeamCommandArgs {
+  specOrIssue: string;
+  team: string;
+  reviews: number;
   branch?: string;
-  cleanup?: boolean;
-  verbose?: boolean;
+  cleanup: boolean;
+  verbose: boolean;
+}
+
+// State management options
+export interface TaskStateOptions {
+  taskId: string;
+  maxIterations: number;
+  teamType: string;
 }

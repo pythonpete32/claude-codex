@@ -46,14 +46,9 @@ export {
   listPRsForBranch,
 } from './core/operations/github.js';
 
-export {
-  formatCoderPrompt,
-  formatReviewerPrompt,
-} from './core/operations/prompts.js';
+// Prompt formatting now handled by teams directly
 
 export {
-  addCoderResponse,
-  addReviewerResponse,
   cleanupTaskState,
   getTaskState,
   initializeTaskState,
@@ -68,6 +63,7 @@ export {
   isGitRepository,
   listWorktrees,
 } from './core/operations/worktree.js';
+export { executeTeamWorkflow, listTeams } from './core/team-coordinator.js';
 // Re-export error classes
 export {
   AgentExecutionError,
@@ -90,18 +86,18 @@ export {
 } from './shared/errors.js';
 // Re-export types for external use
 export type {
-  CoderPromptOptions,
+  CoordinationOptions,
   GitHubConfig,
   PRInfo,
   PreflightResult,
-  ReviewerPromptOptions,
+  PromptBuilder,
   SDKMessage,
   SDKResult,
   TaskState,
-  TDDCommandArgs,
-  TDDOptions,
-  TDDResult,
+  Team,
+  TeamCommandArgs,
+  TeamResult,
   WorktreeInfo,
 } from './shared/types.js';
-// Re-export workflow
+// Re-export workflows
 export { executeTDDWorkflow } from './workflows/tdd.js';

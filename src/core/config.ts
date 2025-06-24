@@ -1,7 +1,7 @@
-import { z } from 'zod';
 import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { z } from 'zod';
 import { pathExists } from '../shared/utils.js';
 
 /**
@@ -28,13 +28,15 @@ export const CodexConfigSchema = z.object({
   mcpServers: z.record(MCPServerSchema).optional(),
 
   // Team-specific configurations
-  teams: z.record(z.object({
-    mcps: z.array(z.string()),                    // MCP server names enabled for this team
-  })),
+  teams: z.record(
+    z.object({
+      mcps: z.array(z.string()), // MCP server names enabled for this team
+    })
+  ),
 
   // Global defaults
   defaults: z.object({
-    team: z.string().default('standard'),         // Default team, but any team name is valid
+    team: z.string().default('standard'), // Default team, but any team name is valid
     maxReviews: z.number().min(1).max(10).default(3),
     cleanup: z.boolean().default(true),
   }),
@@ -51,21 +53,21 @@ export type ClaudeSDKMCPConfig = z.infer<typeof MCPConfigSchema>;
  */
 export async function loadCodexConfig(): Promise<CodexConfig> {
   const configPath = join(homedir(), '.claude', '.codex.config.json');
-  
-  if (!await pathExists(configPath)) {
+
+  if (!(await pathExists(configPath))) {
     throw new Error(`Config file not found: ${configPath}. Run 'claude-codex init' to create it.`);
   }
 
   const configContent = await readFile(configPath, 'utf-8');
   const rawConfig = JSON.parse(configContent);
-  
+
   // Validate and parse with Zod
   const result = CodexConfigSchema.safeParse(rawConfig);
-  
+
   if (!result.success) {
     throw new Error(`Invalid config file: ${result.error.message}`);
   }
-  
+
   return result.data;
 }
 
@@ -91,6 +93,6 @@ export async function getMCPConfigForTeam(
   }
 
   return {
-    mcpServers: enabledMCPServers
+    mcpServers: enabledMCPServers,
   };
 }

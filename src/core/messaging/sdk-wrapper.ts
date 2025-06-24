@@ -1,6 +1,7 @@
 import { query, type SDKMessage, type SDKResultMessage } from '@anthropic-ai/claude-code';
 import { forceSubscriptionAuth } from '../../lib.js';
 import { AgentExecutionError } from '../../shared/errors.js';
+import type { ClaudeSDKMCPConfig } from '../config.js';
 import { logDebugMessages } from './debug-logger.js';
 import { processMessagesWithDisplay } from './message-processor.js';
 import { extractAgentResults, logFinalResponse } from './result-extractor.js';
@@ -39,6 +40,9 @@ export interface ClaudeAgentOptions {
     showTimestamps?: boolean;
     verbose?: boolean;
   };
+
+  // MCP Configuration
+  mcpConfig?: ClaudeSDKMCPConfig;
 
   // Debug Options
   debug?: boolean; // Enable debug message logging
@@ -90,6 +94,8 @@ export async function runClaudeAgent(options: ClaudeAgentOptions): Promise<Agent
     executable: options.executable,
     executableArgs: options.executableArgs,
     pathToClaudeCodeExecutable: options.pathToClaudeCodeExecutable,
+    // Add MCP configuration if provided
+    ...(options.mcpConfig?.mcpServers && { mcpServers: options.mcpConfig.mcpServers }),
   };
 
   let messages: SDKMessage[] = [];

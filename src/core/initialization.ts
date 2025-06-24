@@ -1,6 +1,6 @@
-import { mkdir, copyFile, readdir } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { copyFile, mkdir, readdir } from 'node:fs/promises';
 import { homedir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pathExists } from '../shared/utils.js';
 import type { CodexConfig } from './config.js';
@@ -29,7 +29,7 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
   await mkdir(commandsDir, { recursive: true });
 
   // Create default config (if doesn't exist or force)
-  if (!options.teamsOnly && (!await pathExists(configPath) || options.force)) {
+  if (!options.teamsOnly && (!(await pathExists(configPath)) || options.force)) {
     const templateConfigPath = join(TEMPLATES_DIR, '.codex.config.json');
     await copyFile(templateConfigPath, configPath);
     console.log('✅ Created config:', configPath);
@@ -39,11 +39,11 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
   if (!options.configOnly) {
     const teamsTemplateDir = join(TEMPLATES_DIR, 'teams');
     const teamFiles = await readdir(teamsTemplateDir);
-    
+
     for (const teamFile of teamFiles) {
       if (teamFile.endsWith('.ts')) {
         const teamPath = join(teamsDir, teamFile);
-        if (!await pathExists(teamPath) || options.force) {
+        if (!(await pathExists(teamPath)) || options.force) {
           const templatePath = join(teamsTemplateDir, teamFile);
           await copyFile(templatePath, teamPath);
           console.log('✅ Created team:', teamPath);
@@ -56,10 +56,10 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
   if (!options.configOnly) {
     const commandsTemplateDir = join(TEMPLATES_DIR, 'commands');
     const commandFiles = await readdir(commandsTemplateDir);
-    
+
     for (const commandFile of commandFiles) {
       const commandPath = join(commandsDir, commandFile);
-      if (!await pathExists(commandPath) || options.force) {
+      if (!(await pathExists(commandPath)) || options.force) {
         const templatePath = join(commandsTemplateDir, commandFile);
         await copyFile(templatePath, commandPath);
         console.log('✅ Created command:', commandPath);
@@ -73,4 +73,3 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
   console.log('2. Run: claude-codex ./spec.md --team standard');
   console.log('3. Add custom teams in ~/.claude/teams/');
 }
-

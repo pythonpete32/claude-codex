@@ -41,12 +41,12 @@ function validateTaskState(state: unknown): asserts state is TaskState {
     throw new ValidationError('taskId must be a string');
   }
 
-  if (typeof s.specPath !== 'string') {
-    throw new ValidationError('specPath must be a string');
+  if (typeof s.specOrIssue !== 'string') {
+    throw new ValidationError('specOrIssue must be a string');
   }
 
-  if (typeof s.originalSpec !== 'string') {
-    throw new ValidationError('originalSpec must be a string');
+  if (typeof s.teamType !== 'string') {
+    throw new ValidationError('teamType must be a string');
   }
 
   if (typeof s.currentIteration !== 'number') {
@@ -61,13 +61,7 @@ function validateTaskState(state: unknown): asserts state is TaskState {
     throw new ValidationError('branchName must be a string');
   }
 
-  if (!Array.isArray(s.coderResponses)) {
-    throw new ValidationError('coderResponses must be an array');
-  }
-
-  if (!Array.isArray(s.reviewerResponses)) {
-    throw new ValidationError('reviewerResponses must be an array');
-  }
+  // Old arrays removed - teams now communicate via files
 
   if (typeof s.createdAt !== 'string') {
     throw new ValidationError('createdAt must be a string');
@@ -134,12 +128,11 @@ async function writeTaskStateAtomic(taskState: TaskState): Promise<void> {
  * Initialize new task state and return complete TaskState object
  */
 export async function initializeTaskState(
-  specPath: string,
+  specOrIssue: string,
   options: Partial<TaskState> = {}
 ): Promise<TaskState> {
   try {
     // Read specification file
-    const originalSpec = await fs.readFile(specPath, 'utf8');
 
     // Use provided task ID or generate new one
     const taskId = options.taskId || generateTaskId();
@@ -147,8 +140,8 @@ export async function initializeTaskState(
 
     const taskState: TaskState = {
       taskId,
-      specPath,
-      originalSpec,
+      specOrIssue: specOrIssue, // Spec file or GitHub issue reference
+      teamType: 'tdd', // Default to TDD for backward compatibility
       currentIteration: 0,
       maxIterations: 3,
       branchName: `tdd/${taskId}`,
@@ -157,8 +150,6 @@ export async function initializeTaskState(
         branchName: '',
         baseBranch: '',
       },
-      coderResponses: [],
-      reviewerResponses: [],
       createdAt: now,
       updatedAt: now,
       status: 'running',
@@ -230,44 +221,6 @@ export async function updateTaskState(taskState: TaskState): Promise<void> {
     }
     throw new StateManagementError(
       `Failed to update task state: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      error instanceof Error ? error : undefined
-    );
-  }
-}
-
-/**
- * Add coder response to existing task state
- */
-export async function addCoderResponse(taskId: string, response: string): Promise<void> {
-  try {
-    const taskState = await getTaskState(taskId);
-    taskState.coderResponses.push(response);
-    await updateTaskState(taskState);
-  } catch (error) {
-    if (error instanceof TaskNotFoundError || error instanceof StateParseError) {
-      throw error;
-    }
-    throw new StateManagementError(
-      `Failed to add coder response: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      error instanceof Error ? error : undefined
-    );
-  }
-}
-
-/**
- * Add reviewer response to existing task state
- */
-export async function addReviewerResponse(taskId: string, response: string): Promise<void> {
-  try {
-    const taskState = await getTaskState(taskId);
-    taskState.reviewerResponses.push(response);
-    await updateTaskState(taskState);
-  } catch (error) {
-    if (error instanceof TaskNotFoundError || error instanceof StateParseError) {
-      throw error;
-    }
-    throw new StateManagementError(
-      `Failed to add reviewer response: ${error instanceof Error ? error.message : 'Unknown error'}`,
       error instanceof Error ? error : undefined
     );
   }
