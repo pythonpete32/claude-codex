@@ -7,6 +7,7 @@
 import { Command } from 'commander';
 import { handleInitCommand } from '~/cli/commands/init.js';
 import { handleTeamCommand } from '~/cli/commands/team.js';
+import { handleTestCommand } from '~/cli/commands/test.js';
 
 // Version from package.json
 const version = '0.4.0';
@@ -36,6 +37,9 @@ export async function runCLI(argv: string[] = process.argv): Promise<void> {
     .option('-b, --branch-name <name>', 'Custom branch name for the feature')
     .option('--no-cleanup', 'Skip cleanup of worktree and task state after completion')
     .action(handleTeamCommand);
+
+  // Test command
+  program.command('test').description('Test command that outputs ping').action(handleTestCommand);
 
   try {
     await program.parseAsync(argv);
