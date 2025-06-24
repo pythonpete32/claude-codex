@@ -21,7 +21,7 @@ const mockFetch = vi.mocked(fetch);
 
 // Import modules after mocking
 const { getGitHubConfig, checkPRExists, listPRsForBranch } = await import(
-  '../../../src/core/operations/github.js'
+  '../../../src/operations/github.js'
 );
 
 describe('GitHub Operations', () => {

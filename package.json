@@ -64,8 +64,10 @@
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.31",
     "@reliverse/relinka": "^1.5.3",
+    "commander": "^14.0.0",
     "picocolors": "^1.1.1",
-    "terminal-size": "^4.0.0"
+    "terminal-size": "^4.0.0",
+    "zod": "^3.25.67"
   },
   "engines": {
     "node": ">=18.0.0"

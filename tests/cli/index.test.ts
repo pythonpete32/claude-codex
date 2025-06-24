@@ -1,16 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { runCLI } from '../../src/cli/index.js';
 
-// Mock all CLI modules
-vi.mock('../../src/cli/args.js', () => ({
-  parseArgs: vi.fn(),
-  validateArgs: vi.fn(),
-  displayHelp: vi.fn(),
-  displayVersion: vi.fn(),
+// Mock all command handlers
+
+vi.mock('../../src/cli/commands/init.js', () => ({
+  handleInitCommand: vi.fn(),
 }));
 
-vi.mock('../../src/cli/commands/tdd.js', () => ({
-  handleTDDCommand: vi.fn(),
+vi.mock('../../src/cli/commands/team.js', () => ({
+  handleTeamCommand: vi.fn(),
+}));
+
+// Mock package.json
+vi.mock('node:module', () => ({
+  createRequire: vi.fn(() => ({
+    '../../package.json': { version: '1.0.0-test' },
+  })),
 }));
 
 // Mock process.exit
@@ -19,149 +24,115 @@ const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => {
 });
 
 // Import mocked modules
-const mockArgs = await import('../../src/cli/args.js');
-const mockTDDCommand = await import('../../src/cli/commands/tdd.js');
+const mockInitCommand = await import('../../src/cli/commands/init.js');
+const mockTeamCommand = await import('../../src/cli/commands/team.js');
 
-describe('CLI Index', () => {
+describe('CLI Index with Commander.js', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
     // Mock console methods
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'log').mockImplementation(() => {});
 
     // Setup default mocks
-    vi.mocked(mockArgs.parseArgs).mockReturnValue({});
-    vi.mocked(mockArgs.validateArgs).mockImplementation(() => {});
-    vi.mocked(mockArgs.displayHelp).mockImplementation(() => {});
-    vi.mocked(mockArgs.displayVersion).mockImplementation(() => {});
-    vi.mocked(mockTDDCommand.handleTDDCommand).mockResolvedValue(undefined);
+    vi.mocked(mockInitCommand.handleInitCommand).mockResolvedValue(undefined);
+    vi.mocked(mockTeamCommand.handleTeamCommand).mockResolvedValue(undefined);
   });
 
   describe('help and version handling', () => {
-    it('should display help and return when help flag is present', async () => {
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({ help: true });
-
-      await runCLI(['node', 'script', '--help']);
-
-      expect(mockArgs.displayHelp).toHaveBeenCalledOnce();
-      expect(mockArgs.validateArgs).not.toHaveBeenCalled();
-      expect(mockTDDCommand.handleTDDCommand).not.toHaveBeenCalled();
+    it('should handle help flag', async () => {
+      // Commander.js handles help automatically and exits, so we expect process.exit
+      await expect(runCLI(['node', 'script', '--help'])).rejects.toThrow('process.exit');
     });
 
-    it('should display version and return when version flag is present', async () => {
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({ version: true });
-
-      await runCLI(['node', 'script', '--version']);
-
-      expect(mockArgs.displayVersion).toHaveBeenCalledOnce();
-      expect(mockArgs.validateArgs).not.toHaveBeenCalled();
-      expect(mockTDDCommand.handleTDDCommand).not.toHaveBeenCalled();
+    it('should handle version flag', async () => {
+      // Commander.js handles version automatically and exits, so we expect process.exit
+      await expect(runCLI(['node', 'script', '--version'])).rejects.toThrow('process.exit');
     });
   });
 
   describe('command routing', () => {
-    it('should route tdd command to TDD handler', async () => {
-      const mockTDDArgs = {
-        specPath: './spec.md',
-        reviews: 3,
-        cleanup: true,
-        verbose: false,
-      };
-
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({
-        command: 'tdd',
-        tdd: mockTDDArgs,
-      });
-
-      await runCLI(['node', 'script', 'tdd', './spec.md']);
-
-      expect(mockArgs.parseArgs).toHaveBeenCalledWith(['node', 'script', 'tdd', './spec.md']);
-      expect(mockArgs.validateArgs).toHaveBeenCalledWith({
-        command: 'tdd',
-        tdd: mockTDDArgs,
-      });
-      expect(mockTDDCommand.handleTDDCommand).toHaveBeenCalledWith(mockTDDArgs);
+    it('should route init command to init handler', async () => {
+      await runCLI(['node', 'script', 'init']);
+      expect(mockInitCommand.handleInitCommand).toHaveBeenCalled();
     });
 
-    it('should handle missing TDD args', async () => {
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({
-        command: 'tdd',
-        // tdd args missing
-      });
-
-      await expect(runCLI(['node', 'script', 'tdd'])).rejects.toThrow('process.exit');
-
-      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'TDD command arguments missing');
-      expect(mockExit).toHaveBeenCalledWith(1);
-    });
-
-    it('should handle no command specified', async () => {
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({});
-
-      await expect(runCLI(['node', 'script'])).rejects.toThrow('process.exit');
-
-      expect(console.error).toHaveBeenCalledWith(
-        '❌ Error:',
-        'No command specified. Use --help for usage information.'
+    it('should route init command with force flag', async () => {
+      await runCLI(['node', 'script', 'init', '--force']);
+      expect(mockInitCommand.handleInitCommand).toHaveBeenCalledWith(
+        { force: true },
+        expect.any(Object)
       );
-      expect(mockExit).toHaveBeenCalledWith(1);
+    });
+
+    it('should route team command to team handler', async () => {
+      await runCLI(['node', 'script', 'team', 'tdd', './spec.md']);
+      expect(mockTeamCommand.handleTeamCommand).toHaveBeenCalledWith(
+        'tdd',
+        './spec.md',
+        {
+          cleanup: true,
+          maxReviews: '3',
+        },
+        expect.any(Object)
+      );
+    });
+
+    it('should route team command with options', async () => {
+      await runCLI([
+        'node',
+        'script',
+        'team',
+        'standard',
+        './spec.md',
+        '--max-reviews',
+        '3',
+        '--branch-name',
+        'feature/xyz',
+      ]);
+      expect(mockTeamCommand.handleTeamCommand).toHaveBeenCalledWith(
+        'standard',
+        './spec.md',
+        {
+          maxReviews: '3',
+          branchName: 'feature/xyz',
+          cleanup: true,
+        },
+        expect.any(Object)
+      );
     });
   });
 
   describe('error handling', () => {
-    it('should handle parsing errors', async () => {
-      vi.mocked(mockArgs.parseArgs).mockImplementation(() => {
-        throw new Error('Invalid argument');
-      });
+    it('should handle init command errors', async () => {
+      vi.mocked(mockInitCommand.handleInitCommand).mockRejectedValue(new Error('Init failed'));
 
-      await expect(runCLI(['node', 'script', '--invalid'])).rejects.toThrow('process.exit');
+      await expect(runCLI(['node', 'script', 'init'])).rejects.toThrow('process.exit');
 
-      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'Invalid argument');
-      expect(console.error).toHaveBeenCalledWith('💡 Use --help for usage information');
+      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'Init failed');
       expect(mockExit).toHaveBeenCalledWith(1);
     });
 
-    it('should handle validation errors', async () => {
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({ command: 'tdd' });
-      vi.mocked(mockArgs.validateArgs).mockImplementation(() => {
-        throw new Error('Validation failed');
-      });
-
-      await expect(runCLI(['node', 'script', 'tdd'])).rejects.toThrow('process.exit');
-
-      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'Validation failed');
-      expect(mockExit).toHaveBeenCalledWith(1);
-    });
-
-    it('should handle TDD command execution errors', async () => {
-      const mockTDDArgs = {
-        specPath: './spec.md',
-        reviews: 3,
-        cleanup: true,
-        verbose: false,
-      };
-
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({
-        command: 'tdd',
-        tdd: mockTDDArgs,
-      });
-
-      vi.mocked(mockTDDCommand.handleTDDCommand).mockRejectedValue(
-        new Error('TDD execution failed')
+    it('should handle team command errors', async () => {
+      vi.mocked(mockTeamCommand.handleTeamCommand).mockRejectedValue(
+        new Error('Team execution failed')
       );
 
-      await expect(runCLI(['node', 'script', 'tdd', './spec.md'])).rejects.toThrow('process.exit');
+      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow(
+        'process.exit'
+      );
 
-      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'TDD execution failed');
+      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'Team execution failed');
       expect(mockExit).toHaveBeenCalledWith(1);
     });
 
     it('should handle non-Error objects', async () => {
-      vi.mocked(mockArgs.parseArgs).mockImplementation(() => {
-        throw 'String error';
-      });
+      vi.mocked(mockTeamCommand.handleTeamCommand).mockRejectedValue('String error');
 
-      await expect(runCLI(['node', 'script'])).rejects.toThrow('process.exit');
+      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow(
+        'process.exit'
+      );
 
       expect(console.error).toHaveBeenCalledWith('❌ Error:', 'String error');
     });
@@ -171,14 +142,11 @@ describe('CLI Index', () => {
     it('should use process.argv by default', async () => {
       // Mock process.argv
       const originalArgv = process.argv;
-      process.argv = ['node', 'script', '--help'];
-
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({ help: true });
+      process.argv = ['node', 'script', 'init'];
 
       await runCLI();
 
-      expect(mockArgs.parseArgs).toHaveBeenCalledWith(['node', 'script', '--help']);
-      expect(mockArgs.displayHelp).toHaveBeenCalledOnce();
+      expect(mockInitCommand.handleInitCommand).toHaveBeenCalledWith({}, expect.any(Object));
 
       // Restore original process.argv
       process.argv = originalArgv;
@@ -186,49 +154,27 @@ describe('CLI Index', () => {
   });
 
   describe('integration flow', () => {
-    it('should execute complete flow for successful tdd command', async () => {
-      const mockTDDArgs = {
-        specPath: './spec.md',
-        reviews: 5,
-        branch: 'feature/test',
-        cleanup: true,
-        verbose: true,
-      };
-
-      vi.mocked(mockArgs.parseArgs).mockReturnValue({
-        command: 'tdd',
-        tdd: mockTDDArgs,
-      });
-
+    it('should execute complete flow for team command', async () => {
       await runCLI([
         'node',
         'script',
-        'tdd',
+        'team',
+        'frontend',
         './spec.md',
-        '--reviews',
-        '5',
-        '--branch',
-        'feature/test',
-        '--verbose',
+        '--max-reviews',
+        '3',
+        '--no-cleanup',
       ]);
 
-      // Verify complete flow
-      expect(mockArgs.parseArgs).toHaveBeenCalledWith([
-        'node',
-        'script',
-        'tdd',
+      expect(mockTeamCommand.handleTeamCommand).toHaveBeenCalledWith(
+        'frontend',
         './spec.md',
-        '--reviews',
-        '5',
-        '--branch',
-        'feature/test',
-        '--verbose',
-      ]);
-      expect(mockArgs.validateArgs).toHaveBeenCalledWith({
-        command: 'tdd',
-        tdd: mockTDDArgs,
-      });
-      expect(mockTDDCommand.handleTDDCommand).toHaveBeenCalledWith(mockTDDArgs);
+        {
+          maxReviews: '3',
+          cleanup: false,
+        },
+        expect.any(Object)
+      );
     });
   });
 });

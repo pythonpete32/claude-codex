@@ -18,7 +18,7 @@ vi.mock('util', () => ({
 
 // Import the modules after mocking
 const { createWorktree, getCurrentBranch, isGitRepository, cleanupWorktree, listWorktrees } =
-  await import('../../../src/core/operations/worktree.js');
+  await import('../../../src/operations/worktree.js');
 
 describe('Worktree Operations', () => {
   beforeEach(() => {

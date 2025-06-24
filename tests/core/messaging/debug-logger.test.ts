@@ -8,7 +8,7 @@ import {
   generateDebugFileName,
   loadDebugMessages,
   logDebugMessages,
-} from '../../../src/core/messaging/debug-logger.js';
+} from '../../../src/messaging/debug-logger.js';
 import { SAMPLE_DEBUG_LOG, SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
 
 // Mock console methods

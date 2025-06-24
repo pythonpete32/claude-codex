@@ -10,7 +10,7 @@ const mockColors = {
   success: vi.fn((text: string) => `success(${text})`),
 };
 
-vi.mock('../src/core/messaging.js', () => ({
+vi.mock('../src/shared/colors.js', () => ({
   colors: mockColors,
 }));
 
