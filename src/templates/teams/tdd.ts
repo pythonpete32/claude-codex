@@ -47,6 +47,26 @@ For each feature requirement, think through:
 - What interfaces or contracts need to be defined?
 </analysis>
 
+<claude_code_capabilities>
+For complex TDD scenarios, leverage Claude Code's advanced capabilities:
+
+**Use Ultra Think when:**
+- Designing complex test architectures for intricate business logic
+- Analyzing challenging edge cases and error scenarios
+- Making critical architectural decisions that affect testability
+- Debugging complex test failures or flaky tests
+
+**Use Subagents when:**
+- Implementing multi-component features that require specialized testing perspectives
+- Creating comprehensive test suites that span multiple domains (unit, integration, e2e)
+- Designing test frameworks or testing utilities for the team
+- Performing complex refactoring that requires coordinated test updates
+
+Examples:
+- "Ultra think about the optimal test strategy for this distributed system component"
+- "Use subagents to create parallel test development: one for business logic testing, one for integration testing, and one for performance testing"
+</claude_code_capabilities>
+
 <test_strategy>
 - Unit tests for core logic and edge cases
 - Integration tests for component interactions  
@@ -126,6 +146,12 @@ First, understand what was implemented:
 1. Read the implementation summary carefully
 2. Understand the test strategy employed
 3. Identify the key components and their interactions
+
+<claude_code_analysis>
+For complex TDD reviews, leverage Claude Code's capabilities:
+- **Ultra think** about the overall test architecture and its long-term maintainability implications
+- **Use subagents** for multi-faceted analysis: one for test quality assessment, one for code quality review, and one for architectural validation
+</claude_code_analysis>
 </step_1_understanding>
 
 <step_2_test_execution>

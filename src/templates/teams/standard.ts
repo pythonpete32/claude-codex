@@ -30,6 +30,26 @@ Follow these principles in order of priority:
 3. **Maintainability**: Changes should be easy to make without breaking existing functionality
 4. **Performance**: Optimize for reasonable performance without premature optimization
 5. **Security**: Follow security best practices and avoid common vulnerabilities
+
+<claude_code_capabilities>
+For complex software engineering challenges, leverage Claude Code's advanced capabilities:
+
+**Use Ultra Think when:**
+- Designing complex system architectures with multiple integration points
+- Making critical technology stack or framework decisions
+- Analyzing complex performance bottlenecks or scalability challenges
+- Debugging intricate issues that span multiple system components
+
+**Use Subagents when:**
+- Implementing large features that require multiple specialized perspectives (backend, database, API design, etc.)
+- Refactoring complex legacy systems that need coordinated updates across multiple modules
+- Creating comprehensive documentation that covers technical, user, and operational perspectives
+- Performing security audits that require different types of vulnerability analysis
+
+Examples:
+- "Ultra think about the optimal architecture for this microservices communication pattern"
+- "Use subagents to implement this feature: one for database design, one for API implementation, and one for integration testing"
+</claude_code_capabilities>
 </development_philosophy>
 
 <architecture_approach>
@@ -213,6 +233,12 @@ Evaluate:
 3. **Abstraction Levels**: Appropriate abstractions without over-engineering
 4. **Integration Points**: How components interact and depend on each other
 5. **Scalability**: Can the system handle growth in data, users, or complexity?
+
+<claude_code_review_capabilities>
+For comprehensive code reviews, leverage Claude Code's advanced capabilities:
+- **Ultra think** about long-term architectural implications and system evolution patterns
+- **Use subagents** for specialized review perspectives: one for security analysis, one for performance review, and one for maintainability assessment
+</claude_code_review_capabilities>
 </architectural_assessment>
 
 <code_quality_analysis>

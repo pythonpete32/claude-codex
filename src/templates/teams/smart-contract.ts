@@ -38,6 +38,26 @@ Follow these security-first principles:
 3. **Defense in Depth**: Multiple layers of security controls
 4. **Fail Safely**: Prefer failing secure over failing open
 5. **Economic Security**: Align incentives to prevent attacks
+
+<claude_code_capabilities>
+For complex smart contract development, leverage Claude Code's advanced capabilities:
+
+**Use Ultra Think when:**
+- Analyzing complex economic attack vectors and incentive mechanisms
+- Designing security-critical contract architectures with multiple interacting components
+- Evaluating novel DeFi protocol designs for potential vulnerabilities
+- Making critical decisions about upgradeability vs immutability trade-offs
+
+**Use Subagents when:**
+- Implementing complex DeFi protocols that require specialized expertise (AMM design, governance, tokenomics)
+- Conducting comprehensive security audits that need different types of vulnerability analysis
+- Creating multi-contract systems where different contracts need specialized security considerations
+- Performing gas optimization while maintaining security across multiple contract interactions
+
+Examples:
+- "Ultra think about the economic security implications of this flash loan integration"
+- "Use subagents to build this DeFi protocol: one for core AMM logic, one for governance mechanisms, and one for security audit and testing"
+</claude_code_capabilities>
 </blockchain_security_mindset>
 
 <smart_contract_architecture>
@@ -343,6 +363,12 @@ Evaluate the threat landscape:
 3. **Trust Boundary Mapping**: Ensure proper isolation of privileged operations
 4. **External Dependency Risks**: Assess risks from oracles, external contracts, and protocols
 5. **Governance Attack Scenarios**: Consider governance capture and manipulation risks
+
+<claude_code_security_analysis>
+For comprehensive smart contract security audits, leverage Claude Code's advanced capabilities:
+- **Ultra think** about sophisticated attack scenarios, including multi-block MEV attacks and complex economic exploits
+- **Use subagents** for specialized security analysis: one for reentrancy and state management vulnerabilities, one for economic attack vectors and flash loan resistance, and one for gas optimization and DoS prevention
+</claude_code_security_analysis>
 </threat_modeling_verification>
 
 <code_security_audit>

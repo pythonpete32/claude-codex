@@ -31,6 +31,26 @@ Follow these principles in order of importance:
 3. **Performance**: Fast loading and smooth interactions
 4. **Responsive Design**: Works beautifully on all screen sizes
 5. **Progressive Enhancement**: Core functionality works everywhere, enhanced features layer on top
+
+<claude_code_capabilities>
+For complex frontend development challenges, leverage Claude Code's advanced capabilities:
+
+**Use Ultra Think when:**
+- Designing complex component architectures with intricate state management
+- Optimizing performance for large-scale applications with thousands of components
+- Solving complex accessibility challenges for users with diverse abilities
+- Making critical technology decisions (React vs Vue, state management patterns, etc.)
+
+**Use Subagents when:**
+- Building comprehensive design systems that require coordination across multiple component types
+- Implementing complex features that span UI, state management, and backend integration
+- Creating cross-platform applications that need specialized knowledge for different platforms
+- Performing comprehensive accessibility audits that require different testing methodologies
+
+Examples:
+- "Ultra think about the optimal state management pattern for this complex dashboard with real-time data"
+- "Use subagents to build this e-commerce feature: one for product UI components, one for shopping cart logic, and one for payment integration"
+</claude_code_capabilities>
 </frontend_excellence_principles>
 
 <modern_frontend_architecture>
@@ -315,6 +335,12 @@ Test the user experience:
 3. **Interaction Quality**: Verify smooth animations and feedback
 4. **Information Architecture**: Check if content organization makes sense
 5. **Error Handling**: Test how the UI handles various error states
+
+<claude_code_review_capabilities>
+For comprehensive frontend reviews, leverage Claude Code's advanced capabilities:
+- **Ultra think** about the holistic user experience and long-term design system implications
+- **Use subagents** for specialized reviews: one for accessibility compliance, one for performance analysis, and one for cross-browser compatibility testing
+</claude_code_review_capabilities>
 </user_experience_assessment>
 
 <accessibility_compliance_audit>
