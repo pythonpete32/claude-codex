@@ -96,9 +96,14 @@ export async function executeTeamWorkflow(options: CoordinationOptions): Promise
 
         // Cleanup if requested
         if (options.cleanup && worktreeInfo) {
-          console.log('🧹 Cleaning up worktree...');
-          await cleanupWorktree(worktreeInfo);
-          await cleanupTaskState(taskId);
+          try {
+            console.log('🧹 Cleaning up worktree...');
+            await cleanupWorktree(worktreeInfo);
+            await cleanupTaskState(taskId);
+          } catch (cleanupError) {
+            console.warn('⚠️  Cleanup failed:', cleanupError);
+            // Don't fail the workflow due to cleanup errors
+          }
         }
 
         return {
@@ -118,9 +123,14 @@ export async function executeTeamWorkflow(options: CoordinationOptions): Promise
 
     // Cleanup if requested
     if (options.cleanup && worktreeInfo) {
-      console.log('🧹 Cleaning up worktree...');
-      await cleanupWorktree(worktreeInfo);
-      await cleanupTaskState(taskId);
+      try {
+        console.log('🧹 Cleaning up worktree...');
+        await cleanupWorktree(worktreeInfo);
+        await cleanupTaskState(taskId);
+      } catch (cleanupError) {
+        console.warn('⚠️  Cleanup failed:', cleanupError);
+        // Don't fail the workflow due to cleanup errors
+      }
     }
 
     return {

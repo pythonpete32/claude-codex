@@ -52,7 +52,7 @@ describe('CLI Index with Commander.js', () => {
     });
 
     it('should handle version flag', async () => {
-      // Commander.js handles version automatically and exits, so we expect process.exit  
+      // Commander.js handles version automatically and exits, so we expect process.exit
       await expect(runCLI(['node', 'script', '--version'])).rejects.toThrow('process.exit');
     });
   });
@@ -84,7 +84,17 @@ describe('CLI Index with Commander.js', () => {
     });
 
     it('should route tdd command with options', async () => {
-      await runCLI(['node', 'script', 'tdd', './spec.md', '--max-reviews', '5', '--branch-name', 'feature/test', '--no-cleanup']);
+      await runCLI([
+        'node',
+        'script',
+        'tdd',
+        './spec.md',
+        '--max-reviews',
+        '5',
+        '--branch-name',
+        'feature/test',
+        '--no-cleanup',
+      ]);
       expect(mockTDDCommand.handleTDDCommand).toHaveBeenCalledWith(
         './spec.md',
         {
@@ -110,7 +120,17 @@ describe('CLI Index with Commander.js', () => {
     });
 
     it('should route team command with options', async () => {
-      await runCLI(['node', 'script', 'team', 'standard', './spec.md', '--max-reviews', '3', '--branch-name', 'feature/xyz']);
+      await runCLI([
+        'node',
+        'script',
+        'team',
+        'standard',
+        './spec.md',
+        '--max-reviews',
+        '3',
+        '--branch-name',
+        'feature/xyz',
+      ]);
       expect(mockTeamCommand.handleTeamCommand).toHaveBeenCalledWith(
         'standard',
         './spec.md',
@@ -137,9 +157,7 @@ describe('CLI Index with Commander.js', () => {
     });
 
     it('should handle init command errors', async () => {
-      vi.mocked(mockInitCommand.handleInitCommand).mockRejectedValue(
-        new Error('Init failed')
-      );
+      vi.mocked(mockInitCommand.handleInitCommand).mockRejectedValue(new Error('Init failed'));
 
       await expect(runCLI(['node', 'script', 'init'])).rejects.toThrow('process.exit');
 
@@ -152,7 +170,9 @@ describe('CLI Index with Commander.js', () => {
         new Error('Team execution failed')
       );
 
-      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow('process.exit');
+      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow(
+        'process.exit'
+      );
 
       expect(console.error).toHaveBeenCalledWith('❌ Error:', 'Team execution failed');
       expect(mockExit).toHaveBeenCalledWith(1);
@@ -175,10 +195,7 @@ describe('CLI Index with Commander.js', () => {
 
       await runCLI();
 
-      expect(mockInitCommand.handleInitCommand).toHaveBeenCalledWith(
-        {},
-        expect.any(Object)
-      );
+      expect(mockInitCommand.handleInitCommand).toHaveBeenCalledWith({}, expect.any(Object));
 
       // Restore original process.argv
       process.argv = originalArgv;

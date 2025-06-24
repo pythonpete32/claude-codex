@@ -1,9 +1,9 @@
 /**
  * @deprecated These tests are deprecated as we've migrated to commander.js
- * 
+ *
  * The manual argument parsing in src/cli/args.js has been replaced with commander.js
  * which handles argument parsing, validation, and help generation automatically.
- * 
+ *
  * New CLI tests are in index.test.ts and commands/*.test.ts
  */
 

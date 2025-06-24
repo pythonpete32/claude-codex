@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getMCPConfigForTeam } from '../../src/core/config.js';
 import type { CodexConfig } from '../../src/core/config.js';
+import { getMCPConfigForTeam } from '../../src/core/config.js';
 
 describe('MCP Configuration Integration', () => {
   const mockConfig: CodexConfig = {
@@ -34,7 +34,7 @@ describe('MCP Configuration Integration', () => {
   describe('getMCPConfigForTeam', () => {
     it('should return correct MCP config for standard team', async () => {
       const result = await getMCPConfigForTeam('standard', mockConfig);
-      
+
       expect(result.mcpServers).toEqual({
         'snap-happy': {
           command: 'npx',
@@ -48,7 +48,7 @@ describe('MCP Configuration Integration', () => {
 
     it('should return correct MCP config for frontend team', async () => {
       const result = await getMCPConfigForTeam('frontend', mockConfig);
-      
+
       expect(result.mcpServers).toEqual({
         'snap-happy': {
           command: 'npx',
@@ -67,13 +67,13 @@ describe('MCP Configuration Integration', () => {
 
     it('should return empty MCP config for smart-contract team', async () => {
       const result = await getMCPConfigForTeam('smart-contract', mockConfig);
-      
+
       expect(result.mcpServers).toEqual({});
     });
 
     it('should return empty MCP config for unknown team', async () => {
       const result = await getMCPConfigForTeam('unknown-team', mockConfig);
-      
+
       expect(result.mcpServers).toEqual({});
     });
 
@@ -82,9 +82,9 @@ describe('MCP Configuration Integration', () => {
         ...mockConfig,
         teams: {},
       };
-      
+
       const result = await getMCPConfigForTeam('standard', configWithoutTeams);
-      
+
       expect(result.mcpServers).toEqual({});
     });
 
@@ -95,9 +95,9 @@ describe('MCP Configuration Integration', () => {
           standard: { mcps: ['non-existent-mcp'] },
         },
       };
-      
+
       const result = await getMCPConfigForTeam('standard', configWithMissingMCP);
-      
+
       expect(result.mcpServers).toEqual({});
     });
   });
@@ -108,7 +108,7 @@ describe('MCP Configuration Integration', () => {
       const frontendConfig = await getMCPConfigForTeam('frontend', mockConfig);
       expect(Object.keys(frontendConfig.mcpServers)).toContain('snap-happy');
       expect(Object.keys(frontendConfig.mcpServers)).toContain('web-scraper');
-      
+
       // Smart contract teams get no additional tools (focus on security)
       const smartContractConfig = await getMCPConfigForTeam('smart-contract', mockConfig);
       expect(Object.keys(smartContractConfig.mcpServers)).toHaveLength(0);
@@ -116,7 +116,7 @@ describe('MCP Configuration Integration', () => {
 
     it('should maintain MCP server environment variables', async () => {
       const result = await getMCPConfigForTeam('standard', mockConfig);
-      
+
       expect(result.mcpServers['snap-happy'].env).toEqual({
         SNAP_HAPPY_SCREENSHOT_PATH: '~/Screenshots',
       });

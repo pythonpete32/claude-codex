@@ -20,15 +20,15 @@ export async function handleTeamCommand(
 ): Promise<void> {
   try {
     console.log(`🎯 Starting ${teamType} team workflow...`);
-    
+
     const result = await executeTeamWorkflow({
       teamType,
       specOrIssue,
-      maxReviews: options.maxReviews ? parseInt(options.maxReviews, 10) : 3,
+      maxReviews: options.maxReviews ? Number.parseInt(options.maxReviews, 10) : 3,
       branchName: options.branchName,
       cleanup: options.cleanup !== false, // Default to true unless --no-cleanup
     });
-    
+
     if (result.success) {
       console.log('🎉 Team workflow completed successfully!');
       if (result.prUrl) {
@@ -42,9 +42,11 @@ export async function handleTeamCommand(
       console.log(`🆔 Task ID: ${result.taskId}`);
       process.exit(1);
     }
-    
   } catch (error) {
-    console.error('❌ Team workflow error:', error instanceof Error ? error.message : String(error));
+    console.error(
+      '❌ Team workflow error:',
+      error instanceof Error ? error.message : String(error)
+    );
     process.exit(1);
   }
 }

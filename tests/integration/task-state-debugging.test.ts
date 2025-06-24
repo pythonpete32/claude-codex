@@ -3,8 +3,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { initializeTaskState } from '../../src/core/operations/state.js';
-import type { TDDOptions } from '../../src/shared/types.js';
+import type { CoordinationOptions } from '../../src/shared/types.js';
 import { executeTDDWorkflow } from '../../src/workflows/tdd.js';
+
+// Temporary alias for backward compatibility
+type TDDOptions = CoordinationOptions;
 
 // Mock external dependencies
 vi.mock('../../src/core/messaging/sdk-wrapper.js', () => ({
@@ -34,6 +37,22 @@ vi.mock('../../src/core/operations/worktree.js', () => ({
   cleanupWorktree: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock('../../src/core/teams.js', () => ({
+  loadTeam: vi.fn().mockResolvedValue({
+    CODER: vi.fn((spec: string) => `Mock coder prompt for: ${spec}`),
+    REVIEWER: vi.fn((spec: string) => `Mock reviewer prompt for: ${spec}`),
+  }),
+}));
+
+vi.mock('../../src/core/config.js', () => ({
+  loadCodexConfig: vi.fn().mockResolvedValue({
+    teams: { tdd: { mcps: [] } },
+    mcpServers: {},
+    defaults: { team: 'tdd', maxReviews: 3, cleanup: true },
+  }),
+  getMCPConfigForTeam: vi.fn().mockResolvedValue({ mcpServers: {} }),
+}));
+
 describe('Task State ID Consistency Debug', () => {
   let tempDir: string;
   let originalCwd: string;
@@ -59,7 +78,8 @@ Implement a simple test feature with proper error handling.
 
   it('should debug task ID consistency issue', async () => {
     const options: TDDOptions = {
-      specPath: './test-spec.md',
+      specOrIssue: './test-spec.md',
+      teamType: 'tdd',
       maxReviews: 1,
       cleanup: false,
     };

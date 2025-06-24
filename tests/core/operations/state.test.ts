@@ -142,8 +142,8 @@ describe('Task State Management', () => {
   describe('getTaskState', () => {
     const mockTaskState: TaskState = {
       taskId: 'task-123',
-      specPath: './test-spec.md',
-      originalSpec: 'Test spec',
+      specOrIssue: './test-spec.md',
+      teamType: 'tdd',
       currentIteration: 1,
       maxIterations: 3,
       branchName: 'tdd/task-123',
@@ -152,8 +152,6 @@ describe('Task State Management', () => {
         branchName: 'tdd/task-123',
         baseBranch: 'main',
       },
-      coderResponses: ['Response 1'],
-      reviewerResponses: [],
       createdAt: '2023-01-01T00:00:00.000Z',
       updatedAt: '2023-01-01T00:00:00.000Z',
       status: 'running',
@@ -193,7 +191,7 @@ describe('Task State Management', () => {
       const invalidStates = [
         { ...mockTaskState, taskId: 123 }, // Wrong type
         { ...mockTaskState, status: 'invalid' }, // Invalid status
-        { ...mockTaskState, coderResponses: 'not array' }, // Wrong type
+        { ...mockTaskState, specOrIssue: 123 }, // Wrong type
         { ...mockTaskState, currentIteration: 'not number' }, // Wrong type
       ];
 
@@ -207,8 +205,8 @@ describe('Task State Management', () => {
   describe('updateTaskState', () => {
     const mockTaskState: TaskState = {
       taskId: 'task-123',
-      specPath: './test-spec.md',
-      originalSpec: 'Test spec',
+      specOrIssue: './test-spec.md',
+      teamType: 'tdd',
       currentIteration: 1,
       maxIterations: 3,
       branchName: 'tdd/task-123',
@@ -217,8 +215,6 @@ describe('Task State Management', () => {
         branchName: 'tdd/task-123',
         baseBranch: 'main',
       },
-      coderResponses: ['Response 1'],
-      reviewerResponses: [],
       createdAt: '2023-01-01T00:00:00.000Z',
       updatedAt: '2023-01-01T00:00:00.000Z',
       status: 'running',

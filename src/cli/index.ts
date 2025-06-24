@@ -5,8 +5,8 @@
  */
 
 import { Command } from 'commander';
-import { handleTDDCommand } from './commands/tdd.js';
 import { handleInitCommand } from './commands/init.js';
+import { handleTDDCommand } from './commands/tdd.js';
 import { handleTeamCommand } from './commands/team.js';
 
 // Version from package.json

@@ -116,7 +116,9 @@ describe('TDD CLI Command Handler', () => {
     it('should handle cleanup disabled', async () => {
       const noCleanupOptions = { ...mockOptions, cleanup: false };
 
-      await expect(handleTDDCommand(mockSpecPath, noCleanupOptions)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, noCleanupOptions)).rejects.toThrow(
+        'process.exit'
+      );
 
       expect(console.log).toHaveBeenCalledWith('   Cleanup: disabled');
       expect(mockWorkflow.executeTDDWorkflow).toHaveBeenCalledWith({
