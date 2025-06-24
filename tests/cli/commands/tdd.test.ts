@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { handleTDDCommand } from '../../../src/cli/commands/tdd.js';
-import type { PreflightResult, TDDCommandArgs, TDDResult } from '../../../src/shared/types.js';
+import { handleTDDCommand, type TDDCommandOptions } from '../../../src/cli/commands/tdd.js';
+import type { PreflightResult, TeamResult } from '../../../src/shared/types.js';
 
 // Mock dependencies
 vi.mock('../../../src/workflows/tdd.js', () => ({
@@ -25,12 +25,11 @@ const mockWorkflow = await import('../../../src/workflows/tdd.js');
 const mockPreflight = await import('../../../src/shared/preflight.js');
 
 describe('TDD CLI Command Handler', () => {
-  const mockArgs: TDDCommandArgs = {
-    specPath: './test-spec.md',
-    reviews: 3,
-    branch: 'test-branch',
+  const mockSpecPath = './test-spec.md';
+  const mockOptions: TDDCommandOptions = {
+    maxReviews: '3',
+    branchName: 'test-branch',
     cleanup: true,
-    verbose: false,
   };
 
   const mockSuccessfulPreflight: PreflightResult = {
@@ -39,7 +38,7 @@ describe('TDD CLI Command Handler', () => {
     warnings: [],
   };
 
-  const mockSuccessfulResult: TDDResult = {
+  const mockSuccessfulResult: TeamResult = {
     success: true,
     prUrl: 'https://github.com/test/repo/pull/123',
     iterations: 2,
@@ -61,11 +60,12 @@ describe('TDD CLI Command Handler', () => {
 
   describe('successful execution', () => {
     it('should handle successful workflow execution', async () => {
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(mockPreflight.validateEnvironment).toHaveBeenCalledOnce();
       expect(mockWorkflow.executeTDDWorkflow).toHaveBeenCalledWith({
-        specPath: '/resolved/./test-spec.md',
+        specOrIssue: '/resolved/./test-spec.md',
+        teamType: 'tdd',
         maxReviews: 3,
         branchName: 'test-branch',
         cleanup: true,
@@ -79,7 +79,7 @@ describe('TDD CLI Command Handler', () => {
     });
 
     it('should display workflow configuration', async () => {
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.log).toHaveBeenCalledWith('🤖 Claude Codex - Starting TDD Workflow');
       expect(console.log).toHaveBeenCalledWith('   Specification: /resolved/./test-spec.md');
@@ -88,13 +88,14 @@ describe('TDD CLI Command Handler', () => {
       expect(console.log).toHaveBeenCalledWith('   Cleanup: enabled');
     });
 
-    it('should handle args without branch name', async () => {
-      const argsNoBranch = { ...mockArgs, branch: undefined };
+    it('should handle options without branch name', async () => {
+      const optionsNoBranch = { ...mockOptions, branchName: undefined };
 
-      await expect(handleTDDCommand(argsNoBranch)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, optionsNoBranch)).rejects.toThrow('process.exit');
 
       expect(mockWorkflow.executeTDDWorkflow).toHaveBeenCalledWith({
-        specPath: '/resolved/./test-spec.md',
+        specOrIssue: '/resolved/./test-spec.md',
+        teamType: 'tdd',
         maxReviews: 3,
         branchName: undefined,
         cleanup: true,
@@ -104,22 +105,23 @@ describe('TDD CLI Command Handler', () => {
       expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining('Branch:'));
     });
 
-    it('should show verbose mode when enabled', async () => {
-      const verboseArgs = { ...mockArgs, verbose: true };
+    it('should show deprecation warning', async () => {
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
-      await expect(handleTDDCommand(verboseArgs)).rejects.toThrow('process.exit');
-
-      expect(console.log).toHaveBeenCalledWith('   Verbose: enabled');
+      expect(console.log).toHaveBeenCalledWith('🚨 DEPRECATION WARNING:');
+      expect(console.log).toHaveBeenCalledWith('   The "tdd" command is deprecated.');
+      expect(console.log).toHaveBeenCalledWith('   Please use: claude-codex team tdd <spec-path>');
     });
 
     it('should handle cleanup disabled', async () => {
-      const noCleanupArgs = { ...mockArgs, cleanup: false };
+      const noCleanupOptions = { ...mockOptions, cleanup: false };
 
-      await expect(handleTDDCommand(noCleanupArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, noCleanupOptions)).rejects.toThrow('process.exit');
 
       expect(console.log).toHaveBeenCalledWith('   Cleanup: disabled');
       expect(mockWorkflow.executeTDDWorkflow).toHaveBeenCalledWith({
-        specPath: '/resolved/./test-spec.md',
+        specOrIssue: '/resolved/./test-spec.md',
+        teamType: 'tdd',
         maxReviews: 3,
         branchName: 'test-branch',
         cleanup: false,
@@ -137,7 +139,7 @@ describe('TDD CLI Command Handler', () => {
 
       vi.mocked(mockPreflight.validateEnvironment).mockResolvedValue(failedPreflight);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('❌ Environment validation failed:');
       expect(console.error).toHaveBeenCalledWith('  • GITHUB_TOKEN not found');
@@ -158,7 +160,7 @@ describe('TDD CLI Command Handler', () => {
 
       vi.mocked(mockPreflight.validateEnvironment).mockResolvedValue(preflightWithWarnings);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.warn).toHaveBeenCalledWith('⚠️  Warnings:');
       expect(console.warn).toHaveBeenCalledWith('  • Claude Code CLI not found');
@@ -168,7 +170,7 @@ describe('TDD CLI Command Handler', () => {
 
   describe('workflow execution failures', () => {
     it('should handle workflow failure with max iterations', async () => {
-      const failedResult: TDDResult = {
+      const failedResult: TeamResult = {
         success: false,
         iterations: 3,
         taskId: 'test-task-456',
@@ -177,7 +179,7 @@ describe('TDD CLI Command Handler', () => {
 
       vi.mocked(mockWorkflow.executeTDDWorkflow).mockResolvedValue(failedResult);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('❌ TDD Workflow Failed');
       expect(console.error).toHaveBeenCalledWith('   🔄 Iterations: 3');
@@ -189,14 +191,14 @@ describe('TDD CLI Command Handler', () => {
       // Should show specific guidance for max iterations
       expect(console.error).toHaveBeenCalledWith('💡 Suggestions:');
       expect(console.error).toHaveBeenCalledWith(
-        '   • Try increasing --reviews for more iterations'
+        '   • Try increasing --max-reviews for more iterations'
       );
 
       expect(mockExit).toHaveBeenCalledWith(1);
     });
 
     it('should handle specification file errors', async () => {
-      const specError: TDDResult = {
+      const specError: TeamResult = {
         success: false,
         iterations: 0,
         taskId: 'test-task-789',
@@ -205,7 +207,7 @@ describe('TDD CLI Command Handler', () => {
 
       vi.mocked(mockWorkflow.executeTDDWorkflow).mockResolvedValue(specError);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('💡 Suggestions:');
       expect(console.error).toHaveBeenCalledWith(
@@ -215,7 +217,7 @@ describe('TDD CLI Command Handler', () => {
     });
 
     it('should handle environment errors', async () => {
-      const envError: TDDResult = {
+      const envError: TeamResult = {
         success: false,
         iterations: 0,
         taskId: 'test-task-env',
@@ -224,7 +226,7 @@ describe('TDD CLI Command Handler', () => {
 
       vi.mocked(mockWorkflow.executeTDDWorkflow).mockResolvedValue(envError);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('💡 Suggestions:');
       expect(console.error).toHaveBeenCalledWith(
@@ -234,7 +236,7 @@ describe('TDD CLI Command Handler', () => {
     });
 
     it('should handle generic errors', async () => {
-      const genericError: TDDResult = {
+      const genericError: TeamResult = {
         success: false,
         iterations: 1,
         taskId: 'test-task-generic',
@@ -243,7 +245,7 @@ describe('TDD CLI Command Handler', () => {
 
       vi.mocked(mockWorkflow.executeTDDWorkflow).mockResolvedValue(genericError);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('❌ TDD Workflow Failed');
       expect(console.error).toHaveBeenCalledWith('   💥 Error: Some other error occurred');
@@ -255,7 +257,7 @@ describe('TDD CLI Command Handler', () => {
       const unexpectedError = new Error('Something went wrong');
       vi.mocked(mockWorkflow.executeTDDWorkflow).mockRejectedValue(unexpectedError);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('💥 Unexpected error occurred:');
       expect(console.error).toHaveBeenCalledWith('   Something went wrong');
@@ -279,7 +281,7 @@ describe('TDD CLI Command Handler', () => {
     it('should handle non-Error objects', async () => {
       vi.mocked(mockWorkflow.executeTDDWorkflow).mockRejectedValue('String error');
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('   String error');
     });
@@ -292,7 +294,7 @@ describe('TDD CLI Command Handler', () => {
       const endTime = 1005500; // 5.5 seconds later
       vi.spyOn(Date, 'now').mockReturnValueOnce(startTime).mockReturnValueOnce(endTime);
 
-      await expect(handleTDDCommand(mockArgs)).rejects.toThrow('process.exit');
+      await expect(handleTDDCommand(mockSpecPath, mockOptions)).rejects.toThrow('process.exit');
 
       expect(console.log).toHaveBeenCalledWith('═'.repeat(60));
       expect(console.log).toHaveBeenCalledWith('   ⏱️  Duration: 5.5s');

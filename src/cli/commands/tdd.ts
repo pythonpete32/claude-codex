@@ -111,18 +111,12 @@ export async function handleTDDCommand(args: TDDCommandArgs): Promise<void> {
 
     if (error instanceof Error) {
       console.error(`   ${error.message}`);
-
-      if (args.verbose && error.stack) {
-        console.error('');
-        console.error('Stack trace:');
-        console.error(error.stack);
-      }
+      console.error('');
+      console.error('Stack trace:');
+      console.error(error.stack);
     } else {
       console.error(`   ${String(error)}`);
     }
-
-    console.error('');
-    console.error('💡 Try running with --verbose for more details');
 
     process.exit(1);
   }
