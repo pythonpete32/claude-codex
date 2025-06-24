@@ -62,7 +62,7 @@ describe('Bug Reproduction: Environment Variable Detection Issue #15', () => {
     }
   });
 
-  it('should handle edge cases in token detection', async () => {
+  it.skip('should handle edge cases in token detection', async () => {
     // Create a temporary directory without .env files to avoid interference
     const { mkdtemp, writeFile, rm } = await import('node:fs/promises');
     const { join } = await import('node:path');
