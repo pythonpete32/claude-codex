@@ -11,7 +11,7 @@ interface ToolUseBlock {
   type: 'tool_use';
   id: string;
   name: string;
-  input: Record<string, any>;
+  input: Record<string, unknown>;
 }
 
 /**
@@ -20,7 +20,7 @@ interface ToolUseBlock {
 interface ToolResultBlock {
   type: 'tool_result';
   tool_use_id: string;
-  content: string | Record<string, any>[];
+  content: string | Record<string, unknown>[];
   is_error?: boolean;
 }
 
@@ -90,7 +90,7 @@ export class ComponentMessageStreamRenderer {
               },
               session_id: message.session_id,
               parent_tool_use_id: null,
-            } as any,
+            } as unknown,
             this.options
           );
 

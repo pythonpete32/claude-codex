@@ -31,7 +31,7 @@ interface ToolUseBlock {
   type: 'tool_use';
   id: string;
   name: string;
-  input: Record<string, any>;
+  input: Record<string, unknown>;
 }
 
 /**
@@ -48,7 +48,7 @@ interface TextBlock {
 interface ToolResultBlock {
   type: 'tool_result';
   tool_use_id: string;
-  content: string | Record<string, any>[];
+  content: string | Record<string, unknown>[];
   is_error?: boolean;
 }
 

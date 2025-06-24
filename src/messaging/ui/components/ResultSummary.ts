@@ -8,7 +8,7 @@ import { generateResultMetrics } from '~/messaging/ui/utils/content-summarizer.j
 interface ToolResultBlock {
   type: 'tool_result';
   tool_use_id: string;
-  content: string | Record<string, any>[];
+  content: string | Record<string, unknown>[];
   is_error?: boolean;
 }
 

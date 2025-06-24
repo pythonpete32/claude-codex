@@ -5,8 +5,8 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
 import { handleInitCommand } from '~/cli/commands/init.js';
 import { handleTeamCommand } from '~/cli/commands/team.js';

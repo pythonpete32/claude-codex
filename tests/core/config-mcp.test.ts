@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import type { CodexConfig } from '../../src/config/config.js';
 import { getMCPConfigForTeam } from '../../src/config/config.js';
 
