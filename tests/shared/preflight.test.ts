@@ -28,14 +28,14 @@ vi.mock('fs', () => ({
   },
 }));
 
-vi.mock('../../src/core/operations/worktree.js', () => ({
+vi.mock('../../src/operations/worktree.js', () => ({
   isGitRepository: vi.fn(),
 }));
 
 // Import modules after mocking
 const { validateEnvironment, quickValidation } = await import('../../src/shared/preflight.js');
 const mockFs = await import('node:fs');
-const mockWorktree = await import('../../src/core/operations/worktree.js');
+const mockWorktree = await import('../../src/operations/worktree.js');
 
 describe('Environment Validation', () => {
   beforeEach(() => {

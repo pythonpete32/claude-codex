@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type ClaudeAgentOptions, runClaudeAgent } from '../../../src/messaging/sdk-wrapper.js';
 import { createMockQuery, SAMPLE_DEBUG_MESSAGES } from '../../helpers/mock-sdk.js';
 
-// Mock the lib module
-vi.mock('../../../src/lib.js', () => ({
+// Mock the auth module  
+vi.mock('../../../src/shared/auth.js', () => ({
   forceSubscriptionAuth: vi.fn(),
 }));
 
@@ -198,7 +198,7 @@ describe('SDK Wrapper', () => {
     });
 
     it('should call forceSubscriptionAuth', async () => {
-      const { forceSubscriptionAuth } = await import('../../../src/lib.js');
+      const { forceSubscriptionAuth } = await import('../../../src/shared/auth.js');
       const mockQuery = createMockQuery(SAMPLE_DEBUG_MESSAGES);
 
       const options: ClaudeAgentOptions = {

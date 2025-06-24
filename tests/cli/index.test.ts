@@ -2,9 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { runCLI } from '../../src/cli/index.js';
 
 // Mock all command handlers
-vi.mock('../../src/cli/commands/tdd.js', () => ({
-  handleTDDCommand: vi.fn(),
-}));
 
 vi.mock('../../src/cli/commands/init.js', () => ({
   handleInitCommand: vi.fn(),
@@ -27,7 +24,6 @@ const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => {
 });
 
 // Import mocked modules
-const mockTDDCommand = await import('../../src/cli/commands/tdd.js');
 const mockInitCommand = await import('../../src/cli/commands/init.js');
 const mockTeamCommand = await import('../../src/cli/commands/team.js');
 
@@ -40,7 +36,6 @@ describe('CLI Index with Commander.js', () => {
     vi.spyOn(console, 'log').mockImplementation(() => {});
 
     // Setup default mocks
-    vi.mocked(mockTDDCommand.handleTDDCommand).mockResolvedValue(undefined);
     vi.mocked(mockInitCommand.handleInitCommand).mockResolvedValue(undefined);
     vi.mocked(mockTeamCommand.handleTeamCommand).mockResolvedValue(undefined);
   });
@@ -71,40 +66,7 @@ describe('CLI Index with Commander.js', () => {
       );
     });
 
-    it('should route tdd command to TDD handler', async () => {
-      await runCLI(['node', 'script', 'tdd', './spec.md']);
-      expect(mockTDDCommand.handleTDDCommand).toHaveBeenCalledWith(
-        './spec.md',
-        {
-          cleanup: true,
-          maxReviews: '3',
-        },
-        expect.any(Object)
-      );
-    });
 
-    it('should route tdd command with options', async () => {
-      await runCLI([
-        'node',
-        'script',
-        'tdd',
-        './spec.md',
-        '--max-reviews',
-        '5',
-        '--branch-name',
-        'feature/test',
-        '--no-cleanup',
-      ]);
-      expect(mockTDDCommand.handleTDDCommand).toHaveBeenCalledWith(
-        './spec.md',
-        {
-          maxReviews: '5',
-          branchName: 'feature/test',
-          cleanup: false,
-        },
-        expect.any(Object)
-      );
-    });
 
     it('should route team command to team handler', async () => {
       await runCLI(['node', 'script', 'team', 'tdd', './spec.md']);
@@ -145,16 +107,6 @@ describe('CLI Index with Commander.js', () => {
   });
 
   describe('error handling', () => {
-    it('should handle command execution errors', async () => {
-      vi.mocked(mockTDDCommand.handleTDDCommand).mockRejectedValue(
-        new Error('TDD execution failed')
-      );
-
-      await expect(runCLI(['node', 'script', 'tdd', './spec.md'])).rejects.toThrow('process.exit');
-
-      expect(console.error).toHaveBeenCalledWith('❌ Error:', 'TDD execution failed');
-      expect(mockExit).toHaveBeenCalledWith(1);
-    });
 
     it('should handle init command errors', async () => {
       vi.mocked(mockInitCommand.handleInitCommand).mockRejectedValue(new Error('Init failed'));
@@ -179,9 +131,9 @@ describe('CLI Index with Commander.js', () => {
     });
 
     it('should handle non-Error objects', async () => {
-      vi.mocked(mockTDDCommand.handleTDDCommand).mockRejectedValue('String error');
+      vi.mocked(mockTeamCommand.handleTeamCommand).mockRejectedValue('String error');
 
-      await expect(runCLI(['node', 'script', 'tdd', './spec.md'])).rejects.toThrow('process.exit');
+      await expect(runCLI(['node', 'script', 'team', 'tdd', './spec.md'])).rejects.toThrow('process.exit');
 
       expect(console.error).toHaveBeenCalledWith('❌ Error:', 'String error');
     });
@@ -203,29 +155,6 @@ describe('CLI Index with Commander.js', () => {
   });
 
   describe('integration flow', () => {
-    it('should execute complete flow for successful tdd command', async () => {
-      await runCLI([
-        'node',
-        'script',
-        'tdd',
-        './spec.md',
-        '--max-reviews',
-        '5',
-        '--branch-name',
-        'feature/test',
-      ]);
-
-      // Verify complete flow
-      expect(mockTDDCommand.handleTDDCommand).toHaveBeenCalledWith(
-        './spec.md',
-        {
-          maxReviews: '5',
-          branchName: 'feature/test',
-          cleanup: true,
-        },
-        expect.any(Object)
-      );
-    });
 
     it('should execute complete flow for team command', async () => {
       await runCLI([

@@ -17,7 +17,7 @@ vi.mock('../../src/messaging/sdk-wrapper.js', () => ({
   }),
 }));
 
-vi.mock('../../src/core/operations/github.js', () => ({
+vi.mock('../../src/operations/github.js', () => ({
   checkPRExists: vi.fn().mockResolvedValue({
     number: 123,
     url: 'https://github.com/test/repo/pull/123',
@@ -27,7 +27,7 @@ vi.mock('../../src/core/operations/github.js', () => ({
   }),
 }));
 
-vi.mock('../../src/core/operations/worktree.js', () => ({
+vi.mock('../../src/operations/worktree.js', () => ({
   createWorktree: vi.fn().mockResolvedValue({
     path: '/tmp/test-worktree',
     branchName: 'test-branch',
@@ -36,14 +36,14 @@ vi.mock('../../src/core/operations/worktree.js', () => ({
   cleanupWorktree: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../../src/core/teams.js', () => ({
+vi.mock('../../src/teams/loader.js', () => ({
   loadTeam: vi.fn().mockResolvedValue({
     CODER: vi.fn((spec: string) => `Mock coder prompt for: ${spec}`),
     REVIEWER: vi.fn((spec: string) => `Mock reviewer prompt for: ${spec}`),
   }),
 }));
 
-vi.mock('../../src/core/config.js', () => ({
+vi.mock('../../src/config/config.js', () => ({
   loadCodexConfig: vi.fn().mockResolvedValue({
     teams: { tdd: { mcps: [] } },
     mcpServers: {},
