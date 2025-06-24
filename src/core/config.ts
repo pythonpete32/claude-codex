@@ -80,7 +80,8 @@ export async function getMCPConfigForTeam(
 ): Promise<ClaudeSDKMCPConfig> {
   const teamConfig = config.teams[teamType];
   if (!teamConfig) {
-    throw new Error(`Team "${teamType}" not found in config`);
+    // Return empty config for unknown teams (graceful fallback)
+    return { mcpServers: {} };
   }
 
   // Filter MCP servers to only include those enabled for this team
