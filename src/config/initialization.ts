@@ -6,7 +6,29 @@ import { pathExists } from '~/shared/utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const TEMPLATES_DIR = join(__dirname, '..', 'templates');
+
+/**
+ * Find the templates directory by checking multiple possible locations
+ */
+async function findTemplatesDirectory(): Promise<string> {
+  // Try different possible template locations in order of likelihood
+  const possiblePaths = [
+    join(__dirname, '..', 'templates'), // Development: src/templates
+    join(__dirname, 'templates'), // Production bundle: dist/templates
+    join(process.cwd(), 'dist', 'templates'), // Alternative production path
+    join(process.cwd(), 'templates'), // Direct templates folder
+  ];
+
+  for (const templatePath of possiblePaths) {
+    if (await pathExists(templatePath)) {
+      return templatePath;
+    }
+  }
+
+  throw new Error(
+    `Templates directory not found. Checked the following locations:\n${possiblePaths.map((p) => `  - ${p}`).join('\n')}\n\nPlease reinstall claude-codex or report this issue.`
+  );
+}
 
 export interface InitOptions {
   force?: boolean;
@@ -22,6 +44,9 @@ export async function initializeClaudeCodex(options: InitOptions = {}): Promise<
   const teamsDir = join(claudeDir, 'teams');
   const commandsDir = join(claudeDir, 'commands');
   const configPath = join(claudeDir, '.codex.config.json');
+
+  // Find templates directory dynamically
+  const TEMPLATES_DIR = await findTemplatesDirectory();
 
   // Create directories
   await mkdir(teamsDir, { recursive: true });
