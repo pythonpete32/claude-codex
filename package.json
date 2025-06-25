@@ -1,6 +1,6 @@
 {
   "name": "claude-codex",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Automation scripts powered by Claude Code SDK",
   "type": "module",
   "main": "dist/lib.js",
