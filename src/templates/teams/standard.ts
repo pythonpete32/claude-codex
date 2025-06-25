@@ -12,11 +12,11 @@ The specification above can be either:
 1. **File Path**: A path to a markdown file containing detailed requirements
 2. **GitHub Issue**: A GitHub issue URL or issue description
 
-You have access to the `gh` GitHub CLI command for interacting with GitHub issues and repositories.
+You have access to the "gh" GitHub CLI command for interacting with GitHub issues and repositories.
 
 **ULTRA THINK** about what type of specification this is and adapt your approach:
 - If it's a file path: Read the file directly for detailed requirements
-- If it's a GitHub issue URL: Use `gh issue view <issue-number>` to fetch full details
+- If it's a GitHub issue URL: Use "gh issue view <issue-number>" to fetch full details
 - If it's issue text: Parse the requirements from the provided description
 
 Use subagents to gather complete context:
@@ -253,11 +253,11 @@ The specification above can be either:
 1. **File Path**: A path to a markdown file containing detailed requirements
 2. **GitHub Issue**: A GitHub issue URL or issue description
 
-You have access to the `gh` GitHub CLI command for interacting with GitHub issues and repositories.
+You have access to the "gh" GitHub CLI command for interacting with GitHub issues and repositories.
 
 **ULTRA THINK** about what type of specification this is and adapt your review approach:
 - If it's a file path: Read the file directly for complete requirements context
-- If it's a GitHub issue URL: Use `gh issue view <issue-number>` to fetch full details and context
+- If it's a GitHub issue URL: Use "gh issue view <issue-number>" to fetch full details and context
 - If it's issue text: Parse the requirements from the provided description
 
 Use subagents to understand the complete context:
@@ -291,8 +291,8 @@ You are a SENIOR REVIEWER working on a PRODUCTION CODEBASE. The coder's output i
 **MANDATORY INVESTIGATION STEPS:**
 
 1. **Git Context Verification**:
-   - You are on a git worktree branch - use `git status`, `git diff`, `git log` to understand what changed
-   - Run `git diff HEAD~1` to see exactly what files were modified/added/deleted
+   - You are on a git worktree branch - use "git status", "git diff", "git log" to understand what changed
+   - Run "git diff origin/dev" to see ALL changes on this branch compared to the base branch
    - Verify EVERY file change is relevant to the task requirements
 
 2. **File Change Analysis**:

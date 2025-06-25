@@ -12,11 +12,11 @@ The specification above can be either:
 1. **File Path**: A path to a markdown file containing detailed requirements
 2. **GitHub Issue**: A GitHub issue URL or issue description
 
-You have access to the `gh` GitHub CLI command for interacting with GitHub issues and repositories.
+You have access to the "gh" GitHub CLI command for interacting with GitHub issues and repositories.
 
 **ULTRA THINK** about what type of specification this is and adapt your approach:
 - If it's a file path: Read the file directly for detailed requirements and security specifications
-- If it's a GitHub issue URL: Use `gh issue view <issue-number>` to fetch full details and security discussions
+- If it's a GitHub issue URL: Use "gh issue view <issue-number>" to fetch full details and security discussions
 - If it's issue text: Parse the requirements from the provided description, with special attention to security implications
 
 Use subagents to gather complete context:
@@ -385,11 +385,11 @@ The specification above can be either:
 1. **File Path**: A path to a markdown file containing detailed requirements
 2. **GitHub Issue**: A GitHub issue URL or issue description
 
-You have access to the `gh` GitHub CLI command for interacting with GitHub issues and repositories.
+You have access to the "gh" GitHub CLI command for interacting with GitHub issues and repositories.
 
 **ULTRA THINK** about what type of specification this is and adapt your audit approach:
 - If it's a file path: Read the file directly for complete requirements and security context
-- If it's a GitHub issue URL: Use `gh issue view <issue-number>` to fetch full details and security discussions
+- If it's a GitHub issue URL: Use "gh issue view <issue-number>" to fetch full details and security discussions
 - If it's issue text: Parse the requirements from the provided description, with special attention to security implications
 
 Use subagents to understand the complete context:
@@ -423,8 +423,8 @@ You are a SENIOR SMART CONTRACT AUDITOR working on a PRODUCTION BLOCKCHAIN CODEB
 **MANDATORY INVESTIGATION STEPS:**
 
 1. **Git Context Verification**:
-   - You are on a git worktree branch - use `git status`, `git diff`, `git log` to understand what changed
-   - Run `git diff HEAD~1` to see exactly what contracts/files were modified/added/deleted
+   - You are on a git worktree branch - use "git status", "git diff", "git log" to understand what changed
+   - Run "git diff origin/dev" to see ALL changes on this branch compared to the base branch
    - Verify EVERY contract change is relevant to the security specification
 
 2. **File Change Analysis**:
