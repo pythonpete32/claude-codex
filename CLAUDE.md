@@ -22,13 +22,41 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `bun run release` - Complete release workflow (build + publish to npm)
 
 
-### Key Technical Details
+### Advanced Technical Architecture
 
 **Claude Code SDK Integration:**
-- Uses `@anthropic-ai/claude-code` SDK for AI interactions
+- **177-line advanced SDK wrapper** with comprehensive options support and dependency injection
+- **Real-time message processing pipeline** with adaptive terminal display and streaming
+- **Debug logging system** with structured output and task state persistence
+- **Error handling hierarchy** with specific exception types and graceful recovery
 - Enforces subscription mode by removing API key environment variables
-- Supports streaming message output with real-time display
-- Handles abort signals and graceful shutdown
+- Supports all Claude Code permission modes and tool restrictions
+
+**MCP Server Ecosystem Integration:**
+```json
+{
+  "mcpServers": {
+    "puppeteer": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-puppeteer"] },
+    "snap-happy": { "command": "npx", "args": ["@mariozechner/snap-happy"] },
+    "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp"] },
+    "mcp_excalidraw": { "command": "npx", "args": ["-y", "excalidraw-mcp"] },
+    "sequential-thinking": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"] }
+  },
+  "teams": {
+    "frontend": { "mcps": ["context7", "puppeteer"] },
+    "tdd": { "mcps": ["context7", "snap-happy"] },
+    "standard": { "mcps": ["context7", "snap-happy"] },
+    "smart-contract": { "mcps": ["context7"] }
+  }
+}
+```
+
+**Git Worktree Isolation System:**
+- **Parallel task execution** without conflicts via isolated worktrees
+- **Automatic branch creation** (`tdd/{taskId}` or custom names)
+- **Task state management** with persistent state in `.codex/task-{id}.json`
+- **Cleanup orchestration** with optional preservation for debugging
+- **Agent communication protocol** via `.temp/coder-feedback.md` and `.temp/review-feedback.md`
 
 
 ## Development Workflow
@@ -38,12 +66,27 @@ This project uses automated git hooks via Lefthook:
 - **Pre-commit**: Automatically formats staged files with Biome
 - **Pre-push**: Runs format check, linting, and tests (blocks push if any fail)
 
-### Testing Strategy
+### Advanced Testing Strategy
+
+**Multi-Agent System Testing:**
+- **Agent Template Validation**: Test prompt engineering and reasoning capabilities
+- **MCP Integration Testing**: Validate server connectivity and tool functionality  
+- **Workflow Orchestration Testing**: End-to-end team coordination validation
+- **Worktree Isolation Testing**: Git operation safety and cleanup verification
+- **Configuration Management Testing**: Template and config file validation
+
+**Testing Infrastructure:**
 - Uses Vitest for testing with Node.js environment
 - Test files: `tests/**/*.{test,spec}.{js,ts}` (separate from source code)
 - Coverage reports generated to `coverage/` directory
 - Tests run automatically on pre-push hook
-- **Testing Guidelines**: See @docs/TESTING.md for patterns and best practices
+- **Advanced Testing Patterns**: See @docs/TESTING.md for multi-agent testing strategies
+
+**Specialized Testing Patterns:**
+- **Mock MCP Servers**: Injectable MCP server implementations for testing
+- **Agent Response Mocking**: Controllable agent behavior for deterministic tests
+- **Worktree Environment Isolation**: Safe testing environments with automatic cleanup
+- **Multi-Team Integration Testing**: Cross-team workflow validation and state management
 
 ### Release Process
 Uses Changesets for automated releases:
@@ -70,11 +113,60 @@ Uses Changesets for automated releases:
 - **TypeScript** with strict configuration
 - Modern ESM modules throughout
 
-## Project Context
+## Project Architecture
 
-This is part of a larger "Claude Codex" automation toolkit. The current implementation provides a foundation CLI that interfaces with Claude Code SDK. According to the PRD, this will evolve into a TDD (Test-Driven Development) workflow system with background agents for automated feature implementation.
+**Claude Codex** is a sophisticated **multi-agent orchestration platform** that coordinates specialized AI teams to automate complex development workflows. The system integrates advanced MCP servers, git worktree isolation, and domain-expert agents to deliver enterprise-grade automation capabilities.
 
-The CLI currently provides basic Claude Code interaction with enhanced UX (colors, streaming, error handling) while ensuring subscription-based authentication.
+### Multi-Agent Team Architecture
+
+#### Specialized Agent Teams
+- **TDD Team**: Test-Driven Development specialists with comprehensive testing methodology and Red-Green-Refactor workflow enforcement
+- **Frontend Team**: Modern web development experts with accessibility (WCAG 2.1 AA), performance (Core Web Vitals), and responsive design focus  
+- **Standard Team**: General-purpose development automation with Clean Architecture and SOLID principles
+- **Smart Contract Team**: Blockchain and Web3 development specialists with security-first approach and economic attack prevention
+
+#### Agent Capabilities Integration
+- **ULTRA THINK**: Advanced reasoning for complex architectural decisions and comprehensive codebase analysis
+- **Subagents**: Parallel specialized processing for multi-perspective development and comprehensive analysis
+- **Codebase Exploration**: Mandatory deep-dive exploration before any implementation work begins
+- **Critical Validation**: Multi-layer validation preventing dangerous changes and ensuring GitHub issue compliance
+
+#### Team Execution Workflow
+1. **Initialization**: Create isolated git worktree for task execution (`../.codex-worktrees/`)
+2. **Coder Phase**: Specialized domain-expert agent implements requirements with full codebase context
+3. **Reviewer Phase**: Quality assurance and validation agent provides comprehensive feedback
+4. **Iteration Loop**: Feedback integration and refinement through `.temp/` file communication
+5. **Completion**: Automated PR creation with GitHub integration and optional cleanup
+
+### Core CLI Commands
+
+#### Initialization
+```bash
+# Initialize configuration and team templates
+claude-codex init [--force]  # Overwrite existing configuration
+```
+
+#### Team-Based Execution  
+```bash
+# Execute specialized team workflows
+claude-codex team <type> <spec-or-issue> [options]
+
+# Available teams
+claude-codex team standard ./spec.md     # General development
+claude-codex team tdd ./spec.md          # Test-driven development
+claude-codex team frontend ./spec.md     # Modern web development
+claude-codex team smart-contract ./spec.md  # Blockchain development
+
+# Options
+-r, --max-reviews <number>    # Maximum review iterations (default: 3)
+-b, --branch-name <name>      # Custom branch name (default: tdd/{taskId})
+--no-cleanup                  # Skip worktree cleanup after completion
+```
+
+#### Configuration Management
+- **Config file**: `~/.claude/.codex.config.json` - Team and MCP server configuration
+- **Team templates**: `~/.claude/teams/` - Customizable agent prompt templates  
+- **Command templates**: `~/.claude/commands/` - Reusable command patterns
 
 ## Claude Code Best Practices Integration
 
