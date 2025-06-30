@@ -1,0 +1,37 @@
+{
+	"name": "@dao/chat-items-edit-tool",
+	"version": "0.1.0",
+	"description": "chat-items/edit-tool atomic package",
+	"type": "module",
+	"main": "./src/index.ts",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"check": "bun run typecheck && bun run lint",
+		"prepublish": "bun run check && bun test",
+		"publish:jsr": "../../../scripts/jsr-publish-auto.sh"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"typescript": "^5.0.0",
+		"@biomejs/biome": "latest"
+	},
+	"keywords": [
+		"dao",
+		"codex",
+		"atomic"
+	],
+	"dependencies": {
+		"zod": "^3.25.67",
+		"@dao/chat-items-common-types": "workspace:*"
+	}
+}

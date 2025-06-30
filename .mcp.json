@@ -1,0 +1,27 @@
+{
+	"mcpServers": {
+		"@magicuidesign/mcp": {
+			"command": "npx",
+			"args": ["-y", "@magicuidesign/mcp@latest"]
+		},
+		"puppeteer": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+		},
+		"snap-happy": {
+			"command": "npx",
+			"args": ["@mariozechner/snap-happy"],
+			"env": {
+				"SNAP_HAPPY_SCREENSHOT_PATH": "~/Screenshots"
+			}
+		},
+		"context7": {
+			"command": "npx",
+			"args": ["-y", "@upstash/context7-mcp"]
+		},
+		"mcp_excalidraw": {
+			"command": "npx",
+			"args": ["-y", "excalidraw-mcp"]
+		}
+	}
+}

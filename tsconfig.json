@@ -25,7 +25,7 @@
     "paths": {
       "@claude-codex/core/*": ["packages/core/src/*"],
       "@claude-codex/log-processor/*": ["packages/log-processor/src/*"],
-      "@claude-codex/types/*": ["shared/types/*"]
+      "@claude-codex/types/*": ["packages/types/src/*"]
     }
   },
   "exclude": ["node_modules", "dist", ".next"]

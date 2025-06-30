@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "UI wrapper for Claude Code with DDD architecture",
-  "workspaces": ["apps/*", "packages/*", "shared/*"],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",

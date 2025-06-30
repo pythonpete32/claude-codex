@@ -1,0 +1,52 @@
+{
+	"name": "@dao/chat-items-mcp-context7",
+	"version": "1.0.0",
+	"description": "Context7 MCP integration for documentation lookup and library integration with comprehensive type safety and validation",
+	"type": "module",
+	"main": "./src/index.ts",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"src/**/*",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsc --noEmit",
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"check": "bun run typecheck && bun run lint",
+		"prepublish": "bun run check && bun test",
+		"publish:jsr": "jsr publish"
+	},
+	"keywords": [
+		"context7",
+		"mcp",
+		"documentation",
+		"library-lookup",
+		"integration",
+		"chat-item",
+		"typescript",
+		"validation",
+		"claude",
+		"atomic-codex"
+	],
+	"author": "DAO",
+	"license": "MIT",
+	"dependencies": {
+		"zod": "^3.22.0",
+		"@dao/chat-items-common-types": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"typescript": "^5.0.0",
+		"@biomejs/biome": "latest"
+	},
+	"peerDependencies": {
+		"typescript": ">=5.0.0"
+	}
+}

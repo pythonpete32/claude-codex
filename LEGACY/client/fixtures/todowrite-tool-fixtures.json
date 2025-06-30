@@ -1,0 +1,472 @@
+{
+	"basic": [
+		{
+			"id": "todowrite_basic_single",
+			"category": "basic",
+			"description": "Single todo write operation",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_abc123",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "todo_001",
+							"content": "Complete project documentation",
+							"status": "pending",
+							"priority": "high"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_abc123",
+				"type": "tool_result",
+				"content": "Successfully wrote 1 todo item"
+			},
+			"toolUseResult": {
+				"output": {
+					"totalProcessed": 1,
+					"added": 1,
+					"updated": 0,
+					"failed": 0,
+					"todos": [
+						{
+							"id": "todo_001",
+							"content": "Complete project documentation",
+							"status": "pending",
+							"priority": "high"
+						}
+					],
+					"message": "Successfully wrote 1 todo item"
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"id": "todowrite_basic_multiple",
+			"category": "basic",
+			"description": "Multiple todos write operation",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_def456",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "todo_002",
+							"content": "Review code changes",
+							"status": "pending",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_003",
+							"content": "Update test coverage",
+							"status": "in_progress",
+							"priority": "high"
+						},
+						{
+							"id": "todo_004",
+							"content": "Deploy to staging",
+							"status": "pending",
+							"priority": "low"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_def456",
+				"type": "tool_result",
+				"content": "Successfully wrote 3 todo items"
+			},
+			"toolUseResult": {
+				"output": {
+					"totalProcessed": 3,
+					"added": 3,
+					"updated": 0,
+					"failed": 0,
+					"todos": [
+						{
+							"id": "todo_002",
+							"content": "Review code changes",
+							"status": "pending",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_003",
+							"content": "Update test coverage",
+							"status": "in_progress",
+							"priority": "high"
+						},
+						{
+							"id": "todo_004",
+							"content": "Deploy to staging",
+							"status": "pending",
+							"priority": "low"
+						}
+					],
+					"message": "Successfully wrote 3 todo items"
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"updates": [
+		{
+			"id": "todowrite_updates_mixed",
+			"category": "updates",
+			"description": "Mixed add and update operations",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_ghi789",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "todo_005",
+							"content": "Fix login bug",
+							"status": "completed",
+							"priority": "high"
+						},
+						{
+							"id": "todo_006",
+							"content": "Add user authentication",
+							"status": "pending",
+							"priority": "medium"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_ghi789",
+				"type": "tool_result",
+				"content": "Successfully processed 2 todo items: 1 added, 1 updated"
+			},
+			"toolUseResult": {
+				"output": {
+					"totalProcessed": 2,
+					"added": 1,
+					"updated": 1,
+					"failed": 0,
+					"todos": [
+						{
+							"id": "todo_005",
+							"content": "Fix login bug",
+							"status": "completed",
+							"priority": "high"
+						},
+						{
+							"id": "todo_006",
+							"content": "Add user authentication",
+							"status": "pending",
+							"priority": "medium"
+						}
+					],
+					"message": "Successfully processed 2 todo items: 1 added, 1 updated"
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"priority_mix": [
+		{
+			"id": "todowrite_priority_mixed",
+			"category": "priority_mix",
+			"description": "Todos with different priorities",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_jkl012",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "todo_007",
+							"content": "Critical security fix",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_008",
+							"content": "Update documentation",
+							"status": "pending",
+							"priority": "low"
+						},
+						{
+							"id": "todo_009",
+							"content": "Optimize database queries",
+							"status": "in_progress",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_010",
+							"content": "Implement new feature",
+							"status": "pending",
+							"priority": "high"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_jkl012",
+				"type": "tool_result",
+				"content": "Successfully wrote 4 todo items"
+			},
+			"toolUseResult": {
+				"output": {
+					"totalProcessed": 4,
+					"added": 4,
+					"updated": 0,
+					"failed": 0,
+					"todos": [
+						{
+							"id": "todo_007",
+							"content": "Critical security fix",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_008",
+							"content": "Update documentation",
+							"status": "pending",
+							"priority": "low"
+						},
+						{
+							"id": "todo_009",
+							"content": "Optimize database queries",
+							"status": "in_progress",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_010",
+							"content": "Implement new feature",
+							"status": "pending",
+							"priority": "high"
+						}
+					],
+					"message": "Successfully wrote 4 todo items"
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"large_lists": [
+		{
+			"id": "todowrite_large_list",
+			"category": "large_lists",
+			"description": "Large list of todos",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_mno345",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "todo_011",
+							"content": "Setup CI/CD pipeline",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_012",
+							"content": "Write unit tests",
+							"status": "in_progress",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_013",
+							"content": "Code review",
+							"status": "pending",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_014",
+							"content": "Update dependencies",
+							"status": "completed",
+							"priority": "low"
+						},
+						{
+							"id": "todo_015",
+							"content": "Performance optimization",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_016",
+							"content": "Security audit",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_017",
+							"content": "User feedback integration",
+							"status": "in_progress",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_018",
+							"content": "Mobile responsiveness",
+							"status": "pending",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_019",
+							"content": "Accessibility improvements",
+							"status": "pending",
+							"priority": "low"
+						},
+						{
+							"id": "todo_020",
+							"content": "API documentation",
+							"status": "completed",
+							"priority": "low"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_mno345",
+				"type": "tool_result",
+				"content": "Successfully wrote 10 todo items"
+			},
+			"toolUseResult": {
+				"output": {
+					"totalProcessed": 10,
+					"added": 8,
+					"updated": 2,
+					"failed": 0,
+					"todos": [
+						{
+							"id": "todo_011",
+							"content": "Setup CI/CD pipeline",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_012",
+							"content": "Write unit tests",
+							"status": "in_progress",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_013",
+							"content": "Code review",
+							"status": "pending",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_014",
+							"content": "Update dependencies",
+							"status": "completed",
+							"priority": "low"
+						},
+						{
+							"id": "todo_015",
+							"content": "Performance optimization",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_016",
+							"content": "Security audit",
+							"status": "pending",
+							"priority": "high"
+						},
+						{
+							"id": "todo_017",
+							"content": "User feedback integration",
+							"status": "in_progress",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_018",
+							"content": "Mobile responsiveness",
+							"status": "pending",
+							"priority": "medium"
+						},
+						{
+							"id": "todo_019",
+							"content": "Accessibility improvements",
+							"status": "pending",
+							"priority": "low"
+						},
+						{
+							"id": "todo_020",
+							"content": "API documentation",
+							"status": "completed",
+							"priority": "low"
+						}
+					],
+					"message": "Successfully wrote 10 todo items: 8 added, 2 updated"
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"errors": [
+		{
+			"id": "todowrite_validation_error",
+			"category": "errors",
+			"description": "Validation error with invalid todo data",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_pqr678",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "",
+							"content": "",
+							"status": "invalid_status",
+							"priority": "invalid_priority"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_pqr678",
+				"type": "tool_result",
+				"content": "Error: Invalid todo data - empty ID and content, invalid status and priority"
+			},
+			"toolUseResult": {
+				"output": "Error: Invalid todo data - empty ID and content, invalid status and priority",
+				"status": "failed"
+			}
+		},
+		{
+			"id": "todowrite_storage_error",
+			"category": "errors",
+			"description": "Storage system unavailable",
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "call_stu901",
+				"name": "TodoWrite",
+				"input": {
+					"todos": [
+						{
+							"id": "todo_021",
+							"content": "Valid todo item",
+							"status": "pending",
+							"priority": "medium"
+						}
+					]
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "call_stu901",
+				"type": "tool_result",
+				"content": "Error: Todo storage system is currently unavailable"
+			},
+			"toolUseResult": {
+				"output": "Error: Todo storage system is currently unavailable",
+				"status": "failed"
+			}
+		}
+	]
+}

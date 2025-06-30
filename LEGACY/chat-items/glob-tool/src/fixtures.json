@@ -1,0 +1,176 @@
+{
+	"packageName": "@dao/codex-chat-item-glob-tool",
+	"componentType": "glob_tool",
+	"toolName": "Glob",
+	"category": "file",
+	"priority": "medium",
+	"fixtureCount": 3,
+	"generatedAt": "2025-01-01T00:00:00Z",
+	"fixtures": [
+		{
+			"toolCall": {
+				"uuid": "49aa294a-2f12-4197-8478-127f9fc9d4b7",
+				"timestamp": "2025-06-25T18:20:11.465Z",
+				"parentUuid": "dde3c669-70e7-46b7-8a83-8b4f9c26fad4",
+				"sessionId": "140ff683-32fc-4600-b3cb-52da55fcfaba",
+				"tool": {
+					"type": "tool_use",
+					"id": "glob_123",
+					"name": "Glob",
+					"input": {
+						"pattern": "**/*.ts",
+						"path": "src/"
+					}
+				}
+			},
+			"toolResult": {
+				"uuid": "2c1ad171-3778-4dcc-a644-1aea39b35d33",
+				"parentUuid": "49aa294a-2f12-4197-8478-127f9fc9d4b7",
+				"timestamp": "2025-06-25T18:20:11.465Z",
+				"result": {
+					"tool_use_id": "glob_123",
+					"type": "tool_result",
+					"content": "Found 5 matching files",
+					"is_error": false
+				},
+				"toolUseResult": {
+					"matches": [
+						"src/index.ts",
+						"src/types.ts",
+						"src/utils.ts",
+						"src/components/Button.ts",
+						"src/components/Form.ts"
+					],
+					"matchCount": 5,
+					"isError": false
+				}
+			},
+			"expectedComponentData": {
+				"type": "glob_tool",
+				"props": {
+					"toolUse": {
+						"type": "tool_use",
+						"id": "glob_123",
+						"name": "Glob",
+						"input": {
+							"pattern": "**/*.ts",
+							"path": "src/"
+						}
+					},
+					"status": "completed",
+					"timestamp": "2025-01-01T00:00:00Z",
+					"toolResult": {
+						"matches": [
+							"src/index.ts",
+							"src/types.ts",
+							"src/utils.ts",
+							"src/components/Button.ts",
+							"src/components/Form.ts"
+						],
+						"matchCount": 5,
+						"isError": false
+					}
+				}
+			}
+		},
+		{
+			"toolCall": {
+				"uuid": "680fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:25:16.463Z",
+				"parentUuid": "5e81746b-9ef2-4e0c-93ea-d3d29503d752",
+				"sessionId": "140ff683-32fc-4600-b3cb-52da55fcfaba",
+				"tool": {
+					"type": "tool_use",
+					"id": "glob_456",
+					"name": "Glob",
+					"input": {
+						"pattern": "*.json"
+					}
+				}
+			},
+			"toolResult": {
+				"uuid": "4f513711-42e5-4898-9dbb-227ef091bc89",
+				"parentUuid": "680fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:25:19.401Z",
+				"result": {
+					"type": "tool_result",
+					"content": "No matches found",
+					"is_error": false,
+					"tool_use_id": "glob_456"
+				},
+				"toolUseResult": []
+			},
+			"expectedComponentData": {
+				"type": "glob_tool",
+				"props": {
+					"toolUse": {
+						"type": "tool_use",
+						"id": "glob_456",
+						"name": "Glob",
+						"input": {
+							"pattern": "*.json"
+						}
+					},
+					"status": "completed",
+					"timestamp": "2025-01-01T00:00:00Z",
+					"toolResult": {
+						"matches": [],
+						"matchCount": 0,
+						"isError": false
+					}
+				}
+			}
+		},
+		{
+			"toolCall": {
+				"uuid": "780fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:26:16.463Z",
+				"parentUuid": "6e81746b-9ef2-4e0c-93ea-d3d29503d752",
+				"sessionId": "140ff683-32fc-4600-b3cb-52da55fcfaba",
+				"tool": {
+					"type": "tool_use",
+					"id": "glob_789",
+					"name": "Glob",
+					"input": {
+						"pattern": "[invalid glob",
+						"path": "/nonexistent/path"
+					}
+				}
+			},
+			"toolResult": {
+				"uuid": "5f513711-42e5-4898-9dbb-227ef091bc89",
+				"parentUuid": "780fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:26:19.401Z",
+				"result": {
+					"type": "tool_result",
+					"content": "Error: Invalid glob pattern",
+					"is_error": true,
+					"tool_use_id": "glob_789"
+				},
+				"toolUseResult": "Error: Invalid glob pattern: [invalid glob"
+			},
+			"expectedComponentData": {
+				"type": "glob_tool",
+				"props": {
+					"toolUse": {
+						"type": "tool_use",
+						"id": "glob_789",
+						"name": "Glob",
+						"input": {
+							"pattern": "[invalid glob",
+							"path": "/nonexistent/path"
+						}
+					},
+					"status": "failed",
+					"timestamp": "2025-01-01T00:00:00Z",
+					"toolResult": {
+						"matches": [],
+						"matchCount": 0,
+						"isError": true,
+						"errorMessage": "Error: Invalid glob pattern: [invalid glob"
+					}
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,316 @@
+{
+	"basic": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_001",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/README.md",
+					"content": "# My Project\n\nThis is a simple README file.\n\n## Features\n- Feature 1\n- Feature 2"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_001",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/README.md"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/README.md",
+					"content": "# My Project\n\nThis is a simple README file.\n\n## Features\n- Feature 1\n- Feature 2",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_002",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/package.json",
+					"content": "{\n  \"name\": \"my-project\",\n  \"version\": \"1.0.0\",\n  \"description\": \"A sample project\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"start\": \"node index.js\",\n    \"test\": \"jest\"\n  }\n}"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_002",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/package.json"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/package.json",
+					"content": "{\n  \"name\": \"my-project\",\n  \"version\": \"1.0.0\",\n  \"description\": \"A sample project\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"start\": \"node index.js\",\n    \"test\": \"jest\"\n  }\n}",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"sourceCode": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_003",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/src/index.ts",
+					"content": "export interface Config {\n  port: number;\n  host: string;\n}\n\nexport function createServer(config: Config) {\n  return {\n    start: () => console.log(`Server starting on ${config.host}:${config.port}`)\n  };\n}"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_003",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/src/index.ts"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/src/index.ts",
+					"content": "export interface Config {\n  port: number;\n  host: string;\n}\n\nexport function createServer(config: Config) {\n  return {\n    start: () => console.log(`Server starting on ${config.host}:${config.port}`)\n  };\n}",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_004",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/src/utils.js",
+					"content": "// Utility functions\n\nexport function formatDate(date) {\n  return date.toISOString().split('T')[0];\n}\n\nexport function capitalize(str) {\n  return str.charAt(0).toUpperCase() + str.slice(1);\n}\n\nexport function debounce(func, wait) {\n  let timeout;\n  return function executedFunction(...args) {\n    const later = () => {\n      clearTimeout(timeout);\n      func(...args);\n    };\n    clearTimeout(timeout);\n    timeout = setTimeout(later, wait);\n  };\n}"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_004",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/src/utils.js"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/src/utils.js",
+					"content": "// Utility functions\n\nexport function formatDate(date) {\n  return date.toISOString().split('T')[0];\n}\n\nexport function capitalize(str) {\n  return str.charAt(0).toUpperCase() + str.slice(1);\n}\n\nexport function debounce(func, wait) {\n  let timeout;\n  return function executedFunction(...args) {\n    const later = () => {\n      clearTimeout(timeout);\n      func(...args);\n    };\n    clearTimeout(timeout);\n    timeout = setTimeout(later, wait);\n  };\n}",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"configuration": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_005",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/tsconfig.json",
+					"content": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"commonjs\",\n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\"\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\"]\n}"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_005",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/tsconfig.json"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/tsconfig.json",
+					"content": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"commonjs\",\n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\"\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\"]\n}",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_006",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/.env.example",
+					"content": "# Environment variables\nPORT=3000\nNODE_ENV=development\nDATABASE_URL=postgresql://localhost:5432/mydb\nJWT_SECRET=your_jwt_secret_here\nAPI_KEY=your_api_key_here"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_006",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/.env.example"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/.env.example",
+					"content": "# Environment variables\nPORT=3000\nNODE_ENV=development\nDATABASE_URL=postgresql://localhost:5432/mydb\nJWT_SECRET=your_jwt_secret_here\nAPI_KEY=your_api_key_here",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"documentation": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_007",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/docs/ARCHITECTURE.md",
+					"content": "# System Architecture\n\n## Overview\nThis document describes the system architecture for our application.\n\n## Components\n\n### Frontend\n- React application\n- TypeScript for type safety\n- CSS modules for styling\n\n### Backend\n- Node.js server\n- Express framework\n- PostgreSQL database\n\n### Infrastructure\n- Docker containers\n- nginx reverse proxy\n- Redis for caching\n\n## Data Flow\n1. User interaction triggers frontend event\n2. Frontend makes API request to backend\n3. Backend processes request and queries database\n4. Response is cached in Redis\n5. Data is returned to frontend\n6. UI updates with new data"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_007",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/docs/ARCHITECTURE.md"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/docs/ARCHITECTURE.md",
+					"content": "# System Architecture\n\n## Overview\nThis document describes the system architecture for our application.\n\n## Components\n\n### Frontend\n- React application\n- TypeScript for type safety\n- CSS modules for styling\n\n### Backend\n- Node.js server\n- Express framework\n- PostgreSQL database\n\n### Infrastructure\n- Docker containers\n- nginx reverse proxy\n- Redis for caching\n\n## Data Flow\n1. User interaction triggers frontend event\n2. Frontend makes API request to backend\n3. Backend processes request and queries database\n4. Response is cached in Redis\n5. Data is returned to frontend\n6. UI updates with new data",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"errors": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_008",
+				"name": "Write",
+				"input": {
+					"file_path": "/nonexistent/directory/file.txt",
+					"content": "This should fail due to nonexistent directory"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_008",
+				"type": "tool_result",
+				"content": "Error: ENOENT: no such file or directory, open '/nonexistent/directory/file.txt'"
+			},
+			"toolUseResult": {
+				"output": "Error: ENOENT: no such file or directory, open '/nonexistent/directory/file.txt'",
+				"status": "failed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_009",
+				"name": "Write",
+				"input": {
+					"file_path": "/root/protected-file.txt",
+					"content": "This should fail due to permission issues"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_009",
+				"type": "tool_result",
+				"content": "Error: EACCES: permission denied, open '/root/protected-file.txt'"
+			},
+			"toolUseResult": {
+				"output": "Error: EACCES: permission denied, open '/root/protected-file.txt'",
+				"status": "failed"
+			}
+		}
+	],
+	"edgeCases": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_010",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/.gitkeep",
+					"content": ""
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_010",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/.gitkeep"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/.gitkeep",
+					"content": "",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_011",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/files/very-long-filename-that-might-cause-display-issues-in-the-ui-component-when-rendered.md",
+					"content": "# Very Long Filename Test\n\nThis file tests how the UI handles very long filenames that might cause display issues."
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_011",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/files/very-long-filename-that-might-cause-display-issues-in-the-ui-component-when-rendered.md"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/files/very-long-filename-that-might-cause-display-issues-in-the-ui-component-when-rendered.md",
+					"content": "# Very Long Filename Test\n\nThis file tests how the UI handles very long filenames that might cause display issues.",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "write_012",
+				"name": "Write",
+				"input": {
+					"file_path": "/Users/user/project/unicode-test-файл.txt",
+					"content": "This file tests Unicode support in filenames.\n\n测试 Unicode 支持\nПроверка поддержки Unicode\n🚀 Emoji support test"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "write_012",
+				"type": "tool_result",
+				"content": "File created successfully at: /Users/user/project/unicode-test-файл.txt"
+			},
+			"toolUseResult": {
+				"output": {
+					"type": "create",
+					"filePath": "/Users/user/project/unicode-test-файл.txt",
+					"content": "This file tests Unicode support in filenames.\n\n测试 Unicode 支持\nПроверка поддержки Unicode\n🚀 Emoji support test",
+					"structuredPatch": []
+				},
+				"status": "completed"
+			}
+		}
+	]
+}

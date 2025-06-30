@@ -1,0 +1,10 @@
+{
+	"name": "@dao/codex-log-monitor",
+	"version": "0.1.0",
+	"description": "Monitor Claude log files in real-time with historical data support",
+	"exports": "./src/index.ts",
+	"publish": {
+		"include": ["src/**/*.ts", "README.md", "LICENSE", "package.json", "jsr.json"],
+		"exclude": ["tests/**", "node_modules/**", "*.local.ts", "**/*.test.ts", "bun.lock"]
+	}
+}

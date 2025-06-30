@@ -1,0 +1,244 @@
+{
+	"packageName": "@dao/codex-chat-item-ls-tool",
+	"componentType": "ls_tool",
+	"toolName": "LS",
+	"category": "file",
+	"priority": "medium",
+	"fixtureCount": 3,
+	"generatedAt": "2025-01-01T00:00:00Z",
+	"fixtures": [
+		{
+			"toolCall": {
+				"uuid": "ls-49aa294a-2f12-4197-8478-127f9fc9d4b7",
+				"timestamp": "2025-06-25T18:20:11.465Z",
+				"parentUuid": "ls-dde3c669-70e7-46b7-8a83-8b4f9c26fad4",
+				"sessionId": "140ff683-32fc-4600-b3cb-52da55fcfaba",
+				"tool": {
+					"type": "tool_use",
+					"id": "ls_123",
+					"name": "LS",
+					"input": {
+						"path": "/Users/example/projects/test"
+					}
+				}
+			},
+			"toolResult": {
+				"uuid": "ls-2c1ad171-3778-4dcc-a644-1aea39b35d33",
+				"parentUuid": "ls-49aa294a-2f12-4197-8478-127f9fc9d4b7",
+				"timestamp": "2025-06-25T18:20:11.465Z",
+				"result": {
+					"tool_use_id": "ls_123",
+					"type": "tool_result",
+					"content": "Listed 5 files and directories",
+					"is_error": false
+				},
+				"toolUseResult": {
+					"entries": [
+						{
+							"name": "README.md",
+							"type": "file",
+							"size": 1234,
+							"hidden": false,
+							"permissions": "rw-r--r--",
+							"lastModified": "2025-06-25T12:00:00Z"
+						},
+						{
+							"name": "src",
+							"type": "directory",
+							"hidden": false,
+							"permissions": "rwxr-xr-x",
+							"lastModified": "2025-06-25T10:00:00Z"
+						},
+						{
+							"name": ".gitignore",
+							"type": "file",
+							"size": 456,
+							"hidden": true,
+							"permissions": "rw-r--r--",
+							"lastModified": "2025-06-24T08:00:00Z"
+						},
+						{
+							"name": "package.json",
+							"type": "file",
+							"size": 789,
+							"hidden": false,
+							"permissions": "rw-r--r--",
+							"lastModified": "2025-06-25T11:00:00Z"
+						},
+						{
+							"name": "node_modules",
+							"type": "directory",
+							"hidden": false,
+							"permissions": "rwxr-xr-x",
+							"lastModified": "2025-06-25T09:00:00Z"
+						}
+					],
+					"entryCount": 5,
+					"path": "/Users/example/projects/test",
+					"isError": false
+				}
+			},
+			"expectedComponentData": {
+				"type": "ls_tool",
+				"props": {
+					"toolUse": {
+						"type": "tool_use",
+						"id": "ls_123",
+						"name": "LS",
+						"input": {
+							"path": "/Users/example/projects/test"
+						}
+					},
+					"status": "completed",
+					"timestamp": "2025-01-01T00:00:00Z",
+					"toolResult": {
+						"entries": [
+							{
+								"name": "README.md",
+								"type": "file",
+								"size": 1234,
+								"hidden": false,
+								"permissions": "rw-r--r--",
+								"lastModified": "2025-06-25T12:00:00Z"
+							},
+							{
+								"name": "src",
+								"type": "directory",
+								"hidden": false,
+								"permissions": "rwxr-xr-x",
+								"lastModified": "2025-06-25T10:00:00Z"
+							},
+							{
+								"name": ".gitignore",
+								"type": "file",
+								"size": 456,
+								"hidden": true,
+								"permissions": "rw-r--r--",
+								"lastModified": "2025-06-24T08:00:00Z"
+							},
+							{
+								"name": "package.json",
+								"type": "file",
+								"size": 789,
+								"hidden": false,
+								"permissions": "rw-r--r--",
+								"lastModified": "2025-06-25T11:00:00Z"
+							},
+							{
+								"name": "node_modules",
+								"type": "directory",
+								"hidden": false,
+								"permissions": "rwxr-xr-x",
+								"lastModified": "2025-06-25T09:00:00Z"
+							}
+						],
+						"entryCount": 5,
+						"path": "/Users/example/projects/test",
+						"isError": false
+					}
+				}
+			}
+		},
+		{
+			"toolCall": {
+				"uuid": "ls-680fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:25:16.463Z",
+				"parentUuid": "ls-5e81746b-9ef2-4e0c-93ea-d3d29503d752",
+				"sessionId": "140ff683-32fc-4600-b3cb-52da55fcfaba",
+				"tool": {
+					"type": "tool_use",
+					"id": "ls_456",
+					"name": "LS",
+					"input": {
+						"path": "/tmp/empty-dir",
+						"ignore": ["*.tmp", "*.log"]
+					}
+				}
+			},
+			"toolResult": {
+				"uuid": "ls-4f513711-42e5-4898-9dbb-227ef091bc89",
+				"parentUuid": "ls-680fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:25:19.401Z",
+				"result": {
+					"type": "tool_result",
+					"content": "Directory is empty",
+					"is_error": false,
+					"tool_use_id": "ls_456"
+				},
+				"toolUseResult": []
+			},
+			"expectedComponentData": {
+				"type": "ls_tool",
+				"props": {
+					"toolUse": {
+						"type": "tool_use",
+						"id": "ls_456",
+						"name": "LS",
+						"input": {
+							"path": "/tmp/empty-dir",
+							"ignore": ["*.tmp", "*.log"]
+						}
+					},
+					"status": "completed",
+					"timestamp": "2025-01-01T00:00:00Z",
+					"toolResult": {
+						"entries": [],
+						"entryCount": 0,
+						"path": "/tmp/empty-dir",
+						"isError": false
+					}
+				}
+			}
+		},
+		{
+			"toolCall": {
+				"uuid": "ls-780fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:26:16.463Z",
+				"parentUuid": "ls-6e81746b-9ef2-4e0c-93ea-d3d29503d752",
+				"sessionId": "140ff683-32fc-4600-b3cb-52da55fcfaba",
+				"tool": {
+					"type": "tool_use",
+					"id": "ls_789",
+					"name": "LS",
+					"input": {
+						"path": "/nonexistent/directory"
+					}
+				}
+			},
+			"toolResult": {
+				"uuid": "ls-5f513711-42e5-4898-9dbb-227ef091bc89",
+				"parentUuid": "ls-780fa633-4de5-45b8-b282-5b365cd4ee46",
+				"timestamp": "2025-06-25T18:26:19.401Z",
+				"result": {
+					"type": "tool_result",
+					"content": "Error: Directory not found",
+					"is_error": true,
+					"tool_use_id": "ls_789"
+				},
+				"toolUseResult": "Error: ENOENT: no such file or directory '/nonexistent/directory'"
+			},
+			"expectedComponentData": {
+				"type": "ls_tool",
+				"props": {
+					"toolUse": {
+						"type": "tool_use",
+						"id": "ls_789",
+						"name": "LS",
+						"input": {
+							"path": "/nonexistent/directory"
+						}
+					},
+					"status": "failed",
+					"timestamp": "2025-01-01T00:00:00Z",
+					"toolResult": {
+						"entries": [],
+						"entryCount": 0,
+						"path": "/nonexistent/directory",
+						"isError": true,
+						"errorMessage": "Error: ENOENT: no such file or directory '/nonexistent/directory'"
+					}
+				}
+			}
+		}
+	]
+}
