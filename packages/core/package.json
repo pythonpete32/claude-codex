@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@claude-codex/types": "workspace:*",
+    "@claude-codex/utils": "workspace:*",
     "diff": "^8.0.2"
   },
   "devDependencies": {
