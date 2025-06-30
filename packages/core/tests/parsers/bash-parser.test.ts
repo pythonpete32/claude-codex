@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import type { LogEntry } from '@claude-codex/types';
 import { BashToolParser } from '../../src/parsers/bash-parser';
 

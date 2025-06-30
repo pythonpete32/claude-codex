@@ -248,8 +248,8 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
   }
 
   private parseTodoItem = (item: Record<string, unknown>): TodoItem => {
-    // Normalize various todo formats
-    return {
+    // Normalize various todo formats - only include optional fields if they exist
+    const todoItem: TodoItem = {
       id: typeof item.id === 'string' ? item.id : `todo-${Date.now()}`,
       content:
         typeof item.content === 'string'
@@ -267,22 +267,23 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
           : typeof item.created === 'string'
             ? item.created
             : new Date().toISOString(),
-      updatedAt:
-        typeof item.updatedAt === 'string'
-          ? item.updatedAt
-          : typeof item.updated === 'string'
-            ? item.updated
-            : undefined,
-      completedAt:
-        typeof item.completedAt === 'string'
-          ? item.completedAt
-          : typeof item.completed === 'string'
-            ? item.completed
-            : undefined,
-      tags: Array.isArray(item.tags)
-        ? (item.tags.filter(tag => typeof tag === 'string') as string[])
-        : [],
     };
+
+    // Only add optional fields if they exist in the source data
+    if (typeof item.updatedAt === 'string' || typeof item.updated === 'string') {
+      todoItem.updatedAt = typeof item.updatedAt === 'string' ? item.updatedAt : item.updated as string;
+    }
+
+    if (typeof item.completedAt === 'string' || typeof item.completed === 'string') {
+      todoItem.completedAt = typeof item.completedAt === 'string' ? item.completedAt : item.completed as string;
+    }
+
+    // Only add tags if they exist in the source data
+    if (Array.isArray(item.tags)) {
+      todoItem.tags = item.tags.filter(tag => typeof tag === 'string') as string[];
+    }
+
+    return todoItem;
   };
 
   private normalizeStatus(status: unknown): TodoItem['status'] {
@@ -333,7 +334,22 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
 
     // Look for toolUseResult in the log entry
     const entry = toolResult as unknown as RawLogEntry;
-    return entry.toolUseResult || null;
+    
+    // First check if there's a toolUseResult field
+    if (entry.toolUseResult) {
+      return entry.toolUseResult;
+    }
+    
+    // Then check content array for tool_result
+    const content = entry.content;
+    if (Array.isArray(content)) {
+      const toolResultContent = content.find(c => c.type === 'tool_result');
+      if (toolResultContent) {
+        return toolResultContent;
+      }
+    }
+    
+    return null;
   }
 
   private extractErrorMessage(rawResult: RawToolResult | null): string {
@@ -342,12 +358,28 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
     }
 
     if (rawResult && typeof rawResult === 'object') {
-      return (
-        rawResult.errorMessage ||
-        rawResult.error ||
-        rawResult.message ||
-        'Failed to read todos'
-      );
+      // Check if rawResult itself has the error message (for LogEntry.content format)
+      if (typeof rawResult.output === 'string') {
+        return rawResult.output;
+      }
+      
+      const output = rawResult.output || rawResult;
+      if (typeof output === 'object' && output !== null) {
+        const outputObj = output as Record<string, unknown>;
+        return typeof outputObj.error === 'string'
+          ? outputObj.error
+          : typeof outputObj.message === 'string'
+            ? outputObj.message
+            : 'Failed to read todos';
+      }
+      
+      // Check for direct error fields
+      if (typeof rawResult.error === 'string') {
+        return rawResult.error;
+      }
+      if (typeof rawResult.message === 'string') {
+        return rawResult.message;
+      }
     }
 
     return 'TodoRead operation failed';

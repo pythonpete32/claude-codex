@@ -153,11 +153,11 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
         };
       }
 
-      // Handle legacy format with entries
+      // Handle entries array (main test data format)
       if (Array.isArray(output.entries)) {
         return {
           files: output.entries.map(this.parseFileInfo),
-          totalSize: 0,
+          totalSize: typeof output.totalSize === 'number' ? output.totalSize : 0,
           entryCount: output.entries.length,
           interrupted: false,
         };
@@ -187,14 +187,14 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
     for (const line of lines) {
       if (!line.trim()) continue;
 
-      // Simple parsing - assumes "name size type modified" format
+      // Simple parsing - handle both "name size type modified" and simple filename formats
       const parts = line.split(/\s+/);
-      if (parts.length >= 2) {
+      if (parts.length >= 1) {
         const file: FileInfo = {
           name: parts[0],
           path: parts[0], // Relative path
           type: this.inferFileType(parts[0], parts[2]),
-          size: Number.parseInt(parts[1], 10) || 0,
+          size: parts.length >= 2 ? Number.parseInt(parts[1], 10) || 0 : 0,
           modified: parts[3] ? new Date(parts[3]).toISOString() : undefined,
         };
         files.push(file);
@@ -207,26 +207,25 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
 
   private parseFileInfo = (entry: Record<string, unknown>): FileInfo => {
     // Normalize various file info formats
+    const name = typeof entry.name === 'string'
+      ? entry.name
+      : typeof entry.filename === 'string'
+        ? entry.filename
+        : '';
+
     return {
-      name:
-        typeof entry.name === 'string'
-          ? entry.name
-          : typeof entry.filename === 'string'
-            ? entry.filename
-            : '',
+      name,
       path:
         typeof entry.path === 'string'
           ? entry.path
-          : typeof entry.name === 'string'
-            ? entry.name
-            : '',
+          : name,
       type:
         typeof entry.type === 'string' &&
         ['file', 'directory', 'symlink'].includes(entry.type)
           ? (entry.type as 'file' | 'directory' | 'symlink')
           : entry.isDirectory
             ? 'directory'
-            : 'file',
+            : this.inferFileType(name), // Use inference when no type provided
       size: typeof entry.size === 'number' ? entry.size : 0,
       permissions:
         typeof entry.permissions === 'string' ? entry.permissions : undefined,
@@ -262,7 +261,9 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
 
     // Infer from name patterns
     if (name.endsWith('/')) return 'directory';
-    if (name.startsWith('.') && !name.includes('.')) return 'directory'; // Hidden dirs
+    
+    // Hidden directories (starts with dot, no extension)
+    if (name.startsWith('.') && !name.includes('.', 1)) return 'directory';
 
     return 'file';
   }
@@ -272,7 +273,22 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
 
     // Look for toolUseResult in the log entry
     const entry = toolResult as unknown as RawLogEntry;
-    return entry.toolUseResult || null;
+    
+    // First check if there's a toolUseResult field
+    if (entry.toolUseResult) {
+      return entry.toolUseResult;
+    }
+    
+    // Then check content array for tool_result
+    const content = entry.content;
+    if (Array.isArray(content)) {
+      const toolResultContent = content.find(c => c.type === 'tool_result');
+      if (toolResultContent) {
+        return toolResultContent;
+      }
+    }
+    
+    return null;
   }
 
   private extractErrorMessage(rawResult: RawToolResult | null): string {
@@ -281,12 +297,28 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
     }
 
     if (rawResult && typeof rawResult === 'object') {
-      return (
-        rawResult.errorMessage ||
-        rawResult.error ||
-        rawResult.message ||
-        'Unknown error'
-      );
+      // Check if rawResult itself has the error message (for LogEntry.content format)
+      if (typeof rawResult.output === 'string') {
+        return rawResult.output;
+      }
+      
+      const output = rawResult.output || rawResult;
+      if (typeof output === 'object' && output !== null) {
+        const outputObj = output as Record<string, unknown>;
+        return typeof outputObj.error === 'string'
+          ? outputObj.error
+          : typeof outputObj.message === 'string'
+            ? outputObj.message
+            : 'Failed to list directory';
+      }
+      
+      // Check for direct error fields
+      if (typeof rawResult.error === 'string') {
+        return rawResult.error;
+      }
+      if (typeof rawResult.message === 'string') {
+        return rawResult.message;
+      }
     }
 
     return 'Failed to list directory';

@@ -100,6 +100,10 @@ Key architectural decisions:
 - All tool data from logs should be preserved
 - The UI decides what to display, not the parsers
 
+## Tools and Technologies
+
+- bun is our package manager
+
 ## Remember
 
 Being thorough and extracting all data is NOT over-engineering - it's building a robust system that gives users and UI components maximum flexibility. Taking shortcuts by commenting out "difficult" fields is technical debt that compounds quickly.

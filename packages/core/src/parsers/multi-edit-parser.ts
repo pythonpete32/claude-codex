@@ -112,8 +112,16 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
     const rawResult = this.extractRawToolResult(toolResult);
 
     if (rawResult && typeof rawResult === 'object') {
-      // Parse fixture-style output
-      const output = rawResult.output || rawResult;
+      // Parse fixture-style output - handle nested content structure
+      let output = rawResult.output || rawResult;
+      
+      // Handle complex fixture format: toolUseResult.content[0].output
+      if (Array.isArray(rawResult.content)) {
+        const toolResultContent = rawResult.content.find(c => c.type === 'tool_result');
+        if (toolResultContent && toolResultContent.output) {
+          output = toolResultContent.output;
+        }
+      }
 
       if (typeof output === 'object' && output !== null) {
         const outputObj = output as Record<string, unknown>;
@@ -144,7 +152,7 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
     // Handle string output (simple success message)
     if (typeof result.output === 'string') {
       // Try to extract numbers from success message
-      const appliedMatch = result.output.match(/(\d+)\s*edits?\s*applied/i);
+      const appliedMatch = result.output.match(/applied\s+(\d+)\s*edits?/i);
       const editsApplied = appliedMatch
         ? Number.parseInt(appliedMatch[1], 10)
         : 0;
@@ -225,6 +233,13 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
 
     // Look for toolUseResult in the log entry
     const entry = toolResult as unknown as RawLogEntry;
+    
+    // First check if there's a toolUseResult field
+    if (entry.toolUseResult) {
+      return entry.toolUseResult;
+    }
+    
+    // Then check content array for tool_result
     const content = entry.content;
     if (Array.isArray(content)) {
       const toolResultContent = content.find(c => c.type === 'tool_result');
@@ -232,7 +247,8 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
         return toolResultContent;
       }
     }
-    return entry.toolUseResult || null;
+    
+    return null;
   }
 
   // Remove unused method
@@ -243,6 +259,11 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
     }
 
     if (rawResult && typeof rawResult === 'object') {
+      // Check if rawResult itself has the error message (for LogEntry.content format)
+      if (typeof rawResult.output === 'string') {
+        return rawResult.output;
+      }
+      
       const output = rawResult.output || rawResult;
       if (typeof output === 'object' && output !== null) {
         const outputObj = output as Record<string, unknown>;
@@ -251,6 +272,14 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
           : typeof outputObj.message === 'string'
             ? outputObj.message
             : 'Failed to apply edits';
+      }
+      
+      // Check for direct error fields
+      if (typeof rawResult.error === 'string') {
+        return rawResult.error;
+      }
+      if (typeof rawResult.message === 'string') {
+        return rawResult.message;
       }
     }
 

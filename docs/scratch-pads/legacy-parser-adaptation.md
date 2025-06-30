@@ -123,8 +123,71 @@ export class BashToolParser extends BaseToolParser<BashToolChatItem> {
 4. **Simpler**: No Zod, no fixture generation, just parsing
 
 ## Implementation Order
-1. Create base parser class
-2. Copy and adapt bash-tool parser (most complex)
-3. Copy fixtures for testing
-4. Implement remaining parsers
-5. Create parser registry
+1. Create base parser class ✅
+2. Copy and adapt bash-tool parser (most complex) ✅
+3. Copy fixtures for testing ✅
+4. Implement remaining parsers ✅
+5. Create parser registry ✅
+
+## Critical Discovery: extractRawToolResult Pattern
+
+**Date: 2025-06-30**
+
+During test implementation, discovered a critical pattern for parser data extraction that ALL complex parsers need:
+
+### The Problem
+Legacy LogEntry structures from the old codebase have data in different locations:
+1. **Simple format**: `toolResult.content[0].output` (string or object)
+2. **toolUseResult format**: `toolResult.toolUseResult` (structured data from fixtures)
+3. **Nested fixture format**: `toolResult.toolUseResult.content[0].output` (deeply nested)
+
+### The Solution
+Every parser with `extractRawToolResult` method needs this pattern:
+
+```typescript
+private extractRawToolResult(toolResult?: LogEntry): RawToolResult | null {
+  if (!toolResult) return null;
+
+  const entry = toolResult as unknown as RawLogEntry;
+  
+  // CRITICAL: Check toolUseResult field FIRST
+  if (entry.toolUseResult) {
+    return entry.toolUseResult;
+  }
+  
+  // THEN check content array for tool_result
+  const content = entry.content;
+  if (Array.isArray(content)) {
+    const toolResultContent = content.find(c => c.type === 'tool_result');
+    if (toolResultContent) {
+      return toolResultContent;
+    }
+  }
+  
+  return null;
+}
+```
+
+### For Nested Structures
+In `parseOutput` methods, also handle deeply nested fixture data:
+
+```typescript
+// Handle complex fixture format: toolUseResult.content[0].output
+if (Array.isArray(rawResult.content)) {
+  const toolResultContent = rawResult.content.find(c => c.type === 'tool_result');
+  if (toolResultContent && toolResultContent.output) {
+    output = toolResultContent.output;
+  }
+}
+```
+
+### Fixed Parsers
+- ✅ **MultiEditToolParser** - Fixed `extractRawToolResult` + nested structure handling
+- ✅ **LsToolParser** - Fixed `extractRawToolResult`
+- ✅ **TodoReadToolParser** - Already had correct pattern
+- ✅ **TodoWriteToolParser** - Already had correct pattern
+
+### Result
+MultiEditToolParser: 15/15 tests passing ✅
+
+This pattern is ESSENTIAL for any parser that needs to extract complex data from both legacy LogEntry formats and modern toolUseResult fixture formats.

@@ -5,7 +5,7 @@ import type {
   ParseConfig,
   ParsedToolOutput,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { StatusMapper, ParseErrorImpl } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -32,6 +32,28 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
     return toolUse.name
       ? toolUse.name.startsWith('mcp__') || toolUse.name.startsWith('mcp_')
       : false;
+  }
+
+  // Override extractToolUse to handle MCP tool name patterns
+  protected extractToolUse(
+    entry: LogEntry
+  ): MessageContent & { type: 'tool_use' } {
+    const content = this.normalizeContent(entry.content);
+    const toolUse = content.find(
+      block => block.type === 'tool_use' && 
+               block.name && 
+               (block.name.startsWith('mcp__') || block.name.startsWith('mcp_'))
+    );
+
+    if (!toolUse || toolUse.type !== 'tool_use') {
+      throw new ParseErrorImpl(
+        `No MCP tool_use block found`,
+        'MISSING_REQUIRED_FIELD',
+        entry
+      );
+    }
+
+    return toolUse as MessageContent & { type: 'tool_use' };
   }
 
   parse(
@@ -63,7 +85,10 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
         output = parsed.output;
         interrupted = parsed.interrupted || false;
       } else {
-        // Extract error message
+        // For errors, preserve the output AND extract error message
+        if (result.output && typeof result.output === 'object') {
+          output = result.output; // Preserve structured error output
+        }
         errorMessage = this.extractErrorMessage(result);
       }
 
@@ -102,6 +127,9 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
         keyCount: outputMetrics.keyCount,
         showRawJson: outputMetrics.isComplex,
         collapsible: outputMetrics.isLarge,
+        // Additional properties for test compatibility
+        isComplex: outputMetrics.isComplex,
+        isLarge: outputMetrics.isLarge,
       },
     };
   }
@@ -130,12 +158,15 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
       return parts.slice(2).join('_'); // mcp__puppeteer__puppeteer_navigate -> puppeteer_navigate
     }
 
-    // Try underscore format
-    const underscoreParts = toolName.split('_');
-    if (underscoreParts.length >= 3) {
-      return underscoreParts.slice(2).join('_');
+    // Try underscore format (only if no double underscores)
+    if (!toolName.includes('__')) {
+      const underscoreParts = toolName.split('_');
+      if (underscoreParts.length >= 3) {
+        return underscoreParts.slice(2).join('_');
+      }
     }
 
+    // For 2-part names like "mcp__unknown", return the full tool name
     return toolName;
   }
 
