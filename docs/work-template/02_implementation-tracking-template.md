@@ -129,7 +129,6 @@ cd packages/{package-name} && bun type-check
 ## Implementation Notes
 
 ### Phase 1: {Phase1Name} (Next Up)
-
 #### {CoreComponent1} Implementation Strategy
 ```typescript
 // Key decisions for implementation:
@@ -330,6 +329,144 @@ cd packages/{package-name} && bun type-check
 - **Per Decision**: Add entries to "Decisions Made" and "Historical Decisions"
 - **Per Risk**: Update "Risk Management" section with new risks and mitigations
 - **Per Completion**: Move items from active todos to "Completed Items"
+
+---
+
+## Scratch Pad
+
+> **Purpose**: This section captures the messy reality of implementation - problems encountered, solutions discovered, architectural deviations, and ongoing observations. This is the "working memory" of the project that helps maintain context across sessions.
+
+### Current Observations & Thoughts
+**Last Updated**: {YYYY-MM-DD HH:MM}
+
+{Free-form observations about the current state of the project, things noticed, patterns emerging, concerns, etc.}
+
+### Problems Encountered & Solutions
+
+#### 🚨 PROBLEM {N}: {Problem Title}
+- **Issue**: {Detailed description of what went wrong}
+- **Error**: `{Exact error message if applicable}`
+- **Root Cause**: {Why this happened - be specific}
+- **Solution**: {How it was fixed - include code snippets if helpful}
+- **Impact**: {What changed as a result}
+- **Files Changed**: {List of files affected}
+- **Lessons Learned**: {What to remember for next time}
+
+### Architectural Deviations from Original Plan
+
+#### ❗ DEVIATION {N}: {What Changed}
+- **Original Contract**: {What was originally planned/designed}
+- **New Implementation**: {What was actually implemented}
+- **Reason**: {Why the change was necessary}
+- **Impact**: {How this affects the rest of the system}
+- **Backward Compatibility**: {Is old approach still supported?}
+- **Approval Status**: ❌ **NOT REQUESTED** / ✅ **APPROVED** / 🔄 **PENDING**
+
+### Discovered Patterns & Anti-Patterns
+
+#### Pattern: {Pattern Name}
+- **Context**: {When this pattern applies}
+- **Implementation**: {How to implement it}
+- **Benefits**: {Why use this pattern}
+- **Example**: {Code snippet or reference}
+
+#### Anti-Pattern: {Anti-Pattern Name}  
+- **What Not to Do**: {Description}
+- **Why It's Bad**: {Problems it causes}
+- **Better Alternative**: {What to do instead}
+- **Found In**: {Where this was discovered}
+
+### Tool/Framework Learnings
+
+#### {Tool/Framework Name}
+- **Version**: {Version number}
+- **Key Learning**: {What was discovered}
+- **Gotcha**: {Unexpected behavior}
+- **Documentation Gap**: {What the docs don't tell you}
+- **Workaround**: {How to handle the issue}
+
+### Performance Observations
+
+#### {Performance Issue/Optimization}
+- **Measurement**: {Baseline → Optimized}
+- **Bottleneck**: {What was slow}
+- **Solution**: {What fixed it}
+- **Trade-off**: {What was sacrificed if anything}
+
+### Type System Challenges
+
+#### {Type Challenge}
+- **Issue**: {Type system problem encountered}
+- **Context**: {Where/why this came up}
+- **Solution**: {How it was resolved}
+- **TypeScript Feature Used**: {Advanced feature if applicable}
+
+### Integration Gotchas
+
+#### {System/Tool Integration}
+- **Components**: {What was being integrated}
+- **Issue**: {What went wrong}
+- **Root Cause**: {Why it failed}
+- **Fix**: {How it was resolved}
+- **Prevention**: {How to avoid in future}
+
+### Questions for Future Investigation
+
+1. **{Question}**: {Context and why it matters}
+2. **{Question}**: {Context and why it matters}
+3. **{Question}**: {Context and why it matters}
+
+### Ideas for Improvement
+
+- **{Improvement Area}**: {Brief description of potential enhancement}
+- **{Improvement Area}**: {Brief description of potential enhancement}
+- **{Improvement Area}**: {Brief description of potential enhancement}
+
+### Context Preservation Notes
+
+> **For Future Sessions**: Key things to remember when continuing this work
+
+- {Critical context point 1}
+- {Critical context point 2}
+- {Critical context point 3}
+
+### Raw Notes
+
+```
+{Unstructured notes, code snippets, terminal output, etc. that might be useful later}
+```
+
+---
+
+## Scratch Pad Usage Guidelines
+
+### When to Update
+- **Immediately** when encountering a problem
+- **During** problem-solving to track attempts
+- **After** finding a solution to document it
+- **Before** ending a session to preserve context
+
+### What to Include
+- Error messages (exact text)
+- File paths and line numbers
+- Code snippets (before/after)
+- Terminal commands that worked/failed
+- Thought process and reasoning
+- External references (docs, Stack Overflow, etc.)
+
+### How to Structure
+1. Start with the problem/observation
+2. Document investigation steps  
+3. Record the solution
+4. Note the impact
+5. Extract learnings
+
+### Why This Matters
+- **Context Preservation**: Future sessions can pick up where you left off
+- **Pattern Recognition**: Similar problems can be solved faster
+- **Knowledge Building**: Team learns from your discoveries
+- **Debugging Aid**: Historical record for troubleshooting
+- **Architecture Evolution**: Track how the system really evolved vs. planned
 
 ---
 

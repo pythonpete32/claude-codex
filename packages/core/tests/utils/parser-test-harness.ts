@@ -1,5 +1,5 @@
 import { deepEqual } from 'node:assert';
-import type { LogEntry, ToolParser, BaseToolProps } from '@claude-codex/types';
+import type { BaseToolProps, LogEntry, ToolParser } from '@claude-codex/types';
 import { FixtureLoader } from './fixture-loader';
 
 /**
@@ -11,7 +11,7 @@ export interface TestScenario<TProps extends BaseToolProps> {
   /** Expected parser output for validation */
   expected: TProps;
   /** Optional custom validation function for complex scenarios */
-  customValidator?: (actual: TProps, expected: TProps) => void | string;
+  customValidator?: (actual: TProps, expected: TProps) => undefined | string;
   /** Tags for test categorization and filtering */
   tags?: string[];
 }
@@ -44,10 +44,7 @@ export class ParserTestHarness<TProps extends BaseToolProps> {
   private toolCallEntries: LogEntry[];
   private toolResultEntries: LogEntry[];
 
-  constructor(
-    parser: ToolParser<TProps>,
-    fixtureName: string
-  ) {
+  constructor(parser: ToolParser<TProps>, fixtureName: string) {
     this.parser = parser;
     this.fixtureData = FixtureLoader.load<LogEntry[]>(fixtureName);
 
@@ -166,10 +163,7 @@ export class ParserTestHarness<TProps extends BaseToolProps> {
           expected: expectedOutput,
           tags: ['generated', 'basic'],
         });
-      } catch (error) {
-        // Skip scenarios that fail to generate expected output
-        continue;
-      }
+      } catch (_error) {}
     }
 
     return scenarios;
@@ -228,7 +222,7 @@ export class ParserTestHarness<TProps extends BaseToolProps> {
       deepEqual(actual, expected);
     } catch (error) {
       throw new Error(
-        `Parser output validation failed:\n` +
+        'Parser output validation failed:\n' +
           `Expected: ${JSON.stringify(expected, null, 2)}\n` +
           `Actual: ${JSON.stringify(actual, null, 2)}\n` +
           `Difference: ${error instanceof Error ? error.message : String(error)}`
@@ -267,25 +261,26 @@ export class ParserTestHarness<TProps extends BaseToolProps> {
       case 'json':
         return JSON.stringify({ statistics: stats, results }, null, 2);
 
-      case 'markdown':
-        let markdown = `# Parser Test Results\n\n`;
+      case 'markdown': {
+        let markdown = '# Parser Test Results\n\n';
         markdown += `**Summary**: ${stats.passed}/${stats.total} tests passed (${stats.passRate.toFixed(1)}%)\n\n`;
 
         if (stats.failed > 0) {
-          markdown += `## Failed Tests\n\n`;
+          markdown += '## Failed Tests\n\n';
           for (const failure of stats.failedScenarios) {
             markdown += `- **${failure.scenario}**: ${failure.error}\n`;
           }
-          markdown += `\n`;
+          markdown += '\n';
         }
 
-        markdown += `## Performance\n\n`;
+        markdown += '## Performance\n\n';
         markdown += `- Total execution time: ${stats.totalExecutionTime.toFixed(2)}ms\n`;
         markdown += `- Average per test: ${stats.averageExecutionTime.toFixed(2)}ms\n`;
 
         return markdown;
+      }
 
-      case 'junit':
+      case 'junit': {
         // Basic JUnit XML format for CI integration
         let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
         xml += `<testsuite tests="${stats.total}" failures="${stats.failed}" time="${(stats.totalExecutionTime / 1000).toFixed(3)}">\n`;
@@ -295,12 +290,13 @@ export class ParserTestHarness<TProps extends BaseToolProps> {
           if (!result.success) {
             xml += `>\n    <failure message="${result.error || 'Unknown error'}"/>\n  </testcase>\n`;
           } else {
-            xml += `/>\n`;
+            xml += '/>\n';
           }
         }
 
-        xml += `</testsuite>`;
+        xml += '</testsuite>';
         return xml;
+      }
 
       default:
         return JSON.stringify(results, null, 2);

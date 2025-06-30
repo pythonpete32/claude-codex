@@ -166,7 +166,10 @@ describe('TodoReadToolParser', () => {
 
   describe('parse', () => {
     test('should parse successful todo list retrieval', () => {
-      const result = parser.parse(sampleTodoReadToolCall, sampleTodoReadSuccessResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        sampleTodoReadSuccessResult
+      );
 
       // Check base props
       expect(result.id).toBe('toolu_todoread_test');
@@ -207,7 +210,10 @@ describe('TodoReadToolParser', () => {
     });
 
     test('should parse toolUseResult format from fixtures', () => {
-      const result = parser.parse(sampleTodoReadToolCall, sampleTodoReadWithToolUseResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        sampleTodoReadWithToolUseResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.todos).toHaveLength(3);
@@ -220,7 +226,10 @@ describe('TodoReadToolParser', () => {
     });
 
     test('should parse string output format (markdown)', () => {
-      const result = parser.parse(sampleTodoReadToolCall, sampleTodoReadStringResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        sampleTodoReadStringResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.todos).toHaveLength(3);
@@ -241,7 +250,10 @@ describe('TodoReadToolParser', () => {
     });
 
     test('should handle empty todo list', () => {
-      const result = parser.parse(sampleTodoReadToolCall, sampleTodoReadEmptyResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        sampleTodoReadEmptyResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.todos).toEqual([]);
@@ -252,7 +264,10 @@ describe('TodoReadToolParser', () => {
     });
 
     test('should parse error result', () => {
-      const result = parser.parse(sampleTodoReadToolCall, sampleTodoReadErrorResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        sampleTodoReadErrorResult
+      );
 
       expect(result.status.normalized).toBe('failed');
       expect(result.errorMessage).toBe('Failed to access todo storage');
@@ -337,7 +352,10 @@ describe('TodoReadToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleTodoReadToolCall, variousPriorityResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        variousPriorityResult
+      );
 
       expect(result.todos[0].priority).toBe('high');
       expect(result.todos[1].priority).toBe('high');
@@ -374,7 +392,10 @@ describe('TodoReadToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleTodoReadToolCall, alternativeFieldsResult);
+      const result = parser.parse(
+        sampleTodoReadToolCall,
+        alternativeFieldsResult
+      );
 
       expect(result.todos).toHaveLength(2);
       expect(result.todos[0].content).toBe('Alternative content field');

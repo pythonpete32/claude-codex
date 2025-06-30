@@ -42,7 +42,8 @@ const sampleMultiEditSuccessResult: LogEntry = {
     {
       type: 'tool_result',
       tool_use_id: 'toolu_multiedit_test',
-      output: 'Successfully applied 2 edits to /Users/test/project/src/utils.ts',
+      output:
+        'Successfully applied 2 edits to /Users/test/project/src/utils.ts',
       is_error: false,
     },
   ],
@@ -163,7 +164,10 @@ describe('MultiEditToolParser', () => {
 
   describe('parse', () => {
     test('should parse successful multi-edit operation', () => {
-      const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditSuccessResult);
+      const result = parser.parse(
+        sampleMultiEditToolCall,
+        sampleMultiEditSuccessResult
+      );
 
       // Check base props
       expect(result.id).toBe('toolu_multiedit_test');
@@ -189,7 +193,10 @@ describe('MultiEditToolParser', () => {
     });
 
     test('should parse partial success with detailed results', () => {
-      const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditPartialResult);
+      const result = parser.parse(
+        sampleMultiEditToolCall,
+        sampleMultiEditPartialResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.results?.editsApplied).toBe(1);
@@ -204,7 +211,9 @@ describe('MultiEditToolParser', () => {
       // Check second edit (failure)
       expect(result.results?.editDetails[1].success).toBe(false);
       expect(result.results?.editDetails[1].replacements_made).toBe(0);
-      expect(result.results?.editDetails[1].error).toContain('Pattern not found');
+      expect(result.results?.editDetails[1].error).toContain(
+        'Pattern not found'
+      );
 
       // Check UI helpers
       expect(result.ui.successfulEdits).toBe(1);
@@ -212,7 +221,10 @@ describe('MultiEditToolParser', () => {
     });
 
     test('should parse toolUseResult format from fixtures', () => {
-      const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditWithToolUseResult);
+      const result = parser.parse(
+        sampleMultiEditToolCall,
+        sampleMultiEditWithToolUseResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.results?.editsApplied).toBe(2);
@@ -226,10 +238,15 @@ describe('MultiEditToolParser', () => {
     });
 
     test('should parse error result', () => {
-      const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditErrorResult);
+      const result = parser.parse(
+        sampleMultiEditToolCall,
+        sampleMultiEditErrorResult
+      );
 
       expect(result.status.normalized).toBe('failed');
-      expect(result.results?.errorMessage).toBe('File not found: /Users/test/project/nonexistent.ts');
+      expect(result.results?.errorMessage).toBe(
+        'File not found: /Users/test/project/nonexistent.ts'
+      );
       expect(result.results?.editsApplied).toBe(0);
       expect(result.results?.allSuccessful).toBe(false);
       expect(result.results?.editDetails).toEqual([]);
@@ -333,7 +350,10 @@ describe('MultiEditToolParser', () => {
       expect(result.results?.editDetails).toHaveLength(2);
       expect(result.results?.editDetails[0].success).toBe(true);
       expect(result.results?.editDetails[0].replacements_made).toBe(0);
-      expect(result.results?.editDetails[1].operation).toEqual({ old_string: '', new_string: '' });
+      expect(result.results?.editDetails[1].operation).toEqual({
+        old_string: '',
+        new_string: '',
+      });
     });
 
     test('should extract numbers from string messages', () => {
@@ -349,7 +369,10 @@ describe('MultiEditToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMultiEditToolCall, numberExtractionResult);
+      const result = parser.parse(
+        sampleMultiEditToolCall,
+        numberExtractionResult
+      );
 
       expect(result.results?.editsApplied).toBe(3);
       expect(result.results?.allSuccessful).toBe(true);

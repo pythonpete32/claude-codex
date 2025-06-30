@@ -1,0 +1,236 @@
+{
+  "toolName": "MCP-SequentialThinking",
+  "category": "mcp",
+  "priority": "medium",
+  "fixtureCount": 3,
+  "fixtures": [
+    {
+      "toolCall": {
+        "parentUuid": "6afa9ff3-656e-49cc-b2e7-a839854bff52",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+        "version": "1.0.35",
+        "type": "assistant",
+        "timestamp": "2025-06-30T13:02:18.514Z",
+        "message": {
+          "id": "msg_019k1igxFhV4ywEoWVgXTYcr",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-opus-4-20250514",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_01N7WzjTsz1YoYCdPqfBAmgR",
+              "name": "mcp__sequential-thinking__sequentialthinking",
+              "input": {
+                "thought": "Starting to think about JSON-L (JSON Lines) log format. This format stores one JSON object per line, making it easy to append new log entries and parse them line by line. Each line is a complete, valid JSON object.",
+                "nextThoughtNeeded": true,
+                "thoughtNumber": 1,
+                "totalThoughts": 3
+              }
+            }
+          ],
+          "stop_reason": null,
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 9,
+            "cache_creation_input_tokens": 19675,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 8,
+            "service_tier": "standard"
+          }
+        },
+        "requestId": "req_011CQe5RTZ1vH9paP1D6GV8i",
+        "uuid": "3ce3aa9a-01a5-4632-9a3b-f28a99d0d32b"
+      },
+      "toolResult": {
+        "parentUuid": "3ce3aa9a-01a5-4632-9a3b-f28a99d0d32b",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+        "version": "1.0.35",
+        "type": "user",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "tool_use_id": "toolu_01N7WzjTsz1YoYCdPqfBAmgR",
+              "type": "tool_result",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\n  \"thoughtNumber\": 1,\n  \"totalThoughts\": 3,\n  \"nextThoughtNeeded\": true,\n  \"branches\": [],\n  \"thoughtHistoryLength\": 1\n}"
+                }
+              ]
+            }
+          ]
+        },
+        "uuid": "40bea774-9716-4299-9463-e59fd3bb7d29",
+        "timestamp": "2025-06-30T13:02:18.514Z",
+        "toolUseResult": [
+          {
+            "type": "text",
+            "text": "{\n  \"thoughtNumber\": 1,\n  \"totalThoughts\": 3,\n  \"nextThoughtNeeded\": true,\n  \"branches\": [],\n  \"thoughtHistoryLength\": 1\n}"
+          }
+        ]
+      },
+      "expectedComponentData": {},
+      "mcpToolName": "mcp__sequential-thinking__sequentialthinking"
+    },
+    {
+      "toolCall": {
+        "parentUuid": "acda9085-03c8-4371-816e-3993916aa2ba",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+        "version": "1.0.35",
+        "type": "assistant",
+        "timestamp": "2025-06-30T13:02:18.514Z",
+        "message": {
+          "id": "msg_0156cwt3JVby12tvsonqLzz8",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-opus-4-20250514",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_01Q7SwVT7pUBr5ZyVRZPS5bM",
+              "name": "mcp__sequential-thinking__sequentialthinking",
+              "input": {
+                "thought": "The typical structure of JSON-L logs includes fields like timestamp, level (INFO, ERROR, etc.), message, and additional metadata. For assistant logs like mine, they might include fields such as: request_id, model, tokens_used, latency, tool_calls, function_results, and response content.",
+                "nextThoughtNeeded": true,
+                "thoughtNumber": 2,
+                "totalThoughts": 3
+              }
+            }
+          ],
+          "stop_reason": null,
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 11,
+            "cache_creation_input_tokens": 334,
+            "cache_read_input_tokens": 19675,
+            "output_tokens": 2,
+            "service_tier": "standard"
+          }
+        },
+        "requestId": "req_011CQe5SLLxbTjVZVR4iEbKB",
+        "uuid": "b311a1ca-7b71-4370-b5a0-45750ee50595"
+      },
+      "toolResult": {
+        "parentUuid": "b311a1ca-7b71-4370-b5a0-45750ee50595",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+        "version": "1.0.35",
+        "type": "user",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "tool_use_id": "toolu_01Q7SwVT7pUBr5ZyVRZPS5bM",
+              "type": "tool_result",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\n  \"thoughtNumber\": 2,\n  \"totalThoughts\": 3,\n  \"nextThoughtNeeded\": true,\n  \"branches\": [],\n  \"thoughtHistoryLength\": 2\n}"
+                }
+              ]
+            }
+          ]
+        },
+        "uuid": "35b0d033-6f85-4530-a722-64bb680137e6",
+        "timestamp": "2025-06-30T13:02:18.514Z",
+        "toolUseResult": [
+          {
+            "type": "text",
+            "text": "{\n  \"thoughtNumber\": 2,\n  \"totalThoughts\": 3,\n  \"nextThoughtNeeded\": true,\n  \"branches\": [],\n  \"thoughtHistoryLength\": 2\n}"
+          }
+        ]
+      },
+      "expectedComponentData": {},
+      "mcpToolName": "mcp__sequential-thinking__sequentialthinking"
+    },
+    {
+      "toolCall": {
+        "parentUuid": "f5e001b6-cf34-4617-a2e9-6d3faa9e348e",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+        "version": "1.0.35",
+        "type": "assistant",
+        "timestamp": "2025-06-30T13:02:18.514Z",
+        "message": {
+          "id": "msg_01JwgPBQYu5t9WQuX1G89Vyc",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-opus-4-20250514",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_01AByhmUberwi8nPrY3vKDee",
+              "name": "mcp__sequential-thinking__sequentialthinking",
+              "input": {
+                "thought": "The advantage of JSON-L format for logs is that each line can be processed independently, making it ideal for streaming, grep operations, and log aggregation systems. Tools can easily tail the file and parse new entries as they arrive without needing to parse the entire file structure.",
+                "nextThoughtNeeded": false,
+                "thoughtNumber": 3,
+                "totalThoughts": 3
+              }
+            }
+          ],
+          "stop_reason": null,
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 10,
+            "cache_creation_input_tokens": 282,
+            "cache_read_input_tokens": 20009,
+            "output_tokens": 2,
+            "service_tier": "standard"
+          }
+        },
+        "requestId": "req_011CQe5Sr8brgJK9diTppd1y",
+        "uuid": "99673d6d-8f08-43f5-96c5-7c59d0ec8792"
+      },
+      "toolResult": {
+        "parentUuid": "99673d6d-8f08-43f5-96c5-7c59d0ec8792",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+        "version": "1.0.35",
+        "type": "user",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "tool_use_id": "toolu_01AByhmUberwi8nPrY3vKDee",
+              "type": "tool_result",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\n  \"thoughtNumber\": 3,\n  \"totalThoughts\": 3,\n  \"nextThoughtNeeded\": false,\n  \"branches\": [],\n  \"thoughtHistoryLength\": 3\n}"
+                }
+              ]
+            }
+          ]
+        },
+        "uuid": "c88fe3b5-754a-44ee-aa28-be5d4af07650",
+        "timestamp": "2025-06-30T13:02:18.514Z",
+        "toolUseResult": [
+          {
+            "type": "text",
+            "text": "{\n  \"thoughtNumber\": 3,\n  \"totalThoughts\": 3,\n  \"nextThoughtNeeded\": false,\n  \"branches\": [],\n  \"thoughtHistoryLength\": 3\n}"
+          }
+        ]
+      },
+      "expectedComponentData": {},
+      "mcpToolName": "mcp__sequential-thinking__sequentialthinking"
+    }
+  ]
+}

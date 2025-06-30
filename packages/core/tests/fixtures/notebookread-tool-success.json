@@ -117,7 +117,11 @@
             {
               "id": "test-md-1",
               "cell_type": "markdown",
-              "source": ["# Test Jupyter Notebook", "", "This is a test notebook for testing Claude Code's notebook tools."],
+              "source": [
+                "# Test Jupyter Notebook",
+                "",
+                "This is a test notebook for testing Claude Code's notebook tools."
+              ],
               "outputs": [],
               "execution_count": null,
               "metadata": {}

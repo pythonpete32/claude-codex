@@ -231,7 +231,8 @@ describe('LsToolParser', () => {
           {
             type: 'tool_result',
             tool_use_id: 'toolu_ls_test',
-            output: 'package.json 1024 file 2025-06-25T10:00:00Z\nsrc 4096 directory 2025-06-25T12:00:00Z',
+            output:
+              'package.json 1024 file 2025-06-25T10:00:00Z\nsrc 4096 directory 2025-06-25T12:00:00Z',
             is_error: false,
           },
         ],

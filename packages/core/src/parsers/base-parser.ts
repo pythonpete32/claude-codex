@@ -166,12 +166,17 @@ export abstract class BaseToolParser<TProps extends BaseToolProps>
     );
 
     if (!toolResult || toolResult.type !== 'tool_result') {
-      parserLogger.error({
-        toolUseId,
-        availableToolResults: content.filter(b => b.type === 'tool_result').map(b => b.tool_use_id),
-        entryUuid: entry.uuid
-      }, 'No matching tool_result found for correlation');
-      
+      parserLogger.error(
+        {
+          toolUseId,
+          availableToolResults: content
+            .filter(b => b.type === 'tool_result')
+            .map(b => b.tool_use_id),
+          entryUuid: entry.uuid,
+        },
+        'No matching tool_result found for correlation'
+      );
+
       throw new ParseErrorImpl(
         `No matching tool_result found for tool_use_id ${toolUseId}`,
         'MISSING_CORRELATION_DATA',

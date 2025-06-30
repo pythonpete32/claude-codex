@@ -10,6 +10,11 @@ This template system provides a structured approach to architectural design and 
 
 ## Template Files
 
+### 🤝 00_claude-code-collaboration-contract.md
+**Purpose**: Lightweight contract and scaffold for human-AI agent collaboration  
+**Use Case**: Establishing structured collaboration patterns with any terminal AI agent  
+**Content**: Collaboration principles, review processes, ownership guidelines, anti-patterns
+
 ### 📋 01_architectural-design-template.md
 **Purpose**: Complete architectural specification template  
 **Use Case**: Designing new systems, components, or major refactoring projects  
@@ -21,6 +26,12 @@ This template system provides a structured approach to architectural design and 
 **Content**: Phase tracking, todo synchronization, scratch pad, session notes
 
 ## How to Use These Templates
+
+### Step 0: Establish Collaboration Contract (Essential First Step)
+1. **Read the Collaboration Contract**: Start with `00_claude-code-collaboration-contract.md`
+2. **Understand the Principles**: Review the core rules for human-AI collaboration
+3. **Set Up Your Workflow**: Establish review cadence and communication patterns
+4. **Customize for Your Context**: Adapt the contract to your specific project needs
 
 ### Step 1: Copy Templates to Project Directory
 ```bash

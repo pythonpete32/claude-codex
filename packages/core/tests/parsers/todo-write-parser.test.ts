@@ -161,7 +161,10 @@ describe('TodoWriteToolParser', () => {
 
   describe('parse', () => {
     test('should parse successful todo write operation', () => {
-      const result = parser.parse(sampleTodoWriteToolCall, sampleTodoWriteSuccessResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        sampleTodoWriteSuccessResult
+      );
 
       // Check base props
       expect(result.id).toBe('toolu_todowrite_test');
@@ -188,7 +191,10 @@ describe('TodoWriteToolParser', () => {
     });
 
     test('should parse detailed result with counts', () => {
-      const result = parser.parse(sampleTodoWriteToolCall, sampleTodoWriteDetailedResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        sampleTodoWriteDetailedResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.ui.writtenCount).toBe(3);
@@ -203,7 +209,10 @@ describe('TodoWriteToolParser', () => {
     });
 
     test('should NOT extract counts from string messages (avoid anti-pattern)', () => {
-      const result = parser.parse(sampleTodoWriteToolCall, sampleTodoWritePartialResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        sampleTodoWritePartialResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       // Parser correctly avoids brittle string parsing - counts should be 0
@@ -211,7 +220,9 @@ describe('TodoWriteToolParser', () => {
       expect(result.ui.modifiedCount).toBe(0);
       expect(result.ui.deletedCount).toBe(0);
       // But should preserve the message for display
-      expect(result.message).toBe('Added 2 todos, updated 1 todo, failed to process 1 todo');
+      expect(result.message).toBe(
+        'Added 2 todos, updated 1 todo, failed to process 1 todo'
+      );
     });
 
     test('should handle empty todo list (clear operation)', () => {
@@ -237,10 +248,15 @@ describe('TodoWriteToolParser', () => {
     });
 
     test('should parse error result', () => {
-      const result = parser.parse(sampleTodoWriteToolCall, sampleTodoWriteErrorResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        sampleTodoWriteErrorResult
+      );
 
       expect(result.status.normalized).toBe('failed');
-      expect(result.errorMessage).toBe('Failed to access todo storage: Permission denied');
+      expect(result.errorMessage).toBe(
+        'Failed to access todo storage: Permission denied'
+      );
       expect(result.ui.writtenCount).toBe(0);
     });
 
@@ -368,14 +384,17 @@ describe('TodoWriteToolParser', () => {
         ],
       };
 
-      const result = parser.parse(replaceCall); // No result needed for operation detection  
+      const result = parser.parse(replaceCall); // No result needed for operation detection
       expect(result.operation).toBe('replace');
     });
   });
 
   describe('change tracking', () => {
     test('should create synthetic changes for add operations', () => {
-      const result = parser.parse(sampleTodoWriteToolCall, sampleTodoWriteDetailedResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        sampleTodoWriteDetailedResult
+      );
 
       const addChanges = result.changes.filter(c => c.type === 'add');
       expect(addChanges).toHaveLength(2);
@@ -384,7 +403,10 @@ describe('TodoWriteToolParser', () => {
     });
 
     test('should create synthetic changes for update operations', () => {
-      const result = parser.parse(sampleTodoWriteToolCall, sampleTodoWriteDetailedResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        sampleTodoWriteDetailedResult
+      );
 
       const updateChanges = result.changes.filter(c => c.type === 'update');
       expect(updateChanges).toHaveLength(1);
@@ -448,7 +470,7 @@ describe('TodoWriteToolParser', () => {
             tool_use_id: 'toolu_todowrite_test',
             output: {
               written: 5, // alternative field name
-              added: 2,   // alternative field name
+              added: 2, // alternative field name
             },
             is_error: false,
           },
@@ -469,13 +491,17 @@ describe('TodoWriteToolParser', () => {
           {
             type: 'tool_result',
             tool_use_id: 'toolu_todowrite_test',
-            output: 'Operation completed: 5 todos written, 3 todos added, 2 todos updated, 1 todo removed',
+            output:
+              'Operation completed: 5 todos written, 3 todos added, 2 todos updated, 1 todo removed',
             is_error: false,
           },
         ],
       };
 
-      const result = parser.parse(sampleTodoWriteToolCall, complexMessageResult);
+      const result = parser.parse(
+        sampleTodoWriteToolCall,
+        complexMessageResult
+      );
 
       // Parser correctly avoids brittle string parsing - counts should be 0
       expect(result.ui.writtenCount).toBe(0);
@@ -483,7 +509,9 @@ describe('TodoWriteToolParser', () => {
       expect(result.ui.modifiedCount).toBe(0);
       expect(result.ui.deletedCount).toBe(0);
       // But should preserve the message for display
-      expect(result.message).toBe('Operation completed: 5 todos written, 3 todos added, 2 todos updated, 1 todo removed');
+      expect(result.message).toBe(
+        'Operation completed: 5 todos written, 3 todos added, 2 todos updated, 1 todo removed'
+      );
     });
   });
 

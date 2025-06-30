@@ -1,0 +1,26 @@
+{
+  "name": "@claude-codex/utils",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@claude-codex/types": "workspace:*",
+    "pino": "^9.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

@@ -5,18 +5,48 @@
  * using real fixture data from Claude Code tool logs.
  */
 
-// Core utilities
-export { FixtureLoader } from './fixture-loader';
-export { ParserTestHarness } from './parser-test-harness';
-export { TestingHelpers, setupCustomMatchers } from './testing-helpers';
-
+// Core utilities - function-based exports
+export {
+  clearFixtureCache,
+  FixtureLoader, // Legacy compatibility
+  fixtureExists,
+  getAvailableFixtures,
+  getFixturePath,
+  loadFixture,
+  loadFixturesBatch,
+} from './fixture-loader';
 // Type exports
 export type {
-  TestScenario,
   ParserTestResult,
+  TestScenario,
 } from './parser-test-harness';
+export { ParserTestHarness } from './parser-test-harness';
+
+// Import for internal use in setupFixtureBasedTesting
+import { loadFixture, loadFixturesBatch } from './fixture-loader';
+import { ParserTestHarness } from './parser-test-harness';
+import {
+  createMockBaseToolProps,
+  createMockLogEntry,
+  setupCustomMatchers,
+  validateBaseToolProps,
+} from './testing-helpers';
 
 export type { CustomMatchers } from './testing-helpers';
+export {
+  createMockBaseToolProps,
+  createMockLogEntry,
+  createPerformanceTimer,
+  deepCompareWithPath,
+  extractToolPairs,
+  generateTestDescription,
+  setupCustomMatchers,
+  TestingHelpers, // Legacy compatibility
+  validateBaseToolProps,
+  validateFixtureStructure,
+  validateToolStatus,
+  validateUuidCorrelation,
+} from './testing-helpers';
 
 /**
  * Quick setup function for fixture-based testing
@@ -26,9 +56,12 @@ export function setupFixtureBasedTesting() {
   setupCustomMatchers();
 
   return {
-    FixtureLoader,
+    loadFixture,
+    loadFixturesBatch,
     ParserTestHarness,
-    TestingHelpers,
+    validateBaseToolProps,
+    createMockLogEntry,
+    createMockBaseToolProps,
   };
 }
 
@@ -36,8 +69,8 @@ export function setupFixtureBasedTesting() {
  * Re-export commonly used types from the types package
  */
 export type {
-  LogEntry,
   BaseToolProps,
-  ToolStatus,
+  LogEntry,
   ToolParser,
+  ToolStatus,
 } from '@claude-codex/types';

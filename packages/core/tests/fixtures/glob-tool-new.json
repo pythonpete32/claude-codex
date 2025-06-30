@@ -62,7 +62,9 @@
         },
         "uuid": "glob-result-uuid",
         "toolUseResult": {
-          "filenames": ["/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"],
+          "filenames": [
+            "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"
+          ],
           "durationMs": 82,
           "numFiles": 1,
           "truncated": false

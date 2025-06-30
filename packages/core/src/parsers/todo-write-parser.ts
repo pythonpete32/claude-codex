@@ -119,10 +119,12 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
     if (rawResult && typeof rawResult === 'object') {
       // Parse fixture-style output - handle nested content structure
       let output = rawResult.output || rawResult;
-      
+
       // Handle complex fixture format: toolUseResult.content[0].output
       if (Array.isArray(rawResult.content)) {
-        const toolResultContent = rawResult.content.find(c => c.type === 'tool_result');
+        const toolResultContent = rawResult.content.find(
+          c => c.type === 'tool_result'
+        );
         if (toolResultContent && toolResultContent.output) {
           output = toolResultContent.output;
         }
@@ -131,19 +133,43 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
       if (typeof output === 'object' && output !== null) {
         const outputObj = output as Record<string, unknown>;
         // Look for structured data from real logs OR test alternative field names
-        if (outputObj.totalProcessed !== undefined || outputObj.added !== undefined || 
-            outputObj.written !== undefined || outputObj.writtenCount !== undefined) {
+        if (
+          outputObj.totalProcessed !== undefined ||
+          outputObj.added !== undefined ||
+          outputObj.written !== undefined ||
+          outputObj.writtenCount !== undefined
+        ) {
           return {
-            writtenCount: typeof outputObj.totalProcessed === 'number' ? outputObj.totalProcessed :
-                         typeof outputObj.writtenCount === 'number' ? outputObj.writtenCount :
-                         typeof outputObj.written === 'number' ? outputObj.written : 0,
-            addedCount: typeof outputObj.added === 'number' ? outputObj.added :
-                       typeof outputObj.addedCount === 'number' ? outputObj.addedCount : 0,
-            updatedCount: typeof outputObj.updated === 'number' ? outputObj.updated :
-                         typeof outputObj.updatedCount === 'number' ? outputObj.updatedCount : 0,
-            removedCount: typeof outputObj.failed === 'number' ? outputObj.failed :
-                         typeof outputObj.removedCount === 'number' ? outputObj.removedCount : 0,
-            message: typeof outputObj.message === 'string' ? outputObj.message : undefined,
+            writtenCount:
+              typeof outputObj.totalProcessed === 'number'
+                ? outputObj.totalProcessed
+                : typeof outputObj.writtenCount === 'number'
+                  ? outputObj.writtenCount
+                  : typeof outputObj.written === 'number'
+                    ? outputObj.written
+                    : 0,
+            addedCount:
+              typeof outputObj.added === 'number'
+                ? outputObj.added
+                : typeof outputObj.addedCount === 'number'
+                  ? outputObj.addedCount
+                  : 0,
+            updatedCount:
+              typeof outputObj.updated === 'number'
+                ? outputObj.updated
+                : typeof outputObj.updatedCount === 'number'
+                  ? outputObj.updatedCount
+                  : 0,
+            removedCount:
+              typeof outputObj.failed === 'number'
+                ? outputObj.failed
+                : typeof outputObj.removedCount === 'number'
+                  ? outputObj.removedCount
+                  : 0,
+            message:
+              typeof outputObj.message === 'string'
+                ? outputObj.message
+                : undefined,
             interrupted: outputObj.interrupted === true,
           };
         }
@@ -157,25 +183,49 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
       // Check for interrupted flag
       if (output.interrupted === true) {
         return {
-          writtenCount: typeof output.writtenCount === 'number' ? output.writtenCount : 0,
-          addedCount: typeof output.addedCount === 'number' ? output.addedCount : 0,
-          updatedCount: typeof output.updatedCount === 'number' ? output.updatedCount : 0,
-          removedCount: typeof output.removedCount === 'number' ? output.removedCount : 0,
-          message: typeof output.message === 'string' ? output.message : 'Operation interrupted',
+          writtenCount:
+            typeof output.writtenCount === 'number' ? output.writtenCount : 0,
+          addedCount:
+            typeof output.addedCount === 'number' ? output.addedCount : 0,
+          updatedCount:
+            typeof output.updatedCount === 'number' ? output.updatedCount : 0,
+          removedCount:
+            typeof output.removedCount === 'number' ? output.removedCount : 0,
+          message:
+            typeof output.message === 'string'
+              ? output.message
+              : 'Operation interrupted',
           interrupted: true,
         };
       }
 
       return {
-        writtenCount: typeof output.writtenCount === 'number' ? output.writtenCount : 
-                     typeof output.written === 'number' ? output.written : 0,
-        addedCount: typeof output.addedCount === 'number' ? output.addedCount : 
-                   typeof output.added === 'number' ? output.added : 0,
-        updatedCount: typeof output.updatedCount === 'number' ? output.updatedCount : 
-                     typeof output.updated === 'number' ? output.updated : 0,
-        removedCount: typeof output.removedCount === 'number' ? output.removedCount : 
-                     typeof output.removed === 'number' ? output.removed : 0,
-        message: typeof output.message === 'string' ? output.message : undefined,
+        writtenCount:
+          typeof output.writtenCount === 'number'
+            ? output.writtenCount
+            : typeof output.written === 'number'
+              ? output.written
+              : 0,
+        addedCount:
+          typeof output.addedCount === 'number'
+            ? output.addedCount
+            : typeof output.added === 'number'
+              ? output.added
+              : 0,
+        updatedCount:
+          typeof output.updatedCount === 'number'
+            ? output.updatedCount
+            : typeof output.updated === 'number'
+              ? output.updated
+              : 0,
+        removedCount:
+          typeof output.removedCount === 'number'
+            ? output.removedCount
+            : typeof output.removed === 'number'
+              ? output.removed
+              : 0,
+        message:
+          typeof output.message === 'string' ? output.message : undefined,
         interrupted: false,
       };
     }
@@ -213,13 +263,18 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
     // Analyze todo characteristics regardless of writtenCount
     // Check if all todos are new (no existing IDs or temp IDs only)
     const allNewTodos = todos.every(
-      todo => !todo.id || todo.id.startsWith('temp-') || todo.id.startsWith('todo-')
+      todo =>
+        !todo.id || todo.id.startsWith('temp-') || todo.id.startsWith('todo-')
     );
 
     // Check if we have mix of new and existing todos (based on updatedAt presence)
     // Exclude temp- and todo- prefixed IDs as they are considered "new"
     const hasExistingIds = todos.some(
-      todo => todo.id && !todo.id.startsWith('temp-') && !todo.id.startsWith('todo-') && todo.updatedAt
+      todo =>
+        todo.id &&
+        !todo.id.startsWith('temp-') &&
+        !todo.id.startsWith('todo-') &&
+        todo.updatedAt
     );
 
     // If no structured counts available, base decision on todo characteristics
@@ -252,12 +307,12 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
 
     // Look for toolUseResult in the log entry
     const entry = toolResult as unknown as RawLogEntry;
-    
+
     // First check if there's a toolUseResult field
     if (entry.toolUseResult) {
       return entry.toolUseResult;
     }
-    
+
     // Then check content array for tool_result
     const content = entry.content;
     if (Array.isArray(content)) {
@@ -266,7 +321,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
         return toolResultContent;
       }
     }
-    
+
     return null;
   }
 
@@ -280,7 +335,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
       if (typeof rawResult.output === 'string') {
         return rawResult.output;
       }
-      
+
       const output = rawResult.output || rawResult;
       if (typeof output === 'object' && output !== null) {
         const outputObj = output as Record<string, unknown>;
@@ -290,7 +345,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
             ? outputObj.message
             : 'Failed to write todos';
       }
-      
+
       // Check for direct error fields
       if (typeof rawResult.error === 'string') {
         return rawResult.error;

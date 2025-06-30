@@ -270,17 +270,31 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
     };
 
     // Only add optional fields if they exist in the source data
-    if (typeof item.updatedAt === 'string' || typeof item.updated === 'string') {
-      todoItem.updatedAt = typeof item.updatedAt === 'string' ? item.updatedAt : item.updated as string;
+    if (
+      typeof item.updatedAt === 'string' ||
+      typeof item.updated === 'string'
+    ) {
+      todoItem.updatedAt =
+        typeof item.updatedAt === 'string'
+          ? item.updatedAt
+          : (item.updated as string);
     }
 
-    if (typeof item.completedAt === 'string' || typeof item.completed === 'string') {
-      todoItem.completedAt = typeof item.completedAt === 'string' ? item.completedAt : item.completed as string;
+    if (
+      typeof item.completedAt === 'string' ||
+      typeof item.completed === 'string'
+    ) {
+      todoItem.completedAt =
+        typeof item.completedAt === 'string'
+          ? item.completedAt
+          : (item.completed as string);
     }
 
     // Only add tags if they exist in the source data
     if (Array.isArray(item.tags)) {
-      todoItem.tags = item.tags.filter(tag => typeof tag === 'string') as string[];
+      todoItem.tags = item.tags.filter(
+        tag => typeof tag === 'string'
+      ) as string[];
     }
 
     return todoItem;
@@ -334,12 +348,12 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
 
     // Look for toolUseResult in the log entry
     const entry = toolResult as unknown as RawLogEntry;
-    
+
     // First check if there's a toolUseResult field
     if (entry.toolUseResult) {
       return entry.toolUseResult;
     }
-    
+
     // Then check content array for tool_result
     const content = entry.content;
     if (Array.isArray(content)) {
@@ -348,7 +362,7 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
         return toolResultContent;
       }
     }
-    
+
     return null;
   }
 
@@ -362,7 +376,7 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
       if (typeof rawResult.output === 'string') {
         return rawResult.output;
       }
-      
+
       const output = rawResult.output || rawResult;
       if (typeof output === 'object' && output !== null) {
         const outputObj = output as Record<string, unknown>;
@@ -372,7 +386,7 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
             ? outputObj.message
             : 'Failed to read todos';
       }
-      
+
       // Check for direct error fields
       if (typeof rawResult.error === 'string') {
         return rawResult.error;

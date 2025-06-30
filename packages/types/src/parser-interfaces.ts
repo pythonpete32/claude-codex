@@ -98,6 +98,14 @@ export class ParseErrorImpl extends Error implements ParseError {
   ) {
     super(message);
     this.name = "ParseError";
+    
+    // Restore prototype chain for instanceof checks
+    Object.setPrototypeOf(this, new.target.prototype);
+    
+    // Capture stack trace
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ParseErrorImpl);
+    }
   }
 }
 

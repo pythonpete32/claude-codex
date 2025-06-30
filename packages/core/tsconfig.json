@@ -20,8 +20,5 @@
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist"],
-  "references": [
-    { "path": "../types" },
-    { "path": "../utils" }
-  ]
+  "references": [{ "path": "../types" }, { "path": "../utils" }]
 }

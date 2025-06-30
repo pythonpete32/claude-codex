@@ -73,7 +73,8 @@ const sampleEditReplaceAllResult: LogEntry = {
     {
       type: 'tool_result',
       tool_use_id: 'toolu_edit_replace_all',
-      output: 'Successfully replaced 3 occurrences of "console.log" with "console.debug" in /Users/test/project/src/debug.ts',
+      output:
+        'Successfully replaced 3 occurrences of "console.log" with "console.debug" in /Users/test/project/src/debug.ts',
       is_error: false,
     },
   ],
@@ -103,7 +104,8 @@ const sampleEditNotFoundResult: LogEntry = {
     {
       type: 'tool_result',
       tool_use_id: 'toolu_edit_test',
-      output: 'String not found: "const oldFunction = () => {" in /Users/test/project/src/utils.ts',
+      output:
+        'String not found: "const oldFunction = () => {" in /Users/test/project/src/utils.ts',
       is_error: true,
     },
   ],
@@ -164,7 +166,10 @@ describe('EditToolParser', () => {
     });
 
     test('should parse replace all operation', () => {
-      const result = parser.parse(sampleEditReplaceAllCall, sampleEditReplaceAllResult);
+      const result = parser.parse(
+        sampleEditReplaceAllCall,
+        sampleEditReplaceAllResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.oldContent).toBe('console.log');
@@ -192,9 +197,7 @@ describe('EditToolParser', () => {
       expect(result.status.normalized).toBe('pending');
       expect(result.filePath).toBe('/Users/test/project/src/utils.ts');
     });
-
   });
-
 
   describe('edge cases', () => {
     test('should handle missing file path', () => {

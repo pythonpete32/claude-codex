@@ -40,9 +40,10 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
   ): MessageContent & { type: 'tool_use' } {
     const content = this.normalizeContent(entry.content);
     const toolUse = content.find(
-      block => block.type === 'tool_use' && 
-               block.name && 
-               (block.name.startsWith('mcp__') || block.name.startsWith('mcp_'))
+      block =>
+        block.type === 'tool_use' &&
+        block.name &&
+        (block.name.startsWith('mcp__') || block.name.startsWith('mcp_'))
     );
 
     if (!toolUse || toolUse.type !== 'tool_use') {

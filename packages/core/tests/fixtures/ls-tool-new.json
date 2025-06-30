@@ -1,6 +1,6 @@
 {
   "toolName": "LS",
-  "category": "core", 
+  "category": "core",
   "priority": "high",
   "fixtureCount": 1,
   "fixtures": [

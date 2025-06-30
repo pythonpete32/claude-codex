@@ -121,7 +121,8 @@ const sampleMcpJsonStringResult: LogEntry = {
     {
       type: 'tool_result',
       tool_use_id: 'toolu_mcp_puppeteer_test',
-      output: '{"status":"success","screenshot":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==","timestamp":"2025-06-25T18:20:12.465Z"}',
+      output:
+        '{"status":"success","screenshot":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==","timestamp":"2025-06-25T18:20:12.465Z"}',
       is_error: false,
     },
   ],
@@ -208,7 +209,10 @@ describe('McpToolParser', () => {
 
   describe('server and method extraction', () => {
     test('should extract server and method from double underscore format', () => {
-      const result = parser.parse(sampleMcpPuppeteerToolCall, sampleMcpPuppeteerSuccessResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        sampleMcpPuppeteerSuccessResult
+      );
 
       expect(result.ui.toolName).toBe('mcp__puppeteer__puppeteer_navigate');
       expect(result.ui.serverName).toBe('puppeteer');
@@ -216,7 +220,10 @@ describe('McpToolParser', () => {
     });
 
     test('should extract server and method from Context7 format', () => {
-      const result = parser.parse(sampleMcpContext7ToolCall, sampleMcpContext7SuccessResult);
+      const result = parser.parse(
+        sampleMcpContext7ToolCall,
+        sampleMcpContext7SuccessResult
+      );
 
       expect(result.ui.toolName).toBe('mcp__context7__resolve-library-id');
       expect(result.ui.serverName).toBe('context7');
@@ -253,7 +260,10 @@ describe('McpToolParser', () => {
 
   describe('parse', () => {
     test('should parse successful Puppeteer MCP operation', () => {
-      const result = parser.parse(sampleMcpPuppeteerToolCall, sampleMcpPuppeteerSuccessResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        sampleMcpPuppeteerSuccessResult
+      );
 
       // Check base props
       expect(result.id).toBe('toolu_mcp_puppeteer_test');
@@ -292,7 +302,10 @@ describe('McpToolParser', () => {
     });
 
     test('should parse successful Context7 MCP operation', () => {
-      const result = parser.parse(sampleMcpContext7ToolCall, sampleMcpContext7SuccessResult);
+      const result = parser.parse(
+        sampleMcpContext7ToolCall,
+        sampleMcpContext7SuccessResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.results.output).toEqual({
@@ -313,17 +326,25 @@ describe('McpToolParser', () => {
     });
 
     test('should parse string output', () => {
-      const result = parser.parse(sampleMcpPuppeteerToolCall, sampleMcpStringResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        sampleMcpStringResult
+      );
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.results.output).toBe('Successfully navigated to https://example.com');
+      expect(result.results.output).toBe(
+        'Successfully navigated to https://example.com'
+      );
       expect(result.ui.displayMode).toBe('text');
       expect(result.ui.isStructured).toBe(false);
       expect(result.ui.isLarge).toBe(false);
     });
 
     test('should parse JSON string output', () => {
-      const result = parser.parse(sampleMcpPuppeteerToolCall, sampleMcpJsonStringResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        sampleMcpJsonStringResult
+      );
 
       expect(result.status.normalized).toBe('completed');
       expect(result.results.output).toEqual({
@@ -336,7 +357,10 @@ describe('McpToolParser', () => {
     });
 
     test('should parse error result', () => {
-      const result = parser.parse(sampleMcpPuppeteerToolCall, sampleMcpErrorResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        sampleMcpErrorResult
+      );
 
       expect(result.status.normalized).toBe('failed');
       expect(result.results.errorMessage).toBe('TIMEOUT_ERROR');
@@ -372,7 +396,10 @@ describe('McpToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMcpPuppeteerToolCall, interruptedResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        interruptedResult
+      );
 
       expect(result.status.normalized).toBe('interrupted');
     });
@@ -437,7 +464,10 @@ describe('McpToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMcpPuppeteerToolCall, simpleArrayResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        simpleArrayResult
+      );
 
       expect(result.ui.displayMode).toBe('list');
       expect(result.ui.hasNestedData).toBe(false);
@@ -456,7 +486,10 @@ describe('McpToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMcpPuppeteerToolCall, largeStringResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        largeStringResult
+      );
 
       expect(result.ui.displayMode).toBe('text');
       expect(result.ui.isLarge).toBe(true);
@@ -475,7 +508,9 @@ describe('McpToolParser', () => {
               items: [1, 2, 3, 4, 5],
               config: { setting1: true, setting2: false },
               // 25+ keys to trigger isLarge
-              ...Object.fromEntries(Array.from({ length: 25 }, (_, i) => [`key${i}`, `value${i}`])),
+              ...Object.fromEntries(
+                Array.from({ length: 25 }, (_, i) => [`key${i}`, `value${i}`])
+              ),
             },
             is_error: false,
           },
@@ -524,7 +559,10 @@ describe('McpToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMcpPuppeteerToolCall, malformedJsonResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        malformedJsonResult
+      );
 
       expect(result.results.output).toBe('{ invalid json }');
       expect(result.ui.displayMode).toBe('text');
@@ -566,7 +604,10 @@ describe('McpToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMcpPuppeteerToolCall, structuredErrorResult);
+      const result = parser.parse(
+        sampleMcpPuppeteerToolCall,
+        structuredErrorResult
+      );
 
       expect(result.results.errorMessage).toBe('Custom error message');
     });

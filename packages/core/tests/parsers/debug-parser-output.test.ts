@@ -18,7 +18,7 @@ const sampleMultiEditToolCall: LogEntry = {
         file_path: '/Users/test/project/src/utils.ts',
         edits: [
           { old_string: 'old1', new_string: 'new1', replace_all: false },
-          { old_string: 'old2', new_string: 'new2', replace_all: true }
+          { old_string: 'old2', new_string: 'new2', replace_all: true },
         ],
       },
     },
@@ -34,7 +34,8 @@ const sampleMultiEditSuccessResult: LogEntry = {
     {
       type: 'tool_result',
       tool_use_id: 'toolu_multiedit_test',
-      output: 'Successfully applied 2 edits to /Users/test/project/src/utils.ts',
+      output:
+        'Successfully applied 2 edits to /Users/test/project/src/utils.ts',
       is_error: false,
     },
   ],
@@ -43,16 +44,19 @@ const sampleMultiEditSuccessResult: LogEntry = {
 describe('Debug Parser Outputs', () => {
   test('MultiEditToolParser actual output structure', () => {
     const parser = new MultiEditToolParser();
-    const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditSuccessResult);
-    
+    const result = parser.parse(
+      sampleMultiEditToolCall,
+      sampleMultiEditSuccessResult
+    );
+
     console.log('MultiEditToolParser output:', JSON.stringify(result, null, 2));
-    
+
     // Log what we're actually getting
     console.log('editsApplied value:', result.editsApplied);
     console.log('message value:', result.message);
     console.log('input structure:', result.input);
     console.log('ui structure:', result.ui);
-    
+
     // Basic structure test
     expect(result).toHaveProperty('id');
     expect(result).toHaveProperty('uuid');
@@ -60,7 +64,7 @@ describe('Debug Parser Outputs', () => {
     expect(result).toHaveProperty('input');
     expect(result).toHaveProperty('ui');
   });
-  
+
   test('LsToolParser actual output structure', () => {
     const sampleLsCall: LogEntry = {
       uuid: 'ls-call-uuid',
@@ -75,7 +79,7 @@ describe('Debug Parser Outputs', () => {
         },
       ],
     };
-    
+
     const sampleLsResult: LogEntry = {
       uuid: 'ls-result-uuid',
       parentUuid: 'ls-call-uuid',
@@ -90,12 +94,12 @@ describe('Debug Parser Outputs', () => {
         },
       ],
     };
-    
+
     const parser = new LsToolParser();
     const result = parser.parse(sampleLsCall, sampleLsResult);
-    
+
     console.log('LsToolParser output:', JSON.stringify(result, null, 2));
-    
+
     // Basic structure test
     expect(result).toHaveProperty('id');
     expect(result).toHaveProperty('uuid');
@@ -104,7 +108,7 @@ describe('Debug Parser Outputs', () => {
     expect(result).toHaveProperty('results');
     expect(result).toHaveProperty('ui');
   });
-  
+
   test('McpToolParser actual output structure', () => {
     const sampleMcpCall: LogEntry = {
       uuid: 'mcp-call-uuid',
@@ -119,7 +123,7 @@ describe('Debug Parser Outputs', () => {
         },
       ],
     };
-    
+
     const sampleMcpResult: LogEntry = {
       uuid: 'mcp-result-uuid',
       parentUuid: 'mcp-call-uuid',
@@ -134,12 +138,12 @@ describe('Debug Parser Outputs', () => {
         },
       ],
     };
-    
+
     const parser = new McpToolParser();
     const result = parser.parse(sampleMcpCall, sampleMcpResult);
-    
+
     console.log('McpToolParser output:', JSON.stringify(result, null, 2));
-    
+
     // Basic structure test
     expect(result).toHaveProperty('id');
     expect(result).toHaveProperty('uuid');

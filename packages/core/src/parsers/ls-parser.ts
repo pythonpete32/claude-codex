@@ -157,7 +157,8 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
       if (Array.isArray(output.entries)) {
         return {
           files: output.entries.map(this.parseFileInfo),
-          totalSize: typeof output.totalSize === 'number' ? output.totalSize : 0,
+          totalSize:
+            typeof output.totalSize === 'number' ? output.totalSize : 0,
           entryCount: output.entries.length,
           interrupted: false,
         };
@@ -207,18 +208,16 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
 
   private parseFileInfo = (entry: Record<string, unknown>): FileInfo => {
     // Normalize various file info formats
-    const name = typeof entry.name === 'string'
-      ? entry.name
-      : typeof entry.filename === 'string'
-        ? entry.filename
-        : '';
+    const name =
+      typeof entry.name === 'string'
+        ? entry.name
+        : typeof entry.filename === 'string'
+          ? entry.filename
+          : '';
 
     return {
       name,
-      path:
-        typeof entry.path === 'string'
-          ? entry.path
-          : name,
+      path: typeof entry.path === 'string' ? entry.path : name,
       type:
         typeof entry.type === 'string' &&
         ['file', 'directory', 'symlink'].includes(entry.type)
@@ -261,7 +260,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
 
     // Infer from name patterns
     if (name.endsWith('/')) return 'directory';
-    
+
     // Hidden directories (starts with dot, no extension)
     if (name.startsWith('.') && !name.includes('.', 1)) return 'directory';
 
@@ -273,12 +272,12 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
 
     // Look for toolUseResult in the log entry
     const entry = toolResult as unknown as RawLogEntry;
-    
+
     // First check if there's a toolUseResult field
     if (entry.toolUseResult) {
       return entry.toolUseResult;
     }
-    
+
     // Then check content array for tool_result
     const content = entry.content;
     if (Array.isArray(content)) {
@@ -287,7 +286,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
         return toolResultContent;
       }
     }
-    
+
     return null;
   }
 
@@ -301,7 +300,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
       if (typeof rawResult.output === 'string') {
         return rawResult.output;
       }
-      
+
       const output = rawResult.output || rawResult;
       if (typeof output === 'object' && output !== null) {
         const outputObj = output as Record<string, unknown>;
@@ -311,7 +310,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
             ? outputObj.message
             : 'Failed to list directory';
       }
-      
+
       // Check for direct error fields
       if (typeof rawResult.error === 'string') {
         return rawResult.error;

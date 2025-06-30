@@ -1,7 +1,7 @@
 {
   "toolName": "TodoRead",
   "category": "core",
-  "priority": "high", 
+  "priority": "high",
   "fixtureCount": 1,
   "fixtures": [
     {

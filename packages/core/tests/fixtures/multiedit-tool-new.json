@@ -1,6 +1,6 @@
 {
   "toolName": "MultiEdit",
-  "category": "core", 
+  "category": "core",
   "priority": "high",
   "fixtureCount": 1,
   "fixtures": [
@@ -147,19 +147,19 @@
           "totalEdits": 2,
           "allSuccessful": true,
           "editDetails": [
-          {
-            "index": 1,
-            "success": true,
-            "oldString": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y",
-            "newString": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    result = x + y\n    print(f\"Adding {x} + {y} = {result}\")\n    return result"
-          },
-          {
-            "index": 2,
-            "success": true,
-            "oldString": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
-            "newString": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")"
-          }
-        ]
+            {
+              "index": 1,
+              "success": true,
+              "oldString": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y",
+              "newString": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    result = x + y\n    print(f\"Adding {x} + {y} = {result}\")\n    return result"
+            },
+            {
+              "index": 2,
+              "success": true,
+              "oldString": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
+              "newString": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")"
+            }
+          ]
         },
         "ui": {
           "totalEdits": 2,
