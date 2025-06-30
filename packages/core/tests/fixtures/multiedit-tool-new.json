@@ -1,0 +1,170 @@
+{
+  "toolName": "MultiEdit",
+  "category": "core", 
+  "priority": "high",
+  "fixtureCount": 1,
+  "fixtures": [
+    {
+      "toolCall": {
+        "parentUuid": "2acc8f9e-a426-4770-83b8-5d13a8e5e7e3",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
+        "version": "1.0.35",
+        "type": "assistant",
+        "timestamp": "2025-06-30T13:57:11.554Z",
+        "message": {
+          "id": "msg_01S1t6KxMeR6RWhm6Uy84mGT",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-sonnet-4-20250514",
+          "content": [
+            {
+              "type": "tool_use",
+              "id": "toolu_018MQ9r3foA1JRCh28jucvcF",
+              "name": "MultiEdit",
+              "input": {
+                "file_path": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py",
+                "edits": [
+                  {
+                    "old_string": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y",
+                    "new_string": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    result = x + y\n    print(f\"Adding {x} + {y} = {result}\")\n    return result"
+                  },
+                  {
+                    "old_string": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
+                    "new_string": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")"
+                  }
+                ]
+              }
+            }
+          ],
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 182,
+            "cache_read_input_tokens": 31830,
+            "output_tokens": 1,
+            "service_tier": "standard"
+          }
+        },
+        "requestId": "req_011CQeXEzyrWkRzjcL6cTxr4",
+        "uuid": "dcd60f6b-f6cb-44e3-a977-2e46b5624432"
+      },
+      "toolResult": {
+        "parentUuid": "dcd60f6b-f6cb-44e3-a977-2e46b5624432",
+        "isSidechain": false,
+        "userType": "external",
+        "cwd": "/Users/abuusama/Desktop/temp/test-data",
+        "sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
+        "version": "1.0.35",
+        "type": "user",
+        "timestamp": "2025-06-30T13:57:12.774Z",
+        "message": {
+          "role": "user",
+          "content": [
+            {
+              "tool_use_id": "toolu_018MQ9r3foA1JRCh28jucvcF",
+              "type": "tool_result",
+              "content": "Applied 2 edits to /Users/abuusama/Desktop/temp/test-data/subdir/nested.py:\n1. Replaced \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\" with \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\"\n2. Replaced \"def main():\n    \"\"\"Main function\"\"\"\n    result = c...\" with \"def main():\n    \"\"\"Main function with enhanced out...\""
+            }
+          ]
+        },
+        "uuid": "b80884fb-e9ea-430d-93d0-e742f60747de",
+        "timestamp": "2025-06-30T13:57:12.774Z",
+        "toolUseResult": {
+          "filePath": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py",
+          "edits": [
+            {
+              "old_string": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y",
+              "new_string": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    result = x + y\n    print(f\"Adding {x} + {y} = {result}\")\n    return result",
+              "replace_all": false
+            },
+            {
+              "old_string": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
+              "new_string": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")",
+              "replace_all": false
+            }
+          ],
+          "originalFileContents": "#!/usr/bin/env python3\n\"\"\"\nPython test file in subdirectory\n\"\"\"\n\ndef calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y\n\ndef main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")\n\nif __name__ == \"__main__\":\n    main()",
+          "structuredPatch": [
+            {
+              "oldStart": 5,
+              "oldLines": 12,
+              "newStart": 5,
+              "newLines": 16,
+              "lines": [
+                " ",
+                " def calculate(x, y):",
+                "     \"\"\"Calculate sum of two numbers\"\"\"",
+                "-    return x + y",
+                "+    result = x + y",
+                "+    print(f\"Adding {x} + {y} = {result}\")",
+                "+    return result",
+                " ",
+                " def main():",
+                "-    \"\"\"Main function\"\"\"",
+                "+    \"\"\"Main function with enhanced output\"\"\"",
+                "+    print(\"Starting calculation...\")",
+                "     result = calculate(10, 20)",
+                "-    print(f\"Result: {result}\")",
+                "+    print(f\"Final result: {result}\")",
+                "+    print(\"Calculation complete.\")",
+                " ",
+                " if __name__ == \"__main__\":",
+                "     main()",
+                "\\ No newline at end of file"
+              ]
+            }
+          ],
+          "userModified": false
+        }
+      },
+      "expectedComponentData": {
+        "id": "toolu_018MQ9r3foA1JRCh28jucvcF",
+        "uuid": "dcd60f6b-f6cb-44e3-a977-2e46b5624432",
+        "parentUuid": "2acc8f9e-a426-4770-83b8-5d13a8e5e7e3",
+        "timestamp": "2025-06-30T13:57:11.554Z",
+        "status": {
+          "normalized": "completed",
+          "original": "completed"
+        },
+        "input": {
+          "filePath": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py",
+          "edits": [
+            {
+              "old_string": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y",
+              "new_string": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    result = x + y\n    print(f\"Adding {x} + {y} = {result}\")\n    return result"
+            },
+            {
+              "old_string": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
+              "new_string": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")"
+            }
+          ]
+        },
+        "message": "Applied 2 edits to /Users/abuusama/Desktop/temp/test-data/subdir/nested.py:\n1. Replaced \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\" with \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\"\n2. Replaced \"def main():\n    \"\"\"Main function\"\"\"\n    result = c...\" with \"def main():\n    \"\"\"Main function with enhanced out...\"",
+        "editsApplied": 2,
+        "allSuccessful": true,
+        "editDetails": [
+          {
+            "index": 1,
+            "success": true,
+            "oldString": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    return x + y",
+            "newString": "def calculate(x, y):\n    \"\"\"Calculate sum of two numbers\"\"\"\n    result = x + y\n    print(f\"Adding {x} + {y} = {result}\")\n    return result"
+          },
+          {
+            "index": 2,
+            "success": true,
+            "oldString": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
+            "newString": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")"
+          }
+        ],
+        "ui": {
+          "totalEdits": 2,
+          "successfulEdits": 2,
+          "failedEdits": 0,
+          "changeSummary": "Applied 2 edits to enhance function definitions and logging"
+        }
+      }
+    }
+  ]
+}
