@@ -13,8 +13,8 @@ export interface MessageContent {
   text?: string;
   id?: string;           // tool_use_id
   name?: string;         // tool name
-  input?: unknown;       // tool input
-  output?: unknown;      // tool result
+  input?: Record<string, any>;  // tool input
+  output?: any;          // tool result
   is_error?: boolean;
   tool_use_id?: string;  // for tool_result
 }

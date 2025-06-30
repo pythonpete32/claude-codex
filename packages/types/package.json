@@ -2,6 +2,12 @@
   "name": "@claude-codex/types",
   "version": "0.0.1",
   "type": "module",
-  "main": "./index.ts",
-  "types": "./index.ts"
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  }
 }

@@ -20,7 +20,7 @@
         "@types/node": "^20.0.0",
       },
     },
-    "shared/types": {
+    "packages/types": {
       "name": "@claude-codex/types",
       "version": "0.0.1",
     },
@@ -46,7 +46,7 @@
 
     "@claude-codex/core": ["@claude-codex/core@workspace:packages/core"],
 
-    "@claude-codex/types": ["@claude-codex/types@workspace:shared/types"],
+    "@claude-codex/types": ["@claude-codex/types@workspace:packages/types"],
 
     "@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
 
