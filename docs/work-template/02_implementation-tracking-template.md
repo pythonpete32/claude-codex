@@ -59,7 +59,7 @@
 - ✅ {Decision made today}
 - ✅ {Decision made today}
 - ✅ {Decision made today}
-- ✅ {Decision made today}
+- ✅ **COMMITTED**: {Phase description} committed as `{commit-hash}` - {file summary}
 
 #### Key Insights
 - {Important insight discovered}
@@ -94,6 +94,8 @@
 4. **🚨 EXPLICIT REVIEW REQUEST**: Must explicitly ask: "Phase X complete - please review staged changes"
 5. **Wait for Approval**: STOP ALL WORK until explicit approval received
 6. **Document Issues**: Update scratch pad with any fixes made
+7. **Commit After Approval**: Only commit when user explicitly requests it
+8. **Log Commit**: Record commit hash in "Today's Decisions" and "Completed Items" sections
 
 ### Critical Rules
 - **Only validate YOUR code**: Ignore pre-existing errors in other packages
@@ -192,6 +194,12 @@ cd packages/{package-name} && bun type-check
 
 ### Completed Items
 *{Track completed work items here as implementation progresses}*
+
+#### Template Format for Completed Items:
+- **Phase X: {Phase Name}** (Commit: `{commit-hash}`)
+  - {List of completed work items}
+  - {Key components delivered}
+  - {Notable achievements}
 
 ### Historical Decisions
 - **{YYYY-MM-DD}**: {Historical decision and context}
