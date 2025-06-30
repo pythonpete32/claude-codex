@@ -37,7 +37,7 @@ export class EditToolParser extends BaseToolParser<EditToolProps> {
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
-      status = mapFromError(result.is_error);
+      status = mapFromError(result.is_error || false, false, false);
     }
 
     // 4. Generate diff (simplified for now)

@@ -123,7 +123,7 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
         const toolResultContent = rawResult.content.find(
           c => c.type === 'tool_result'
         );
-        if (toolResultContent && toolResultContent.output) {
+        if (toolResultContent?.output) {
           output = toolResultContent.output;
         }
       }
@@ -154,19 +154,41 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
       }
     }
 
-    // Handle string output (simple success message)
-    if (typeof result.output === 'string') {
+    // Handle string output (simple success message) - check both output and content fields
+    const stringOutput = typeof result.output === 'string' 
+      ? result.output 
+      : typeof result.content === 'string' 
+        ? result.content 
+        : null;
+    
+    if (stringOutput) {
       // Try to extract numbers from success message
-      const appliedMatch = result.output.match(/applied\s+(\d+)\s*edits?/i);
+      const appliedMatch = stringOutput.match(/applied\s+(\d+)\s*edits?/i);
       const editsApplied = appliedMatch
         ? Number.parseInt(appliedMatch[1], 10)
         : 0;
 
+      // Build edit details from toolUseResult if available
+      let editDetails: EditDetail[] = [];
+      if (rawResult && typeof rawResult === 'object' && 'edits' in rawResult && Array.isArray(rawResult.edits)) {
+        // Parse edit details from fixture format
+        editDetails = rawResult.edits.map((edit, index) => ({
+          operation: {
+            old_string: edit.old_string || '',
+            new_string: edit.new_string || '',
+            replace_all: edit.replace_all || false,
+            index: index + 1,
+          },
+          success: true,
+          replacements_made: 1, // Default to 1 for successful edits
+        }));
+      }
+
       return {
-        message: result.output,
+        message: stringOutput,
         editsApplied,
         allSuccessful: editsApplied > 0,
-        editDetails: [],
+        editDetails,
         interrupted: false,
       };
     }

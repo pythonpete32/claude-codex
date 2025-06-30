@@ -123,9 +123,15 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
       }
     }
 
-    // Handle string output format
-    if (typeof result.output === 'string') {
-      return this.parseStringOutput(result.output);
+    // Handle string output format (check both output and content fields)
+    const stringOutput = typeof result.output === 'string' 
+      ? result.output 
+      : typeof result.content === 'string' 
+        ? result.content 
+        : null;
+    
+    if (stringOutput) {
+      return this.parseStringOutput(stringOutput);
     }
 
     // Handle structured output format
@@ -180,6 +186,11 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
     entryCount: number;
     interrupted?: boolean;
   } {
+    // Check if it's the tree-like format from Claude Code
+    if (output.includes('  - ')) {
+      return this.parseTreeOutput(output);
+    }
+
     // Parse line-based output format
     const lines = output.trim().split('\n');
     const files: FileInfo[] = [];
@@ -200,6 +211,46 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
         };
         files.push(file);
         totalSize += file.size || 0;
+      }
+    }
+
+    return { files, totalSize, entryCount: files.length };
+  }
+
+  private parseTreeOutput(output: string): {
+    files: FileInfo[];
+    totalSize: number;
+    entryCount: number;
+  } {
+    const lines = output.trim().split('\n');
+    const files: FileInfo[] = [];
+    let totalSize = 0;
+
+    for (const line of lines) {
+      // Skip empty lines and the root directory line
+      if (!line.trim() || line.startsWith('- /')) continue;
+      
+      // Skip NOTE lines
+      if (line.includes('NOTE:')) break;
+
+      // Extract filename from tree format "  - filename" or "    - filename"
+      const match = line.match(/^\s*-\s+(.+)$/);
+      if (match) {
+        // Check indentation level - skip deeply nested files (recursive=false)
+        const indentLevel = (line.match(/^\s*/)?.[0].length || 0) / 2;
+        if (indentLevel > 1) continue; // Skip files nested deeper than first level
+        
+        const filename = match[1].trim();
+        const isDirectory = filename.endsWith('/');
+        const name = isDirectory ? filename.slice(0, -1) : filename;
+        
+        const file: FileInfo = {
+          name,
+          path: name,
+          type: isDirectory ? 'directory' : this.inferFileType(name),
+          size: 0, // No size info in tree output
+        };
+        files.push(file);
       }
     }
 

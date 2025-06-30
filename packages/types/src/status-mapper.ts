@@ -8,48 +8,48 @@ import type { ToolStatus } from './ui-props';
 // Status mappings for known tools
 const STATUS_MAPPINGS: Record<string, Record<string, string>> = {
   // Known MCP tools
-  "mcp-puppeteer": {
-    "success": "completed",
-    "error": "failed",
-    "partial": "running"
+  'mcp-puppeteer': {
+    success: 'completed',
+    error: 'failed',
+    partial: 'running',
   },
-  "mcp-context7": {
-    "resolved": "completed", 
-    "failed": "failed",
-    "not_found": "failed"
+  'mcp-context7': {
+    resolved: 'completed',
+    failed: 'failed',
+    not_found: 'failed',
   },
-  "mcp-sequential-thinking": {
-    "in_progress": "running",
-    "completed": "completed",
-    "failed": "failed"
+  'mcp-sequential-thinking': {
+    in_progress: 'running',
+    completed: 'completed',
+    failed: 'failed',
   },
   // Standard tools
-  "bash": {
-    "success": "completed",
-    "error": "failed",
-    "timeout": "failed",
-    "interrupted": "interrupted"
+  bash: {
+    success: 'completed',
+    error: 'failed',
+    timeout: 'failed',
+    interrupted: 'interrupted',
   },
-  "read": {
-    "success": "completed",
-    "error": "failed",
-    "not_found": "failed"
+  read: {
+    success: 'completed',
+    error: 'failed',
+    not_found: 'failed',
   },
-  "write": {
-    "success": "completed",
-    "error": "failed",
-    "permission_denied": "failed"
+  write: {
+    success: 'completed',
+    error: 'failed',
+    permission_denied: 'failed',
   },
-  "edit": {
-    "success": "completed",
-    "error": "failed",
-    "no_match": "failed"
+  edit: {
+    success: 'completed',
+    error: 'failed',
+    no_match: 'failed',
   },
-  "grep": {
-    "success": "completed",
-    "error": "failed",
-    "no_matches": "completed"
-  }
+  grep: {
+    success: 'completed',
+    error: 'failed',
+    no_matches: 'completed',
+  },
   // Add more as we encounter them
 };
 
@@ -61,27 +61,30 @@ let logger: ((toolType: string, status: string) => void) | undefined;
  * Map tool status to normalized UI status.
  * Uses explicit mappings first, then pattern inference.
  */
-export function mapStatus(toolType: string, originalStatus: string): ToolStatus {
+export function mapStatus(
+  toolType: string,
+  originalStatus: string
+): ToolStatus {
   // 1. Check explicit mapping
   const mapping = STATUS_MAPPINGS[toolType.toLowerCase()];
   if (mapping?.[originalStatus]) {
     return {
       normalized: mapping[originalStatus] as ToolStatus['normalized'],
-      original: originalStatus
+      original: originalStatus,
     };
   }
-  
+
   // 2. Pattern-based inference for unknown tools
   const normalized = inferStatus(originalStatus);
-  
+
   // 3. Track unknown patterns for future improvement
-  if (normalized === "unknown") {
+  if (normalized === 'unknown') {
     trackUnknownStatus(toolType, originalStatus);
   }
-  
+
   return {
     normalized,
-    original: originalStatus
+    original: originalStatus,
   };
 }
 
@@ -89,23 +92,28 @@ export function mapStatus(toolType: string, originalStatus: string): ToolStatus 
  * Map from boolean error flag to status (for simple tools)
  */
 export function mapFromError(
-  isError: boolean | undefined, 
-  isPending: boolean = false,
-  isInterrupted: boolean = false
+  isError: boolean | undefined,
+  isPending = false,
+  isInterrupted = false
 ): ToolStatus {
   if (isPending) {
-    return { normalized: "pending" };
-  }
-  
-  if (isInterrupted) {
-    return { 
-      normalized: "interrupted",
-      details: { interrupted: true }
+    return {
+      normalized: 'pending',
+      original: 'pending',
     };
   }
-  
+
+  if (isInterrupted) {
+    return {
+      normalized: 'interrupted',
+      original: 'interrupted',
+      details: { interrupted: true },
+    };
+  }
+
   return {
-    normalized: isError ? "failed" : "completed"
+    normalized: isError ? 'failed' : 'completed',
+    original: isError ? 'error' : 'success',
   };
 }
 
@@ -113,23 +121,23 @@ export function mapFromError(
  * Map with progress information
  */
 export function mapWithProgress(
-  toolType: string, 
-  originalStatus: string, 
+  toolType: string,
+  originalStatus: string,
   progress?: number,
   substatus?: string
 ): ToolStatus {
   const baseStatus = mapStatus(toolType, originalStatus);
-  
+
   if (progress !== undefined || substatus) {
     return {
       ...baseStatus,
       details: {
         progress,
-        substatus
-      }
+        substatus,
+      },
     };
   }
-  
+
   return baseStatus;
 }
 
@@ -137,7 +145,9 @@ export function mapWithProgress(
  * Set a logger function for unknown status tracking
  * This allows types package to remain pure while enabling logging
  */
-export function setStatusLogger(loggerFn: (toolType: string, status: string) => void) {
+export function setStatusLogger(
+  loggerFn: (toolType: string, status: string) => void
+) {
   logger = loggerFn;
 }
 
@@ -145,10 +155,12 @@ export function setStatusLogger(loggerFn: (toolType: string, status: string) => 
  * Helper to determine if a status represents a terminal state
  */
 export function isTerminal(status: ToolStatus): boolean {
-  return status.normalized === 'completed' || 
-         status.normalized === 'failed' ||
-         status.normalized === 'interrupted' ||
-         status.normalized === 'unknown';
+  return (
+    status.normalized === 'completed' ||
+    status.normalized === 'failed' ||
+    status.normalized === 'interrupted' ||
+    status.normalized === 'unknown'
+  );
 }
 
 /**
@@ -176,18 +188,18 @@ export function isInterrupted(status: ToolStatus): boolean {
 
 function inferStatus(status: string): ToolStatus['normalized'] {
   const lower = status.toLowerCase();
-  
+
   // Check for success patterns
   if (
-    lower.includes('success') || 
-    lower.includes('ok') || 
+    lower.includes('success') ||
+    lower.includes('ok') ||
     lower.includes('complete') ||
     lower.includes('done') ||
     lower === 'true'
   ) {
     return 'completed';
   }
-  
+
   // Check for interrupted patterns
   if (
     lower.includes('interrupt') ||
@@ -198,54 +210,56 @@ function inferStatus(status: string): ToolStatus['normalized'] {
   ) {
     return 'interrupted';
   }
-  
+
   // Check for failure patterns
   if (
-    lower.includes('error') || 
-    lower.includes('fail') || 
+    lower.includes('error') ||
+    lower.includes('fail') ||
     lower.includes('crash') ||
     lower.includes('exception') ||
     lower === 'false'
   ) {
     return 'failed';
   }
-  
+
   // Check for pending patterns
   if (
-    lower.includes('pending') || 
-    lower.includes('wait') || 
+    lower.includes('pending') ||
+    lower.includes('wait') ||
     lower.includes('queue') ||
     lower.includes('scheduled')
   ) {
     return 'pending';
   }
-  
+
   // Check for running patterns
   if (
-    lower.includes('running') || 
-    lower.includes('progress') || 
+    lower.includes('running') ||
+    lower.includes('progress') ||
     lower.includes('partial') ||
     lower.includes('processing') ||
     lower.includes('executing')
   ) {
     return 'running';
   }
-  
+
   return 'unknown';
 }
 
 function trackUnknownStatus(toolType: string, status: string) {
   const key = `${toolType}:${status}`;
-  
+
   // Only log once per unknown combination to avoid spam
   if (!unknownStatusCache.has(key)) {
     unknownStatusCache.add(key);
-    
+
     // Use injected logger if available, otherwise fallback to console
     if (logger) {
       logger(toolType, status);
     } else {
-      console.warn(`🔍 New MCP tool discovered: ${toolType}:${status} - consider contributing this mapping to improve the ecosystem`);
+      console.warn(
+        `🔍 New MCP tool discovered: ${toolType}:${status} - consider contributing this mapping to improve the ecosystem`
+      );
     }
   }
 }

@@ -1,8 +1,22 @@
 # {PROJECT_NAME} Implementation Tracking
 
+## Setup & Configuration
+
+### User Configuration
+- **TIMEZONE**: {USER_TIMEZONE} (e.g., 'Africa/Accra', 'America/New_York', 'Europe/London')
+- **LOCATION**: {USER_LOCATION} (optional - for context)
+
+### Required MCP Servers
+- **mcp__time**: For accurate timestamp tracking (MANDATORY for all "Last Updated" fields)
+- **{OTHER_MCP}**: {Description of what it's used for}
+
+> **IMPORTANT**: Always use `mcp__time__get_current_time` with the configured timezone when updating any "Last Updated" field. Never manually enter timestamps.
+
+---
+
 **STATUS**: {Active Implementation | Planning | Complete}  
 **CREATED**: {YYYY-MM-DD}  
-**LAST UPDATED**: {YYYY-MM-DD}  
+**LAST UPDATED**: {YYYY-MM-DD HH:MM} {TIMEZONE}  
 **REFERENCE**: [01_{project-name}-design.md](./01_{project-name}-design.md)
 
 ---
@@ -51,27 +65,27 @@
 ## Implementation Scratch Pad
 
 ### Current Working Session
-**Date**: {YYYY-MM-DD}  
+**Date**: {YYYY-MM-DD HH:MM} {TIMEZONE} (via mcp__time)  
 **Focus**: {Current focus area}  
 **Next**: {Next planned action}
 
 #### Today's Decisions
-- ✅ {Decision made today}
-- ✅ {Decision made today}
-- ✅ {Decision made today}
-- ✅ **COMMITTED**: {Phase description} committed as `{commit-hash}` - {file summary}
+- ✅ **[{HH:MM}]** {Decision made today}
+- ✅ **[{HH:MM}]** {Decision made today}
+- ✅ **[{HH:MM}]** {Decision made today}
+- ✅ **[{HH:MM}]** **COMMITTED**: {Phase description} committed as `{commit-hash}` - {file summary}
 
 #### Key Insights
-- {Important insight discovered}
-- {Important insight discovered}
-- {Important insight discovered}
-- {Important insight discovered}
+- **[{HH:MM}]** {Important insight discovered}
+- **[{HH:MM}]** {Important insight discovered}
+- **[{HH:MM}]** {Important insight discovered}
+- **[{HH:MM}]** {Important insight discovered}
 
 #### Decisions Made
-- **{Category}**: {Decision and rationale}
-- **{Category}**: {Decision and rationale}
-- **{Category}**: {Decision and rationale}
-- **{Category}**: {Decision and rationale}
+- **[{HH:MM}]** **{Category}**: {Decision and rationale}
+- **[{HH:MM}]** **{Category}**: {Decision and rationale}
+- **[{HH:MM}]** **{Category}**: {Decision and rationale}
+- **[{HH:MM}]** **{Category}**: {Decision and rationale}
 
 ---
 
@@ -195,15 +209,15 @@ cd packages/{package-name} && bun type-check
 *{Track completed work items here as implementation progresses}*
 
 #### Template Format for Completed Items:
-- **Phase X: {Phase Name}** (Commit: `{commit-hash}`)
+- **Phase X: {Phase Name}** (Commit: `{commit-hash}`) **[{YYYY-MM-DD HH:MM}]**
   - {List of completed work items}
   - {Key components delivered}
   - {Notable achievements}
 
 ### Historical Decisions
-- **{YYYY-MM-DD}**: {Historical decision and context}
-- **{YYYY-MM-DD}**: {Historical decision and context}
-- **{YYYY-MM-DD}**: {Historical decision and context}
+- **{YYYY-MM-DD HH:MM}**: {Historical decision and context}
+- **{YYYY-MM-DD HH:MM}**: {Historical decision and context}
+- **{YYYY-MM-DD HH:MM}**: {Historical decision and context}
 
 ---
 
@@ -232,22 +246,24 @@ cd packages/{package-name} && bun type-check
 ## Session Notes
 
 ### {YYYY-MM-DD} - {Session Focus}
-**Time**: {duration}  
+**Start Time**: {HH:MM} {TIMEZONE}  
+**End Time**: {HH:MM} {TIMEZONE}  
+**Duration**: {duration}  
 **Participants**: {who was involved}  
 **Outcome**: {what was accomplished}
 
 #### Work Completed
-- {Specific work item completed}
-- {Specific work item completed}
-- {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
 
 #### Decisions Made
-- **{Decision Category}**: {Decision details and rationale}
-- **{Decision Category}**: {Decision details and rationale}
+- **[{HH:MM}]** **{Decision Category}**: {Decision details and rationale}
+- **[{HH:MM}]** **{Decision Category}**: {Decision details and rationale}
 
 #### Blockers Encountered
-- **{Blocker Category}**: {Description of blocker and resolution approach}
-- **{Blocker Category}**: {Description of blocker and resolution approach}
+- **[{HH:MM}]** **{Blocker Category}**: {Description of blocker and resolution approach}
+- **[{HH:MM}]** **{Blocker Category}**: {Description of blocker and resolution approach}
 
 #### Next Session Plan
 - {Planned work for next session}
@@ -257,22 +273,24 @@ cd packages/{package-name} && bun type-check
 ---
 
 ### {YYYY-MM-DD} - {Session Focus}
-**Time**: {duration}  
+**Start Time**: {HH:MM} {TIMEZONE}  
+**End Time**: {HH:MM} {TIMEZONE}  
+**Duration**: {duration}  
 **Participants**: {who was involved}  
 **Outcome**: {what was accomplished}
 
 #### Work Completed
-- {Specific work item completed}
-- {Specific work item completed}
-- {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
 
 #### Decisions Made
-- **{Decision Category}**: {Decision details and rationale}
-- **{Decision Category}**: {Decision details and rationale}
+- **[{HH:MM}]** **{Decision Category}**: {Decision details and rationale}
+- **[{HH:MM}]** **{Decision Category}**: {Decision details and rationale}
 
 #### Blockers Encountered
-- **{Blocker Category}**: {Description of blocker and resolution approach}
-- **{Blocker Category}**: {Description of blocker and resolution approach}
+- **[{HH:MM}]** **{Blocker Category}**: {Description of blocker and resolution approach}
+- **[{HH:MM}]** **{Blocker Category}**: {Description of blocker and resolution approach}
 
 #### Next Session Plan
 - {Planned work for next session}
@@ -282,22 +300,24 @@ cd packages/{package-name} && bun type-check
 ---
 
 ### {YYYY-MM-DD} - {Session Focus}
-**Time**: {duration}  
+**Start Time**: {HH:MM} {TIMEZONE}  
+**End Time**: {HH:MM} {TIMEZONE}  
+**Duration**: {duration}  
 **Participants**: {who was involved}  
 **Outcome**: {what was accomplished}
 
 #### Work Completed
-- {Specific work item completed}
-- {Specific work item completed}
-- {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
+- **[{HH:MM}]** {Specific work item completed}
 
 #### Decisions Made
-- **{Decision Category}**: {Decision details and rationale}
-- **{Decision Category}**: {Decision details and rationale}
+- **[{HH:MM}]** **{Decision Category}**: {Decision details and rationale}
+- **[{HH:MM}]** **{Decision Category}**: {Decision details and rationale}
 
 #### Blockers Encountered
-- **{Blocker Category}**: {Description of blocker and resolution approach}
-- **{Blocker Category}**: {Description of blocker and resolution approach}
+- **[{HH:MM}]** **{Blocker Category}**: {Description of blocker and resolution approach}
+- **[{HH:MM}]** **{Blocker Category}**: {Description of blocker and resolution approach}
 
 #### Next Session Plan
 - {Planned work for next session}
@@ -335,15 +355,17 @@ cd packages/{package-name} && bun type-check
 ## Scratch Pad
 
 > **Purpose**: This section captures the messy reality of implementation - problems encountered, solutions discovered, architectural deviations, and ongoing observations. This is the "working memory" of the project that helps maintain context across sessions.
+> 
+> **IMPORTANT**: Every entry in this section MUST include a timestamp **[YYYY-MM-DD HH:MM]** or **[HH:MM]** for same-day entries. Use `mcp__time__get_current_time` to get accurate timestamps.
 
 ### Current Observations & Thoughts
-**Last Updated**: {YYYY-MM-DD HH:MM}
+**Last Updated**: {YYYY-MM-DD HH:MM} {TIMEZONE} (via mcp__time)
 
 {Free-form observations about the current state of the project, things noticed, patterns emerging, concerns, etc.}
 
 ### Problems Encountered & Solutions
 
-#### 🚨 PROBLEM {N}: {Problem Title}
+#### 🚨 PROBLEM {N}: {Problem Title} **[{YYYY-MM-DD HH:MM}]**
 - **Issue**: {Detailed description of what went wrong}
 - **Error**: `{Exact error message if applicable}`
 - **Root Cause**: {Why this happened - be specific}
@@ -351,26 +373,27 @@ cd packages/{package-name} && bun type-check
 - **Impact**: {What changed as a result}
 - **Files Changed**: {List of files affected}
 - **Lessons Learned**: {What to remember for next time}
+- **Resolved**: **[{HH:MM}]**
 
 ### Architectural Deviations from Original Plan
 
-#### ❗ DEVIATION {N}: {What Changed}
+#### ❗ DEVIATION {N}: {What Changed} **[{YYYY-MM-DD HH:MM}]**
 - **Original Contract**: {What was originally planned/designed}
 - **New Implementation**: {What was actually implemented}
 - **Reason**: {Why the change was necessary}
 - **Impact**: {How this affects the rest of the system}
 - **Backward Compatibility**: {Is old approach still supported?}
-- **Approval Status**: ❌ **NOT REQUESTED** / ✅ **APPROVED** / 🔄 **PENDING**
+- **Approval Status**: ❌ **NOT REQUESTED** / ✅ **APPROVED [{HH:MM}]** / 🔄 **PENDING**
 
 ### Discovered Patterns & Anti-Patterns
 
-#### Pattern: {Pattern Name}
+#### Pattern: {Pattern Name} **[{YYYY-MM-DD HH:MM}]**
 - **Context**: {When this pattern applies}
 - **Implementation**: {How to implement it}
 - **Benefits**: {Why use this pattern}
 - **Example**: {Code snippet or reference}
 
-#### Anti-Pattern: {Anti-Pattern Name}  
+#### Anti-Pattern: {Anti-Pattern Name} **[{YYYY-MM-DD HH:MM}]**
 - **What Not to Do**: {Description}
 - **Why It's Bad**: {Problems it causes}
 - **Better Alternative**: {What to do instead}
@@ -378,7 +401,7 @@ cd packages/{package-name} && bun type-check
 
 ### Tool/Framework Learnings
 
-#### {Tool/Framework Name}
+#### {Tool/Framework Name} **[{YYYY-MM-DD HH:MM}]**
 - **Version**: {Version number}
 - **Key Learning**: {What was discovered}
 - **Gotcha**: {Unexpected behavior}
@@ -387,7 +410,7 @@ cd packages/{package-name} && bun type-check
 
 ### Performance Observations
 
-#### {Performance Issue/Optimization}
+#### {Performance Issue/Optimization} **[{YYYY-MM-DD HH:MM}]**
 - **Measurement**: {Baseline → Optimized}
 - **Bottleneck**: {What was slow}
 - **Solution**: {What fixed it}
@@ -395,7 +418,7 @@ cd packages/{package-name} && bun type-check
 
 ### Type System Challenges
 
-#### {Type Challenge}
+#### {Type Challenge} **[{YYYY-MM-DD HH:MM}]**
 - **Issue**: {Type system problem encountered}
 - **Context**: {Where/why this came up}
 - **Solution**: {How it was resolved}
@@ -403,7 +426,7 @@ cd packages/{package-name} && bun type-check
 
 ### Integration Gotchas
 
-#### {System/Tool Integration}
+#### {System/Tool Integration} **[{YYYY-MM-DD HH:MM}]**
 - **Components**: {What was being integrated}
 - **Issue**: {What went wrong}
 - **Root Cause**: {Why it failed}
@@ -412,15 +435,15 @@ cd packages/{package-name} && bun type-check
 
 ### Questions for Future Investigation
 
-1. **{Question}**: {Context and why it matters}
-2. **{Question}**: {Context and why it matters}
-3. **{Question}**: {Context and why it matters}
+1. **[{HH:MM}]** **{Question}**: {Context and why it matters}
+2. **[{HH:MM}]** **{Question}**: {Context and why it matters}
+3. **[{HH:MM}]** **{Question}**: {Context and why it matters}
 
 ### Ideas for Improvement
 
-- **{Improvement Area}**: {Brief description of potential enhancement}
-- **{Improvement Area}**: {Brief description of potential enhancement}
-- **{Improvement Area}**: {Brief description of potential enhancement}
+- **[{HH:MM}]** **{Improvement Area}**: {Brief description of potential enhancement}
+- **[{HH:MM}]** **{Improvement Area}**: {Brief description of potential enhancement}
+- **[{HH:MM}]** **{Improvement Area}**: {Brief description of potential enhancement}
 
 ### Context Preservation Notes
 

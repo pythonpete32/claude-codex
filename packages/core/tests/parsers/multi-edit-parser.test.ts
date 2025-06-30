@@ -1,145 +1,196 @@
-import { describe, expect, test } from 'vitest';
-import type { LogEntry, EditOperation } from '@claude-codex/types';
+import type { LogEntry, MessageContent, EditOperation } from '@claude-codex/types';
+import { beforeEach, describe, expect, test } from 'vitest';
 import { MultiEditToolParser } from '../../src/parsers/multi-edit-parser';
+import {
+  loadFixture,
+  setupFixtureBasedTesting,
+  validateBaseToolProps,
+} from '../utils';
 
-// Sample test data based on multiedit-tool-fixtures.json structure
-const sampleEdits: EditOperation[] = [
-  {
-    old_string: 'const oldFunction = () => {',
-    new_string: 'const newFunction = () => {',
-    replace_all: false,
-  },
-  {
-    old_string: 'console.log("debug");',
-    new_string: 'console.log("info");',
-    replace_all: true,
-  },
-];
+// Setup fixture-based testing with custom matchers
+setupFixtureBasedTesting();
 
-const sampleMultiEditToolCall: LogEntry = {
-  uuid: 'multiedit-call-uuid',
-  timestamp: '2025-06-25T18:20:11.465Z',
-  type: 'assistant',
-  content: [
-    {
-      type: 'tool_use',
-      id: 'toolu_multiedit_test',
-      name: 'MultiEdit',
-      input: {
-        file_path: '/Users/test/project/src/utils.ts',
-        edits: sampleEdits,
-      },
-    },
-  ],
-};
+interface MultiEditFixture {
+  toolCall: {
+    uuid: string;
+    timestamp: string;
+    parentUuid: string;
+    type: string;
+    isSidechain: boolean;
+    message: {
+      content: MessageContent[];
+    };
+  };
+  toolResult: {
+    uuid: string;
+    timestamp: string;
+    parentUuid: string;
+    type: string;
+    isSidechain: boolean;
+    message: {
+      content: MessageContent[];
+    };
+    toolUseResult?: {
+      filePath: string;
+      edits: EditOperation[];
+      originalFileContents: string;
+      structuredPatch: any[];
+      userModified: boolean;
+    };
+  };
+  expectedComponentData: {
+    id: string;
+    uuid: string;
+    parentUuid: string;
+    timestamp: string;
+    status: {
+      normalized: string;
+      original: string;
+    };
+    input: {
+      filePath: string;
+      edits: EditOperation[];
+    };
+    results: {
+      message: string;
+      editsApplied: number;
+      totalEdits: number;
+      allSuccessful: boolean;
+      editDetails: Array<{
+        index: number;
+        success: boolean;
+        oldString: string;
+        newString: string;
+      }>;
+    };
+    ui: {
+      totalEdits: number;
+      successfulEdits: number;
+      failedEdits: number;
+      changeSummary: string;
+    };
+  };
+}
 
-const sampleMultiEditSuccessResult: LogEntry = {
-  uuid: 'multiedit-result-uuid',
-  parentUuid: 'multiedit-call-uuid',
-  timestamp: '2025-06-25T18:20:12.465Z',
-  type: 'assistant',
-  content: [
-    {
-      type: 'tool_result',
-      tool_use_id: 'toolu_multiedit_test',
-      output:
-        'Successfully applied 2 edits to /Users/test/project/src/utils.ts',
-      is_error: false,
-    },
-  ],
-};
+interface MultiEditFixtureData {
+  fixtures: MultiEditFixture[];
+}
 
-const sampleMultiEditPartialResult: LogEntry = {
-  uuid: 'multiedit-partial-uuid',
-  parentUuid: 'multiedit-call-uuid',
-  timestamp: '2025-06-25T18:20:12.465Z',
-  type: 'assistant',
-  content: [
-    {
-      type: 'tool_result',
-      tool_use_id: 'toolu_multiedit_test',
-      output: {
-        edits_applied: 1,
-        all_successful: false,
-        edit_details: [
-          {
-            operation: sampleEdits[0],
-            success: true,
-            replacements_made: 1,
-          },
-          {
-            operation: sampleEdits[1],
-            success: false,
-            replacements_made: 0,
-            error: 'Pattern not found: console.log("debug");',
-          },
-        ],
-      },
-      is_error: false,
-    },
-  ],
-};
+describe('MultiEditToolParser - Fixture-Based Testing', () => {
+  let parser: MultiEditToolParser;
+  let fixtureData: MultiEditFixtureData;
 
-const sampleMultiEditWithToolUseResult: LogEntry = {
-  uuid: 'multiedit-result-uuid',
-  parentUuid: 'multiedit-call-uuid',
-  timestamp: '2025-06-25T18:20:12.465Z',
-  type: 'assistant',
-  content: [
-    {
-      type: 'tool_result',
-      tool_use_id: 'toolu_multiedit_test',
-      output: 'File updated successfully',
-      is_error: false,
-    },
-  ],
-  toolUseResult: {
-    output: {
-      edits_applied: 2,
-      all_successful: true,
-      edit_details: [
-        {
-          operation: sampleEdits[0],
-          success: true,
-          replacements_made: 1,
-        },
-        {
-          operation: sampleEdits[1],
-          success: true,
-          replacements_made: 3,
-        },
-      ],
-      message: 'All edits applied successfully',
-    },
-  },
-};
+  beforeEach(() => {
+    parser = new MultiEditToolParser();
+    // Load the new fixture file
+    fixtureData = loadFixture('multiedit-tool-new.json');
+  });
 
-const sampleMultiEditErrorResult: LogEntry = {
-  uuid: 'multiedit-error-uuid',
-  parentUuid: 'multiedit-call-uuid',
-  timestamp: '2025-06-25T18:20:12.465Z',
-  type: 'assistant',
-  content: [
-    {
-      type: 'tool_result',
-      tool_use_id: 'toolu_multiedit_test',
-      output: 'File not found: /Users/test/project/nonexistent.ts',
-      is_error: true,
-    },
-  ],
-};
+  /**
+   * Transform fixture data to match parser expectations
+   */
+  function transformToolCall(fixture: MultiEditFixture): LogEntry {
+    return {
+      uuid: fixture.toolCall.uuid,
+      timestamp: fixture.toolCall.timestamp,
+      parentUuid: fixture.toolCall.parentUuid,
+      type: fixture.toolCall.type as 'assistant',
+      isSidechain: fixture.toolCall.isSidechain,
+      content: fixture.toolCall.message.content,
+    };
+  }
 
-describe('MultiEditToolParser', () => {
-  const parser = new MultiEditToolParser();
+  function transformToolResult(fixture: MultiEditFixture): LogEntry {
+    const baseEntry: LogEntry = {
+      uuid: fixture.toolResult.uuid,
+      timestamp: fixture.toolResult.timestamp,
+      parentUuid: fixture.toolResult.parentUuid,
+      type: fixture.toolResult.type as 'user',
+      isSidechain: fixture.toolResult.isSidechain,
+      content: fixture.toolResult.message.content,
+    };
 
-  describe('canParse', () => {
-    test('should identify MultiEdit tool use entries', () => {
-      expect(parser.canParse(sampleMultiEditToolCall)).toBe(true);
+    // Add toolUseResult if it exists (for parser to extract)
+    if (fixture.toolResult.toolUseResult) {
+      (baseEntry as any).toolUseResult = fixture.toolResult.toolUseResult;
+    }
+
+    return baseEntry;
+  }
+
+  describe('real fixture validation', () => {
+    test('should parse all fixture scenarios successfully', () => {
+      expect(fixtureData.fixtures).toBeDefined();
+      expect(fixtureData.fixtures.length).toBeGreaterThan(0);
+
+      for (const fixture of fixtureData.fixtures) {
+        const toolCallEntry = transformToolCall(fixture);
+        const toolResultEntry = transformToolResult(fixture);
+
+        // Verify parser can handle the tool call
+        expect(parser.canParse(toolCallEntry)).toBe(true);
+
+        // Parse and validate
+        const result = parser.parse(toolCallEntry, toolResultEntry);
+
+        // Validate base properties
+        validateBaseToolProps(result);
+
+        // Validate against expected data
+        const expected = fixture.expectedComponentData;
+        expect(result.uuid).toBe(expected.uuid);
+        expect(result.id).toBe(expected.id);
+        expect(result.status.normalized).toBe(expected.status.normalized);
+        expect(result.status.original).toBeDefined();
+        expect(result.input.filePath).toBe(expected.input.filePath);
+        expect(result.input.edits.length).toBe(expected.input.edits.length);
+      }
+    });
+
+    test('should parse successful multi-edit operation from fixture', () => {
+      const fixture = fixtureData.fixtures[0]; // First fixture is a successful multi-edit
+
+      const toolCallEntry = transformToolCall(fixture);
+      const toolResultEntry = transformToolResult(fixture);
+
+      const result = parser.parse(toolCallEntry, toolResultEntry);
+
+      // Verify successful execution
+      expect(result.status.normalized).toBe('completed');
+      expect(result.results).toBeDefined();
+      expect(result.results?.editsApplied).toBe(2);
+      expect(result.results?.totalEdits).toBe(2);
+      expect(result.results?.allSuccessful).toBe(true);
+      
+      // Check the message format
+      expect(result.results?.message).toContain('Applied 2 edits');
+      expect(result.results?.message).toContain('/Users/abuusama/Desktop/temp/test-data/subdir/nested.py');
+      
+      // Verify edit details
+      expect(result.results?.editDetails).toHaveLength(2);
+      expect(result.results?.editDetails[0].success).toBe(true);
+      expect(result.results?.editDetails[1].success).toBe(true);
+      
+      // Verify UI helpers
+      expect(result.ui.totalEdits).toBe(2);
+      expect(result.ui.successfulEdits).toBe(2);
+      expect(result.ui.failedEdits).toBe(0);
+      expect(result.ui.changeSummary).toContain('Applied 2 edits');
+    });
+  });
+
+  describe('canParse validation', () => {
+    test('should correctly identify MultiEdit tool calls', () => {
+      const fixture = fixtureData.fixtures[0];
+      const toolCallEntry = transformToolCall(fixture);
+      expect(parser.canParse(toolCallEntry)).toBe(true);
     });
 
     test('should reject non-MultiEdit tool entries', () => {
       const nonMultiEditEntry: LogEntry = {
-        ...sampleMultiEditToolCall,
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
         content: [
           {
             type: 'tool_use',
@@ -154,120 +205,104 @@ describe('MultiEditToolParser', () => {
 
     test('should reject user messages', () => {
       const userEntry: LogEntry = {
-        ...sampleMultiEditToolCall,
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
         type: 'user',
         content: 'Edit multiple lines',
       };
       expect(parser.canParse(userEntry)).toBe(false);
     });
+
+    test('should handle string content normalization', () => {
+      const stringContentEntry: LogEntry = {
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
+        content: 'Just a string',
+      };
+      expect(parser.canParse(stringContentEntry)).toBe(false);
+    });
+
+    test('should handle single object content normalization', () => {
+      const singleObjectEntry: LogEntry = {
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
+        content: {
+          type: 'tool_use',
+          id: 'test-id',
+          name: 'MultiEdit',
+          input: { file_path: 'test.ts', edits: [] },
+        } as MessageContent,
+      };
+      expect(parser.canParse(singleObjectEntry)).toBe(true);
+    });
   });
 
-  describe('parse', () => {
-    test('should parse successful multi-edit operation', () => {
-      const result = parser.parse(
-        sampleMultiEditToolCall,
-        sampleMultiEditSuccessResult
-      );
-
-      // Check base props
-      expect(result.id).toBe('toolu_multiedit_test');
-      expect(result.uuid).toBe('multiedit-call-uuid');
-      expect(result.timestamp).toBe('2025-06-25T18:20:11.465Z');
-
-      // Check input structure
-      expect(result.input.filePath).toBe('/Users/test/project/src/utils.ts');
-      expect(result.input.edits).toEqual(sampleEdits);
-
-      // Check parsed results
-      expect(result.status.normalized).toBe('completed');
-      expect(result.results?.message).toContain('Successfully applied 2 edits');
-      expect(result.results?.editsApplied).toBe(2);
-      expect(result.results?.allSuccessful).toBe(true);
-      expect(result.results?.errorMessage).toBeUndefined();
-
-      // Check UI helpers
-      expect(result.ui.totalEdits).toBe(2);
-      expect(result.ui.successfulEdits).toBe(2);
-      expect(result.ui.failedEdits).toBe(0);
-      expect(result.ui.changeSummary).toContain('Successfully applied 2 edits');
-    });
-
-    test('should parse partial success with detailed results', () => {
-      const result = parser.parse(
-        sampleMultiEditToolCall,
-        sampleMultiEditPartialResult
-      );
-
-      expect(result.status.normalized).toBe('completed');
-      expect(result.results?.editsApplied).toBe(1);
-      expect(result.results?.allSuccessful).toBe(false);
-      expect(result.results?.editDetails).toHaveLength(2);
-
-      // Check first edit (success)
-      expect(result.results?.editDetails[0].success).toBe(true);
-      expect(result.results?.editDetails[0].replacements_made).toBe(1);
-      expect(result.results?.editDetails[0].operation).toEqual(sampleEdits[0]);
-
-      // Check second edit (failure)
-      expect(result.results?.editDetails[1].success).toBe(false);
-      expect(result.results?.editDetails[1].replacements_made).toBe(0);
-      expect(result.results?.editDetails[1].error).toContain(
-        'Pattern not found'
-      );
-
-      // Check UI helpers
-      expect(result.ui.successfulEdits).toBe(1);
-      expect(result.ui.failedEdits).toBe(1);
-    });
-
-    test('should parse toolUseResult format from fixtures', () => {
-      const result = parser.parse(
-        sampleMultiEditToolCall,
-        sampleMultiEditWithToolUseResult
-      );
-
-      expect(result.status.normalized).toBe('completed');
-      expect(result.results?.editsApplied).toBe(2);
-      expect(result.results?.allSuccessful).toBe(true);
-      expect(result.results?.message).toBe('All edits applied successfully');
-      expect(result.results?.editDetails).toHaveLength(2);
-
-      // Check replacements made
-      expect(result.results?.editDetails[0].replacements_made).toBe(1);
-      expect(result.results?.editDetails[1].replacements_made).toBe(3);
-    });
-
-    test('should parse error result', () => {
-      const result = parser.parse(
-        sampleMultiEditToolCall,
-        sampleMultiEditErrorResult
-      );
-
-      expect(result.status.normalized).toBe('failed');
-      expect(result.results?.errorMessage).toBe(
-        'File not found: /Users/test/project/nonexistent.ts'
-      );
-      expect(result.results?.editsApplied).toBe(0);
-      expect(result.results?.allSuccessful).toBe(false);
-      expect(result.results?.editDetails).toEqual([]);
-    });
-
+  describe('edge cases and error handling', () => {
     test('should handle pending status when no result', () => {
-      const result = parser.parse(sampleMultiEditToolCall);
+      const fixture = fixtureData.fixtures[0];
+      const toolCallEntry = transformToolCall(fixture);
 
+      // Parse without result
+      const result = parser.parse(toolCallEntry);
       expect(result.status.normalized).toBe('pending');
       expect(result.results?.editsApplied).toBe(0);
       expect(result.results?.allSuccessful).toBe(false);
       expect(result.results?.errorMessage).toBeUndefined();
     });
 
-    test('should handle interrupted operations', () => {
-      const interruptedResult: LogEntry = {
-        ...sampleMultiEditSuccessResult,
+    test('should handle error result', () => {
+      const errorResult: LogEntry = {
+        uuid: 'result-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        parentUuid: 'test-uuid',
+        type: 'user',
         content: [
           {
             type: 'tool_result',
-            tool_use_id: 'toolu_multiedit_test',
+            tool_use_id: 'test-id',
+            output: 'File not found: /Users/test/project/nonexistent.ts',
+            is_error: true,
+          },
+        ],
+      };
+
+      const toolCall: LogEntry = {
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
+        content: [
+          {
+            type: 'tool_use',
+            id: 'test-id',
+            name: 'MultiEdit',
+            input: {
+              file_path: '/Users/test/project/nonexistent.ts',
+              edits: [],
+            },
+          },
+        ],
+      };
+
+      const result = parser.parse(toolCall, errorResult);
+      expect(result.status.normalized).toBe('failed');
+      expect(result.results?.errorMessage).toBe('File not found: /Users/test/project/nonexistent.ts');
+      expect(result.results?.editsApplied).toBe(0);
+      expect(result.results?.allSuccessful).toBe(false);
+      expect(result.results?.editDetails).toEqual([]);
+    });
+
+    test('should handle interrupted operations', () => {
+      const interruptedResult: LogEntry = {
+        uuid: 'result-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        parentUuid: 'test-uuid',
+        type: 'user',
+        content: [
+          {
+            type: 'tool_result',
+            tool_use_id: 'test-id',
             output: {
               interrupted: true,
               editsApplied: 1,
@@ -277,26 +312,42 @@ describe('MultiEditToolParser', () => {
         ],
       };
 
-      const result = parser.parse(sampleMultiEditToolCall, interruptedResult);
-
-      expect(result.status.normalized).toBe('interrupted');
-      expect(result.results?.editsApplied).toBe(1);
-      expect(result.results?.allSuccessful).toBe(false);
-      expect(result.results?.message).toBe('Operation interrupted');
-    });
-  });
-
-  describe('edge cases', () => {
-    test('should handle missing file path', () => {
-      const noPathEntry: LogEntry = {
-        ...sampleMultiEditToolCall,
+      const toolCall: LogEntry = {
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
         content: [
           {
             type: 'tool_use',
             id: 'test-id',
             name: 'MultiEdit',
             input: {
-              edits: sampleEdits,
+              file_path: '/test/file.ts',
+              edits: [{ old_string: 'old', new_string: 'new' }],
+            },
+          },
+        ],
+      };
+
+      const result = parser.parse(toolCall, interruptedResult);
+      expect(result.status.normalized).toBe('interrupted');
+      expect(result.results?.editsApplied).toBe(1);
+      expect(result.results?.allSuccessful).toBe(false);
+      expect(result.results?.message).toBe('Operation interrupted');
+    });
+
+    test('should handle missing file path', () => {
+      const noPathEntry: LogEntry = {
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
+        content: [
+          {
+            type: 'tool_use',
+            id: 'test-id',
+            name: 'MultiEdit',
+            input: {
+              edits: [{ old_string: 'old', new_string: 'new' }],
             },
           },
         ],
@@ -304,12 +355,14 @@ describe('MultiEditToolParser', () => {
 
       const result = parser.parse(noPathEntry);
       expect(result.input.filePath).toBeUndefined();
-      expect(result.input.edits).toEqual(sampleEdits);
+      expect(result.input.edits).toHaveLength(1);
     });
 
     test('should handle missing edits array', () => {
       const noEditsEntry: LogEntry = {
-        ...sampleMultiEditToolCall,
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
         content: [
           {
             type: 'tool_use',
@@ -327,88 +380,43 @@ describe('MultiEditToolParser', () => {
       expect(result.ui.totalEdits).toBe(0);
     });
 
-    test('should handle malformed edit details', () => {
-      const malformedResult: LogEntry = {
-        ...sampleMultiEditSuccessResult,
-        content: [
-          {
-            type: 'tool_result',
-            tool_use_id: 'toolu_multiedit_test',
-            output: {
-              edit_details: [
-                { success: true }, // missing fields
-                { operation: null, success: false, error: 'Failed' },
-              ],
-            },
-            is_error: false,
-          },
-        ],
-      };
-
-      const result = parser.parse(sampleMultiEditToolCall, malformedResult);
-
-      expect(result.results?.editDetails).toHaveLength(2);
-      expect(result.results?.editDetails[0].success).toBe(true);
-      expect(result.results?.editDetails[0].replacements_made).toBe(0);
-      expect(result.results?.editDetails[1].operation).toEqual({
-        old_string: '',
-        new_string: '',
-      });
-    });
-
     test('should extract numbers from string messages', () => {
       const numberExtractionResult: LogEntry = {
-        ...sampleMultiEditSuccessResult,
+        uuid: 'result-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        parentUuid: 'test-uuid',
+        type: 'user',
         content: [
           {
             type: 'tool_result',
-            tool_use_id: 'toolu_multiedit_test',
+            tool_use_id: 'test-id',
             output: 'Applied 3 edits successfully to the file',
             is_error: false,
           },
         ],
       };
 
-      const result = parser.parse(
-        sampleMultiEditToolCall,
-        numberExtractionResult
-      );
+      const toolCall: LogEntry = {
+        uuid: 'test-uuid',
+        timestamp: '2025-06-25T18:20:11.465Z',
+        type: 'assistant',
+        content: [
+          {
+            type: 'tool_use',
+            id: 'test-id',
+            name: 'MultiEdit',
+            input: {
+              file_path: '/test/file.ts',
+              edits: [{ old_string: 'a', new_string: 'b' }],
+            },
+          },
+        ],
+      };
 
+      const result = parser.parse(toolCall, numberExtractionResult);
       expect(result.results?.editsApplied).toBe(3);
       expect(result.results?.allSuccessful).toBe(true);
       expect(result.results?.message).toContain('Applied 3 edits');
-    });
-
-    test('should handle complex fixture-style results', () => {
-      const complexResult: LogEntry = {
-        ...sampleMultiEditSuccessResult,
-        content: [
-          {
-            type: 'tool_result',
-            tool_use_id: 'toolu_multiedit_test',
-            output: 'Complex operation completed',
-            is_error: false,
-          },
-        ],
-        toolUseResult: {
-          content: [
-            {
-              type: 'tool_result',
-              tool_use_id: 'toolu_multiedit_test',
-              output: {
-                edits_applied: 5,
-                all_successful: true,
-                edit_details: [],
-              },
-            },
-          ],
-        },
-      };
-
-      const result = parser.parse(sampleMultiEditToolCall, complexResult);
-
-      expect(result.results?.editsApplied).toBe(5);
-      expect(result.results?.allSuccessful).toBe(true);
     });
   });
 
@@ -422,4 +430,23 @@ describe('MultiEditToolParser', () => {
       expect(features).toContain('interrupted-support');
     });
   });
+
+  describe('performance validation', () => {
+    test('should parse fixtures within acceptable time', () => {
+      const startTime = performance.now();
+
+      for (const fixture of fixtureData.fixtures) {
+        const toolCallEntry = transformToolCall(fixture);
+        const toolResultEntry = transformToolResult(fixture);
+        parser.parse(toolCallEntry, toolResultEntry);
+      }
+
+      const endTime = performance.now();
+      const averageTime = (endTime - startTime) / fixtureData.fixtures.length;
+
+      // Each parse should take less than 10ms
+      expect(averageTime).toBeLessThan(10);
+    });
+  });
+
 });

@@ -105,6 +105,26 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
     const rawResult = this.extractRawToolResult(toolResult);
 
     if (rawResult && typeof rawResult === 'object') {
+      // Check if rawResult is directly an array of todos (fixture format)
+      if (Array.isArray(rawResult)) {
+        const items = rawResult.map(this.parseTodoItem);
+        const stats = this.calculateStats(items);
+        return {
+          items,
+          statusCounts: {
+            pending: stats.pending,
+            in_progress: stats.inProgress,
+            completed: stats.completed,
+          },
+          priorityCounts: {
+            high: stats.highPriority,
+            medium: items.filter(i => i.priority === 'medium').length,
+            low: items.filter(i => i.priority === 'low').length,
+          },
+          interrupted: false,
+        };
+      }
+
       // Parse fixture-style output
       const output = rawResult.output || rawResult;
 
@@ -137,9 +157,15 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
       }
     }
 
-    // Handle string output (formatted todo list)
-    if (typeof result.output === 'string') {
-      const items = this.parseStringTodos(result.output);
+    // Handle string output (check both output and content fields)
+    const stringOutput = typeof result.output === 'string' 
+      ? result.output 
+      : typeof result.content === 'string' 
+        ? result.content 
+        : null;
+    
+    if (stringOutput) {
+      const items = this.parseStringTodos(stringOutput);
       const stats = this.calculateStats(items);
       return {
         items,

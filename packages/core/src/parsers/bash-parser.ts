@@ -83,8 +83,36 @@ export class BashToolParser extends BaseToolParser<BashToolProps> {
     exitCode: number;
     interrupted: boolean;
   } {
+    // Handle string output (common in fixtures)
     if (typeof result.output === 'string') {
-      // Error case - output is just a string
+      // If it's an error, put it in stderr; otherwise stdout
+      return {
+        stdout: result.is_error ? '' : result.output,
+        stderr: result.is_error ? result.output : '',
+        exitCode: result.is_error ? 1 : 0,
+        interrupted: false,
+      };
+    }
+
+    // Handle structured output
+    if (result.output && typeof result.output === 'object') {
+      const output = result.output as {
+        stdout?: string;
+        stderr?: string;
+        exit_code?: number;
+        interrupted?: boolean;
+      };
+
+      return {
+        stdout: output.stdout || '',
+        stderr: output.stderr || '',
+        exitCode: output.exit_code ?? (result.is_error ? 1 : 0),
+        interrupted: output.interrupted || false,
+      };
+    }
+
+    // Legacy: Check result.output (shouldn't happen but keep for compatibility)
+    if (typeof result.output === 'string') {
       return {
         stdout: '',
         stderr: result.output,
