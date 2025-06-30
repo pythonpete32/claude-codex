@@ -135,30 +135,39 @@
         ],
         "changes": [
           {
-            "type": "added",
-            "todo": {
+            "type": "add",
+            "todoId": "1",
+            "oldValue": null,
+            "newValue": {
               "id": "1",
               "content": "Create comprehensive tool documentation listing all built-in tools",
               "status": "pending",
-              "priority": "high"
+              "priority": "high",
+              "createdAt": "2025-06-30T13:02:18.515Z"
             }
           },
           {
-            "type": "added",
-            "todo": {
+            "type": "add",
+            "todoId": "2",
+            "oldValue": null,
+            "newValue": {
               "id": "2",
               "content": "Document all MCP tools and their functions",
               "status": "pending",
-              "priority": "high"
+              "priority": "high",
+              "createdAt": "2025-06-30T13:02:18.515Z"
             }
           },
           {
-            "type": "added",
-            "todo": {
+            "type": "add",
+            "todoId": "3",
+            "oldValue": null,
+            "newValue": {
               "id": "3",
               "content": "Organize documentation into clear sections with descriptions",
               "status": "pending",
-              "priority": "medium"
+              "priority": "medium",
+              "createdAt": "2025-06-30T13:02:18.515Z"
             }
           }
         ],

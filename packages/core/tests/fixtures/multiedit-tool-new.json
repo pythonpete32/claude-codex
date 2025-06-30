@@ -141,10 +141,12 @@
             }
           ]
         },
-        "message": "Applied 2 edits to /Users/abuusama/Desktop/temp/test-data/subdir/nested.py:\n1. Replaced \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\" with \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\"\n2. Replaced \"def main():\n    \"\"\"Main function\"\"\"\n    result = c...\" with \"def main():\n    \"\"\"Main function with enhanced out...\"",
-        "editsApplied": 2,
-        "allSuccessful": true,
-        "editDetails": [
+        "results": {
+          "message": "Applied 2 edits to /Users/abuusama/Desktop/temp/test-data/subdir/nested.py:\n1. Replaced \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\" with \"def calculate(x, y):\n    \"\"\"Calculate sum of two n...\"\n2. Replaced \"def main():\n    \"\"\"Main function\"\"\"\n    result = c...\" with \"def main():\n    \"\"\"Main function with enhanced out...\"",
+          "editsApplied": 2,
+          "totalEdits": 2,
+          "allSuccessful": true,
+          "editDetails": [
           {
             "index": 1,
             "success": true,
@@ -157,7 +159,8 @@
             "oldString": "def main():\n    \"\"\"Main function\"\"\"\n    result = calculate(10, 20)\n    print(f\"Result: {result}\")",
             "newString": "def main():\n    \"\"\"Main function with enhanced output\"\"\"\n    print(\"Starting calculation...\")\n    result = calculate(10, 20)\n    print(f\"Final result: {result}\")\n    print(\"Calculation complete.\")"
           }
-        ],
+        ]
+        },
         "ui": {
           "totalEdits": 2,
           "successfulEdits": 2,

@@ -461,6 +461,139 @@ export interface LibraryMatch {
   snippetCount?: number;
 }
 
+// === TASK TOOL SUPPORTING TYPES ===
+
+export interface TaskContent {
+  type: 'text' | 'tool_use' | 'tool_result';
+  text?: string;           // For text content
+  // Additional fields for tool_use/tool_result if needed
+}
+
+// === NOTEBOOK SUPPORTING TYPES ===
+
+export interface NotebookCell {
+  id: string;
+  cell_type: 'code' | 'markdown' | 'raw';
+  source: string[];
+  outputs?: NotebookOutput[];
+  execution_count?: number | null;
+  metadata: Record<string, unknown>;
+}
+
+export interface NotebookOutput {
+  output_type: 'stream' | 'display_data' | 'execute_result' | 'error';
+  text?: string[];
+  data?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+
+export interface NotebookMetadata {
+  kernelspec?: {
+    display_name: string;
+    language: string;
+    name: string;
+  };
+  language_info?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+// === NEW BUILT-IN TOOLS (Missing Core Tools) ===
+
+// Task tool - Complex tool for agent delegation with execution metrics
+export interface TaskToolProps extends BaseToolProps {
+  input: {
+    description: string;     // Short task description (3-5 words)
+    prompt: string;          // Full task prompt for agent
+  };
+  
+  results?: {
+    content: TaskContent[];  // Agent output content array
+    totalDurationMs: number; // Total execution time
+    totalTokens: number;     // Total tokens used
+    totalToolUseCount: number; // Number of tools used by agent
+    usage: {
+      input_tokens: number;
+      cache_creation_input_tokens: number;
+      cache_read_input_tokens: number;
+      output_tokens: number;
+      service_tier: string;
+    };
+    wasInterrupted: boolean; // Whether execution was interrupted
+  };
+  
+  ui: {
+    taskSummary: string;     // Computed from description
+    agentStatus: 'delegating' | 'executing' | 'completed' | 'failed' | 'interrupted';
+    executionTime: string;   // Human-readable duration
+    tokensUsed: string;      // Formatted token count
+    toolsUsed: number;       // Number of tools agent used
+    showMetrics: boolean;    // Whether to show detailed metrics
+  };
+}
+
+// NotebookRead tool - Complex tool for Jupyter notebook reading
+export interface NotebookReadToolProps extends FileToolProps {
+  filePath: string;        // Inherited + required
+  
+  results?: {
+    cells: NotebookCell[];
+    metadata: NotebookMetadata;
+    nbformat: number;
+    nbformat_minor: number;
+  };
+  
+  ui: {
+    totalCells: number;
+    codeCells: number;
+    markdownCells: number;
+    hasOutputs: boolean;
+    cellsWithErrors: number;
+  };
+  
+  // UI interactions
+  onCellClick?: (cellId: string) => void;
+  onRunCell?: (cellId: string) => void;
+}
+
+// NotebookEdit tool - Complex tool for Jupyter notebook editing
+export interface NotebookEditToolProps extends FileToolProps {
+  filePath: string;        // Inherited + required
+  
+  input: {
+    newSource: string;
+    cellId?: string;
+    cellType?: 'code' | 'markdown';
+    editMode?: 'replace' | 'insert' | 'delete';
+  };
+  
+  results?: {
+    success: boolean;
+    message: string;
+    cellId: string;
+    operation: 'replace' | 'insert' | 'delete';
+  };
+  
+  ui: {
+    operationType: string;   // Human-readable operation
+    affectedCellId?: string;
+    showDiff: boolean;
+    previewAvailable: boolean;
+  };
+}
+
+// exit_plan_mode tool - Simple tool for planning workflow completion
+export interface ExitPlanModeToolProps extends BaseToolProps {
+  plan: string;            // Direct prop (simple tool pattern)
+  success?: boolean;       // Direct prop
+  message?: string;        // Direct prop
+  
+  // UI helpers
+  showApprovalButtons?: boolean;
+  planPreview?: string;    // Rendered markdown preview
+  onApprove?: () => void;
+  onReject?: () => void;
+}
+
 // Generic MCP tool props for unknown MCP tools
 export interface McpToolProps extends BaseToolProps {
   input: {
@@ -499,6 +632,10 @@ export type ToolProps =
   | LsToolProps
   | TodoReadToolProps
   | TodoWriteToolProps
+  | TaskToolProps
+  | NotebookReadToolProps
+  | NotebookEditToolProps
+  | ExitPlanModeToolProps
   | MCPPuppeteerToolProps
   | MCPSequentialThinkingToolProps
   | MCPContext7ToolProps
@@ -516,6 +653,10 @@ export enum ToolType {
   Ls = "ls",
   TodoRead = "todo_read",
   TodoWrite = "todo_write",
+  Task = "task",
+  NotebookRead = "notebook_read",
+  NotebookEdit = "notebook_edit",
+  ExitPlanMode = "exit_plan_mode",
   MCPPuppeteer = "mcp_puppeteer",
   MCPSequentialThinking = "mcp_sequential_thinking",
   MCPContext7 = "mcp_context7"

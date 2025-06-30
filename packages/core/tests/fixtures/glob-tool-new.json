@@ -80,10 +80,11 @@
           "pattern": "**/*.py",
           "searchPath": "/Users/abuusama/Desktop/temp/test-data"
         },
-        "matches": ["/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"],
+        "results": ["/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"],
         "ui": {
           "totalMatches": 1,
-          "matchTime": 82
+          "filesWithMatches": 1,
+          "searchTime": 82
         }
       }
     }

@@ -77,78 +77,54 @@
           "showHidden": false,
           "recursive": false
         },
-        "entries": [
+        "results": [
           {
             "name": "claude-tool-output-schemas-analysis.md",
-            "path": "/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas-analysis.md",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "claude-tool-output-schemas.md",
-            "path": "/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "claude-tool-signatures-enhanced.md",
-            "path": "/Users/abuusama/Desktop/temp/test-data/claude-tool-signatures-enhanced.md",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "claude-tool-signatures.md",
-            "path": "/Users/abuusama/Desktop/temp/test-data/claude-tool-signatures.md",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "claude-tools-documentation.md",
-            "path": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "config.json",
-            "path": "/Users/abuusama/Desktop/temp/test-data/config.json",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "excalidraw.log",
-            "path": "/Users/abuusama/Desktop/temp/test-data/excalidraw.log",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "sample.txt",
-            "path": "/Users/abuusama/Desktop/temp/test-data/sample.txt",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "subdir",
-            "path": "/Users/abuusama/Desktop/temp/test-data/subdir",
-            "type": "directory",
-            "isDirectory": true
+            "type": "directory"
           },
           {
             "name": "test-notebook.ipynb",
-            "path": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "test.js",
-            "path": "/Users/abuusama/Desktop/temp/test-data/test.js",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           },
           {
             "name": "tool-testing-checklist.md",
-            "path": "/Users/abuusama/Desktop/temp/test-data/tool-testing-checklist.md",
-            "type": "file",
-            "isDirectory": false
+            "type": "file"
           }
         ],
         "entryCount": 12,
