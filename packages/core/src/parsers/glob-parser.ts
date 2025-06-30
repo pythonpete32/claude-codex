@@ -4,7 +4,7 @@ import type {
   MessageContent,
   ParseConfig,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -32,23 +32,24 @@ export class GlobToolParser extends BaseToolParser<GlobToolProps> {
     };
 
     // 3. Parse results
-    let matches: string[] = [];
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let results: string[] | undefined;
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
 
       if (!result.is_error) {
-        matches = this.parseMatches(result);
+        results = this.parseMatches(result);
       }
 
-      status = StatusMapper.mapFromError(result.is_error);
+      status = mapFromError(result.is_error);
     }
 
     // 4. Calculate UI data
     const ui = {
-      totalMatches: matches.length,
-      matchTime: baseProps.duration || 0,
+      totalMatches: results?.length || 0,
+      filesWithMatches: results?.length || 0,
+      searchTime: baseProps.duration,
     };
 
     // 5. Return structured props
@@ -56,7 +57,7 @@ export class GlobToolParser extends BaseToolParser<GlobToolProps> {
       ...baseProps,
       status,
       input,
-      matches,
+      results,
       ui,
     };
   }

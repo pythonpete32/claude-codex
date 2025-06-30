@@ -176,10 +176,10 @@ describe('MultiEditToolParser', () => {
 
       // Check parsed results
       expect(result.status.normalized).toBe('completed');
-      expect(result.message).toContain('Successfully applied 2 edits');
-      expect(result.editsApplied).toBe(2);
-      expect(result.allSuccessful).toBe(true);
-      expect(result.errorMessage).toBeUndefined();
+      expect(result.results?.message).toContain('Successfully applied 2 edits');
+      expect(result.results?.editsApplied).toBe(2);
+      expect(result.results?.allSuccessful).toBe(true);
+      expect(result.results?.errorMessage).toBeUndefined();
 
       // Check UI helpers
       expect(result.ui.totalEdits).toBe(2);
@@ -192,19 +192,19 @@ describe('MultiEditToolParser', () => {
       const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditPartialResult);
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.editsApplied).toBe(1);
-      expect(result.allSuccessful).toBe(false);
-      expect(result.editDetails).toHaveLength(2);
+      expect(result.results?.editsApplied).toBe(1);
+      expect(result.results?.allSuccessful).toBe(false);
+      expect(result.results?.editDetails).toHaveLength(2);
 
       // Check first edit (success)
-      expect(result.editDetails[0].success).toBe(true);
-      expect(result.editDetails[0].replacements_made).toBe(1);
-      expect(result.editDetails[0].operation).toEqual(sampleEdits[0]);
+      expect(result.results?.editDetails[0].success).toBe(true);
+      expect(result.results?.editDetails[0].replacements_made).toBe(1);
+      expect(result.results?.editDetails[0].operation).toEqual(sampleEdits[0]);
 
       // Check second edit (failure)
-      expect(result.editDetails[1].success).toBe(false);
-      expect(result.editDetails[1].replacements_made).toBe(0);
-      expect(result.editDetails[1].error).toContain('Pattern not found');
+      expect(result.results?.editDetails[1].success).toBe(false);
+      expect(result.results?.editDetails[1].replacements_made).toBe(0);
+      expect(result.results?.editDetails[1].error).toContain('Pattern not found');
 
       // Check UI helpers
       expect(result.ui.successfulEdits).toBe(1);
@@ -215,33 +215,33 @@ describe('MultiEditToolParser', () => {
       const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditWithToolUseResult);
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.editsApplied).toBe(2);
-      expect(result.allSuccessful).toBe(true);
-      expect(result.message).toBe('All edits applied successfully');
-      expect(result.editDetails).toHaveLength(2);
+      expect(result.results?.editsApplied).toBe(2);
+      expect(result.results?.allSuccessful).toBe(true);
+      expect(result.results?.message).toBe('All edits applied successfully');
+      expect(result.results?.editDetails).toHaveLength(2);
 
       // Check replacements made
-      expect(result.editDetails[0].replacements_made).toBe(1);
-      expect(result.editDetails[1].replacements_made).toBe(3);
+      expect(result.results?.editDetails[0].replacements_made).toBe(1);
+      expect(result.results?.editDetails[1].replacements_made).toBe(3);
     });
 
     test('should parse error result', () => {
       const result = parser.parse(sampleMultiEditToolCall, sampleMultiEditErrorResult);
 
       expect(result.status.normalized).toBe('failed');
-      expect(result.errorMessage).toBe('File not found: /Users/test/project/nonexistent.ts');
-      expect(result.editsApplied).toBe(0);
-      expect(result.allSuccessful).toBe(false);
-      expect(result.editDetails).toEqual([]);
+      expect(result.results?.errorMessage).toBe('File not found: /Users/test/project/nonexistent.ts');
+      expect(result.results?.editsApplied).toBe(0);
+      expect(result.results?.allSuccessful).toBe(false);
+      expect(result.results?.editDetails).toEqual([]);
     });
 
     test('should handle pending status when no result', () => {
       const result = parser.parse(sampleMultiEditToolCall);
 
       expect(result.status.normalized).toBe('pending');
-      expect(result.editsApplied).toBe(0);
-      expect(result.allSuccessful).toBe(false);
-      expect(result.errorMessage).toBeUndefined();
+      expect(result.results?.editsApplied).toBe(0);
+      expect(result.results?.allSuccessful).toBe(false);
+      expect(result.results?.errorMessage).toBeUndefined();
     });
 
     test('should handle interrupted operations', () => {
@@ -263,9 +263,9 @@ describe('MultiEditToolParser', () => {
       const result = parser.parse(sampleMultiEditToolCall, interruptedResult);
 
       expect(result.status.normalized).toBe('interrupted');
-      expect(result.editsApplied).toBe(1);
-      expect(result.allSuccessful).toBe(false);
-      expect(result.message).toBe('Operation interrupted');
+      expect(result.results?.editsApplied).toBe(1);
+      expect(result.results?.allSuccessful).toBe(false);
+      expect(result.results?.message).toBe('Operation interrupted');
     });
   });
 
@@ -330,10 +330,10 @@ describe('MultiEditToolParser', () => {
 
       const result = parser.parse(sampleMultiEditToolCall, malformedResult);
 
-      expect(result.editDetails).toHaveLength(2);
-      expect(result.editDetails[0].success).toBe(true);
-      expect(result.editDetails[0].replacements_made).toBe(0);
-      expect(result.editDetails[1].operation).toEqual({ old_string: '', new_string: '' });
+      expect(result.results?.editDetails).toHaveLength(2);
+      expect(result.results?.editDetails[0].success).toBe(true);
+      expect(result.results?.editDetails[0].replacements_made).toBe(0);
+      expect(result.results?.editDetails[1].operation).toEqual({ old_string: '', new_string: '' });
     });
 
     test('should extract numbers from string messages', () => {
@@ -351,9 +351,9 @@ describe('MultiEditToolParser', () => {
 
       const result = parser.parse(sampleMultiEditToolCall, numberExtractionResult);
 
-      expect(result.editsApplied).toBe(3);
-      expect(result.allSuccessful).toBe(true);
-      expect(result.message).toContain('Applied 3 edits');
+      expect(result.results?.editsApplied).toBe(3);
+      expect(result.results?.allSuccessful).toBe(true);
+      expect(result.results?.message).toContain('Applied 3 edits');
     });
 
     test('should handle complex fixture-style results', () => {
@@ -384,8 +384,8 @@ describe('MultiEditToolParser', () => {
 
       const result = parser.parse(sampleMultiEditToolCall, complexResult);
 
-      expect(result.editsApplied).toBe(5);
-      expect(result.allSuccessful).toBe(true);
+      expect(result.results?.editsApplied).toBe(5);
+      expect(result.results?.allSuccessful).toBe(true);
     });
   });
 

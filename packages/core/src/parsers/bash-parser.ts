@@ -4,7 +4,7 @@ import type {
   MessageContent,
   ParseConfig,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -36,7 +36,7 @@ export class BashToolParser extends BaseToolParser<BashToolProps> {
     let exitCode: number | undefined;
     let workingDirectory: string | undefined;
     let interrupted: boolean | undefined;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -48,8 +48,8 @@ export class BashToolParser extends BaseToolParser<BashToolProps> {
       interrupted = parsed.interrupted;
       workingDirectory = toolUse.input?.workingDirectory as string | undefined;
 
-      // Map status using StatusMapper
-      status = StatusMapper.mapFromError(
+      // Map status using status mapping function
+      status = mapFromError(
         result.is_error || exitCode !== 0,
         false,
         interrupted || false

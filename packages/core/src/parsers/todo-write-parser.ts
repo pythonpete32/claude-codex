@@ -9,7 +9,7 @@ import type {
   TodoItem,
   TodoWriteToolProps,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -41,7 +41,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
     let message: string | undefined = undefined;
     let errorMessage: string | undefined = undefined;
     let interrupted = false;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -62,7 +62,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
       }
 
       // Map status including interrupted state
-      status = StatusMapper.mapFromError(result.is_error, false, interrupted);
+      status = mapFromError(result.is_error, false, interrupted);
     }
 
     // Calculate operation type

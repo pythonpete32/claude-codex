@@ -5,7 +5,7 @@ import type {
   ParseConfig,
   ParsedToolOutput,
 } from '@claude-codex/types';
-import { StatusMapper, ParseErrorImpl } from '@claude-codex/types';
+import { mapFromError, ParseErrorImpl } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -74,7 +74,7 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
     let output: unknown;
     let errorMessage: string | undefined;
     let interrupted = false;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -93,7 +93,7 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
       }
 
       // Map status including interrupted state
-      status = StatusMapper.mapFromError(result.is_error, false, interrupted);
+      status = mapFromError(result.is_error, false, interrupted);
     }
 
     // Analyze output structure for UI hints

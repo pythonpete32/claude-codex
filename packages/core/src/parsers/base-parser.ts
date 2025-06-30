@@ -9,7 +9,10 @@ import type {
   ValidationResult,
 } from '@claude-codex/types';
 import { ParseErrorImpl } from '@claude-codex/types';
-import { parserLogger } from '@claude-codex/utils';
+import { createChildLogger } from '@claude-codex/utils';
+
+// Create logger for parsers
+const parserLogger = createChildLogger('parser');
 
 /**
  * Abstract base parser that implements common functionality for all tool parsers.

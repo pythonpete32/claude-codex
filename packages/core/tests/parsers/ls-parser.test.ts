@@ -161,8 +161,8 @@ describe('LsToolParser', () => {
       expect(result.input.recursive).toBe(false);
 
       // Check parsed entries
-      expect(result.entries).toHaveLength(3);
-      expect(result.entries[0]).toEqual({
+      expect(result.results).toHaveLength(3);
+      expect(result.results[0]).toEqual({
         name: 'package.json',
         type: 'file',
         size: 1024,
@@ -170,7 +170,7 @@ describe('LsToolParser', () => {
         lastModified: '2025-06-25T10:00:00Z',
         isHidden: false,
       });
-      expect(result.entries[2]).toEqual({
+      expect(result.results[2]).toEqual({
         name: '.env',
         type: 'file',
         size: 256,
@@ -195,7 +195,7 @@ describe('LsToolParser', () => {
 
       expect(result.status.normalized).toBe('failed');
       expect(result.errorMessage).toBe('Permission denied: /root/private');
-      expect(result.entries).toEqual([]);
+      expect(result.results).toEqual([]);
       expect(result.entryCount).toBe(0);
     });
 
@@ -203,7 +203,7 @@ describe('LsToolParser', () => {
       const result = parser.parse(sampleLsToolCall);
 
       expect(result.status.normalized).toBe('pending');
-      expect(result.entries).toEqual([]);
+      expect(result.results).toEqual([]);
       expect(result.errorMessage).toBeUndefined();
     });
 
@@ -211,8 +211,8 @@ describe('LsToolParser', () => {
       const result = parser.parse(sampleLsToolCall, sampleLsWithToolUseResult);
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.entries).toHaveLength(2);
-      expect(result.entries[0]).toEqual({
+      expect(result.results).toHaveLength(2);
+      expect(result.results[0]).toEqual({
         name: 'README.md',
         type: 'file',
         size: 2048,
@@ -240,10 +240,10 @@ describe('LsToolParser', () => {
       const result = parser.parse(sampleLsToolCall, stringOutputResult);
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.entries).toHaveLength(2);
-      expect(result.entries[0].name).toBe('package.json');
-      expect(result.entries[0].size).toBe(1024);
-      expect(result.entries[1].type).toBe('directory');
+      expect(result.results).toHaveLength(2);
+      expect(result.results[0].name).toBe('package.json');
+      expect(result.results[0].size).toBe(1024);
+      expect(result.results[1].type).toBe('directory');
     });
 
     test('should handle interrupted operations', () => {
@@ -262,7 +262,7 @@ describe('LsToolParser', () => {
       const result = parser.parse(sampleLsToolCall, interruptedResult);
 
       expect(result.status.normalized).toBe('interrupted');
-      expect(result.entries).toEqual([]);
+      expect(result.results).toEqual([]);
     });
   });
 
@@ -305,10 +305,10 @@ describe('LsToolParser', () => {
 
       const result = parser.parse(sampleLsToolCall, malformedResult);
 
-      expect(result.entries).toHaveLength(2);
-      expect(result.entries[0].name).toBe('test.txt'); // filename → name
-      expect(result.entries[0].type).toBe('file'); // default
-      expect(result.entries[1].name).toBe('valid.txt');
+      expect(result.results).toHaveLength(2);
+      expect(result.results[0].name).toBe('test.txt'); // filename → name
+      expect(result.results[0].type).toBe('file'); // default
+      expect(result.results[1].name).toBe('valid.txt');
     });
 
     test('should infer file types from names', () => {
@@ -332,9 +332,9 @@ describe('LsToolParser', () => {
 
       const result = parser.parse(sampleLsToolCall, typeInferenceResult);
 
-      expect(result.entries[0].type).toBe('directory');
-      expect(result.entries[1].type).toBe('directory');
-      expect(result.entries[2].type).toBe('file');
+      expect(result.results[0].type).toBe('directory');
+      expect(result.results[1].type).toBe('directory');
+      expect(result.results[2].type).toBe('file');
     });
   });
 

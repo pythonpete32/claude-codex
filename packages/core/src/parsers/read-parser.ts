@@ -4,7 +4,7 @@ import type {
   ParseConfig,
   ReadToolProps,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -35,7 +35,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
     let truncated = false;
     let totalLines: number | undefined;
     let fileSize: number | undefined;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -51,7 +51,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
         }
       }
 
-      status = StatusMapper.mapFromError(result.is_error);
+      status = mapFromError(result.is_error);
     }
 
     // 4. Return flat props

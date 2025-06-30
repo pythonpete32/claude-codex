@@ -75,7 +75,7 @@ export interface SearchToolProps extends BaseToolProps {
   input: {
     pattern: string;                  // Search pattern
     scope?: string;                   // Search scope/directory
-    options?: Record<string, any>;    // Tool-specific options
+    options?: Record<string, unknown>;    // Tool-specific options
   };
   
   results?: SearchResult[];           // Structured search results
@@ -89,6 +89,31 @@ export interface SearchToolProps extends BaseToolProps {
   // UI interactions
   onMatchClick?: (filePath: string, lineNumber?: number) => void;
   onRefineSearch?: (newPattern: string) => void;
+}
+
+export interface MCPToolProps extends BaseToolProps {
+  input: {
+    parameters: Record<string, unknown>; // MCP tool parameters
+  };
+  
+  results?: {
+    output?: unknown;                   // MCP response data
+    errorMessage?: string;              // Error details
+  };
+  
+  ui: {
+    toolName: string;                   // Full tool name (mcp__server__method)
+    serverName: string;                 // MCP server name
+    methodName: string;                 // MCP method name
+    displayMode: 'text' | 'json' | 'table' | 'list' | 'empty';
+    isStructured: boolean;              // Has nested data
+    hasNestedData: boolean;             // Contains objects/arrays
+    keyCount: number;                   // Number of top-level keys
+    showRawJson?: boolean;              // Show JSON view toggle
+    collapsible?: boolean;              // Can collapse sections
+    isComplex?: boolean;                // Complex data structure
+    isLarge?: boolean;                  // Large data set
+  };
 }
 
 // Simple tool props (flat)
@@ -146,11 +171,12 @@ export interface GlobToolProps extends BaseToolProps {
     searchPath?: string;
   };
   
-  matches: string[];
+  results?: string[];  // File paths, not SearchResult objects
   
   ui: {
     totalMatches: number;
-    matchTime: number;
+    filesWithMatches: number;
+    searchTime?: number;
   };
 }
 
@@ -160,12 +186,14 @@ export interface MultiEditToolProps extends BaseToolProps {
     edits: EditOperation[];
   };
   
-  // Results from fixtures
-  message?: string;
-  editsApplied?: number;
-  allSuccessful?: boolean;
-  editDetails?: EditDetail[];  // Detailed results per edit
-  errorMessage?: string;
+  results?: {
+    message: string;
+    editsApplied: number;
+    totalEdits: number;
+    allSuccessful: boolean;
+    editDetails: EditDetail[];  // Detailed results per edit
+    errorMessage?: string;
+  };
   
   ui: {
     totalEdits: number;
@@ -187,7 +215,7 @@ export interface LsToolProps extends BaseToolProps {
     ignore?: string[];  // Ignore patterns from fixtures
   };
   
-  entries: FileEntry[];
+  results?: FileEntry[];
   entryCount?: number;  // From fixture data
   errorMessage?: string;  // Error messages ARE in the data
   
@@ -454,6 +482,8 @@ export interface McpToolProps extends BaseToolProps {
     keyCount: number;
     showRawJson?: boolean;
     collapsible?: boolean;
+    isComplex?: boolean;
+    isLarge?: boolean;
   };
 }
 

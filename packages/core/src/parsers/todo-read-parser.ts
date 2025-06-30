@@ -8,7 +8,7 @@ import type {
   TodoItem,
   TodoReadToolProps,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -43,7 +43,7 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
       | { high: number; medium: number; low: number }
       | undefined;
     let interrupted = false;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -62,7 +62,7 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
       }
 
       // Map status including interrupted state
-      status = StatusMapper.mapFromError(result.is_error, false, interrupted);
+      status = mapFromError(result.is_error, false, interrupted);
     }
 
     // Calculate statistics

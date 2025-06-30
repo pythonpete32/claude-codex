@@ -101,7 +101,7 @@ describe('Debug Parser Outputs', () => {
     expect(result).toHaveProperty('uuid');
     expect(result).toHaveProperty('status');
     expect(result).toHaveProperty('input');
-    expect(result).toHaveProperty('entries');
+    expect(result).toHaveProperty('results');
     expect(result).toHaveProperty('ui');
   });
   

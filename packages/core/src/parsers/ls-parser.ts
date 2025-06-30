@@ -8,7 +8,7 @@ import type {
   RawLogEntry,
   RawToolResult,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -39,7 +39,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
     let errorMessage: string | undefined;
     let entryCount = 0;
     let interrupted = false;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -58,7 +58,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
       }
 
       // Map status including interrupted state
-      status = StatusMapper.mapFromError(result.is_error, false, interrupted);
+      status = mapFromError(result.is_error, false, interrupted);
     }
 
     // Return structured props for UI consumption
@@ -75,8 +75,8 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
         ignore,
       },
 
-      // Results - use entries instead of files
-      entries: files.map(file => ({
+      // Results - renamed from entries to results per SOT
+      results: files.map(file => ({
         name: file.name,
         type: file.type,
         size: file.size,

@@ -6,7 +6,7 @@ import type {
   SearchMatch,
   SearchResult,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -42,7 +42,7 @@ export class GrepToolParser extends BaseToolParser<GrepToolProps> {
 
     // 3. Parse complex results (structured)
     let results: SearchResult[] = [];
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -51,7 +51,7 @@ export class GrepToolParser extends BaseToolParser<GrepToolProps> {
         results = this.parseSearchResults(result);
       }
 
-      status = StatusMapper.mapFromError(result.is_error);
+      status = mapFromError(result.is_error);
     }
 
     // 4. Calculate UI summary data

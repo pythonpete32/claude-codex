@@ -9,7 +9,7 @@ import type {
   RawLogEntry,
   RawToolResult,
 } from '@claude-codex/types';
-import { StatusMapper } from '@claude-codex/types';
+import { mapFromError } from '@claude-codex/types';
 import { BaseToolParser } from './base-parser';
 
 /**
@@ -42,7 +42,7 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
     let editDetails: EditDetail[] = [];
     let errorMessage: string | undefined;
     let interrupted = false;
-    let status = StatusMapper.mapFromError(false, !toolResult);
+    let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
@@ -62,7 +62,7 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
       }
 
       // Map status including interrupted state
-      status = StatusMapper.mapFromError(result.is_error, false, interrupted);
+      status = mapFromError(result.is_error, false, interrupted);
     }
 
     // Calculate UI stats
@@ -81,12 +81,15 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
         edits: edits || [],
       },
 
-      // Results from fixtures
-      message,
-      editsApplied,
-      allSuccessful,
-      editDetails,
-      errorMessage,
+      // Results - structured format per SOT
+      results: {
+        message: message || 'No message',
+        editsApplied,
+        totalEdits,
+        allSuccessful,
+        editDetails,
+        errorMessage,
+      },
 
       // UI helpers
       ui: {
