@@ -96,7 +96,12 @@ export class FileMonitor extends EventEmitter {
     this.watcher
       .on('add', (path: string) => this.handleFileAdded(path))
       .on('change', (path: string) => this.handleFileChanged(path))
-      .on('error', (error: Error) => this.emit('error', error));
+      .on('error', (error: unknown) =>
+        this.emit(
+          'error',
+          error instanceof Error ? error : new Error(String(error))
+        )
+      );
 
     // Periodic cleanup of inactive sessions
     this.cleanupInterval = setInterval(() => {
@@ -395,8 +400,8 @@ export class FileMonitor extends EventEmitter {
       parentUuid: raw.parentUuid || undefined,
       timestamp: raw.timestamp,
       type: raw.type,
-      content: content,
-      isSidechain: raw.isSidechain,
+      content: content as string | MessageContent | MessageContent[],
+      isSidechain: raw.isSidechain ?? false,
     };
   }
 

@@ -8,7 +8,7 @@ type ToolUse = MessageContent & {
   type: 'tool_use';
   id: string;
   name: string;
-  input: Record<string, any>;
+  input: Record<string, unknown>;
 };
 
 type ToolResult = MessageContent & {
@@ -84,7 +84,7 @@ export class CorrelationEngine extends EventEmitter {
    * Process a log entry for correlation.
    * Returns correlated tool props if a match is found.
    */
-  async processEntry(entry: LogEntry): Promise<any | null> {
+  async processEntry(entry: LogEntry): Promise<unknown | null> {
     // Extract tool data from message content
     const toolUse = this.extractToolUse(entry);
     const toolResult = this.extractToolResult(entry);
@@ -168,7 +168,7 @@ export class CorrelationEngine extends EventEmitter {
     callEntry: LogEntry,
     resultEntry: LogEntry,
     toolUse: ToolUse
-  ): Promise<any> {
+  ): Promise<unknown> {
     const startTime = Date.parse(callEntry.timestamp);
     const endTime = Date.parse(resultEntry.timestamp);
     const duration = endTime - startTime;

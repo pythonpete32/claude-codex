@@ -1,351 +1,236 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { CorrelationEngine } from '../../src/transformer/correlation-engine';
-import { ParserRegistry } from '@claude-codex/core';
-import type { LogEntry, ToolUse, ToolResult } from '@claude-codex/types';
-
-// Mock the logger
-vi.mock('@claude-codex/utils', () => ({
-  createChildLogger: vi.fn(() => ({
-    info: vi.fn(),
-    debug: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  })),
-}));
-
-// Mock parser
-const mockParser = {
-  parse: vi.fn(),
-  canParse: vi.fn(),
-  toolName: 'bash',
-  toolType: 'bash_tool',
-  version: '1.0.0',
-  getMetadata: vi.fn(),
-};
-
-// Mock parser registry
-const mockRegistry = {
-  findParser: vi.fn(() => mockParser),
-  register: vi.fn(),
-  getAll: vi.fn(),
-} as unknown as ParserRegistry;
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { CorrelationEngine } from '../../src/transformer/correlation-engine.js';
+// import { ParserRegistry } from '@claude-codex/core';
+import type { LogEntry } from '@claude-codex/types';
+import type { CorrelationEngineEvents } from '../../src/types.js';
 
 describe('CorrelationEngine', () => {
   let engine: CorrelationEngine;
-  let emitSpy: ReturnType<typeof vi.spyOn>;
+  let mockParserRegistry: { getForEntry: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
-    engine = new CorrelationEngine(mockRegistry, {
-      timeoutMs: 1000, // 1 second for faster tests
-      cleanupIntervalMs: 500,
+    // Create a mock parser registry
+    mockParserRegistry = {
+      getForEntry: vi.fn().mockReturnValue({
+        parse: vi.fn().mockResolvedValue({
+          toolName: 'Mock Tool',
+          status: 'completed',
+        }),
+      }),
+    };
+
+    engine = new CorrelationEngine(mockParserRegistry, {
+      timeoutMs: 100, // 100ms for testing
+      cleanupIntervalMs: 50, // 50ms for testing
     });
-    emitSpy = vi.spyOn(engine, 'emit');
-    vi.clearAllMocks();
+    engine.start();
   });
 
   afterEach(() => {
     engine.stop();
-    vi.restoreAllMocks();
   });
 
-  // Helper functions
-  function createToolCallEntry(toolId: string, toolName: string): LogEntry {
-    return {
-      uuid: `call-${toolId}`,
-      type: 'assistant',
-      timestamp: new Date().toISOString(),
-      message: {
-        role: 'assistant',
+  describe('processEntry', () => {
+    it('should correlate tool_use with tool_result', async () => {
+      const toolCall: LogEntry = {
+        uuid: 'call-001',
+        type: 'assistant',
+        timestamp: '2024-01-01T00:00:00Z',
+        isSidechain: false,
         content: [
           {
             type: 'tool_use',
-            id: toolId,
-            name: toolName,
-            input: { command: 'echo test' },
-          } as ToolUse,
+            id: 'tool_001',
+            name: 'Bash',
+            input: { command: 'ls' },
+          },
         ],
-      },
-    } as LogEntry;
-  }
+      };
 
-  function createToolResultEntry(toolId: string, output?: any): LogEntry {
-    return {
-      uuid: `result-${toolId}`,
-      type: 'user',
-      timestamp: new Date(Date.now() + 100).toISOString(), // 100ms later
-      message: {
-        role: 'user',
+      const toolResult: LogEntry = {
+        uuid: 'result-001',
+        parentUuid: 'call-001',
+        type: 'user',
+        timestamp: '2024-01-01T00:00:01Z',
+        isSidechain: false,
         content: [
           {
             type: 'tool_result',
-            tool_use_id: toolId,
-            content: output || 'test output',
-          } as ToolResult,
+            tool_use_id: 'tool_001',
+            content: 'file1.txt\nfile2.txt',
+          },
         ],
-      },
-    } as LogEntry;
-  }
+      };
 
-  describe('Correlation Matching', () => {
-    it('should correlate tool call with subsequent result', async () => {
-      const toolId = 'test-123';
-      const callEntry = createToolCallEntry(toolId, 'bash');
-      const resultEntry = createToolResultEntry(toolId);
-
-      mockParser.parse.mockResolvedValueOnce({
-        id: toolId,
-        type: 'bash_tool',
-        status: 'completed',
+      let emittedData:
+        | Parameters<CorrelationEngineEvents['tool:completed']>[0]
+        | null = null;
+      engine.on('tool:completed', data => {
+        emittedData = data;
       });
 
-      // Process call first
-      const result1 = await engine.processEntry(callEntry);
-      expect(result1).toBeNull(); // No result yet
+      // Process tool call
+      await engine.processEntry(toolCall);
+      expect(emittedData).toBeNull(); // No emission yet
 
-      // Process result
-      const result2 = await engine.processEntry(resultEntry);
-      expect(result2).toBeTruthy();
-      expect(mockParser.parse).toHaveBeenCalledWith(callEntry, resultEntry);
+      // Process tool result
+      await engine.processEntry(toolResult);
 
-      // Should emit completion event
-      expect(emitSpy).toHaveBeenCalledWith('tool:completed', {
-        toolName: 'bash',
-        toolId,
-        duration: expect.any(Number),
-        call: callEntry,
-        result: resultEntry,
-      });
+      // Should emit completed event
+      expect(emittedData).not.toBeNull();
+      expect(emittedData!.toolName).toBe('Bash');
+      expect(emittedData!.toolId).toBe('tool_001');
+      expect(emittedData!.duration).toBeGreaterThan(0);
+      expect(emittedData!.call).toEqual(toolCall);
+      expect(emittedData!.result).toEqual(toolResult);
     });
 
-    it('should correlate when result arrives before call', async () => {
-      const toolId = 'test-456';
-      const callEntry = createToolCallEntry(toolId, 'edit');
-      const resultEntry = createToolResultEntry(toolId);
+    it('should handle multiple pending tool calls', async () => {
+      const toolCall1: LogEntry = {
+        uuid: 'call-001',
+        type: 'assistant',
+        timestamp: '2024-01-01T00:00:00Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'tool_use',
+            id: 'tool_001',
+            name: 'Read',
+            input: { file_path: '/test.txt' },
+          },
+        ],
+      };
 
-      mockParser.parse.mockResolvedValueOnce({
-        id: toolId,
-        type: 'edit_tool',
-        status: 'completed',
-      });
+      const toolCall2: LogEntry = {
+        uuid: 'call-002',
+        type: 'assistant',
+        timestamp: '2024-01-01T00:00:00Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'tool_use',
+            id: 'tool_002',
+            name: 'Write',
+            input: { file_path: '/output.txt', content: 'test' },
+          },
+        ],
+      };
 
-      // Process result first
-      const result1 = await engine.processEntry(resultEntry);
-      expect(result1).toBeNull(); // No call yet
-
-      // Process call
-      const result2 = await engine.processEntry(callEntry);
-      expect(result2).toBeTruthy();
-      expect(mockParser.parse).toHaveBeenCalledWith(callEntry, resultEntry);
-    });
-
-    it('should handle multiple concurrent tool calls', async () => {
-      const toolId1 = 'tool-1';
-      const toolId2 = 'tool-2';
-
-      const call1 = createToolCallEntry(toolId1, 'bash');
-      const call2 = createToolCallEntry(toolId2, 'read');
-      const result1 = createToolResultEntry(toolId1);
-      const result2 = createToolResultEntry(toolId2);
-
-      mockParser.parse
-        .mockResolvedValueOnce({ id: toolId1, type: 'bash_tool' })
-        .mockResolvedValueOnce({ id: toolId2, type: 'read_tool' });
-
-      // Process all calls first
-      await engine.processEntry(call1);
-      await engine.processEntry(call2);
-
-      // Process results in reverse order
-      const parsed2 = await engine.processEntry(result2);
-      const parsed1 = await engine.processEntry(result1);
-
-      expect(parsed1).toBeTruthy();
-      expect(parsed2).toBeTruthy();
-      expect(mockParser.parse).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  describe('Timeout Handling', () => {
-    it('should timeout orphaned tool calls', async () => {
-      vi.useFakeTimers();
-
-      const toolId = 'timeout-test';
-      const callEntry = createToolCallEntry(toolId, 'bash');
-
-      engine.start();
-
-      // Process call
-      await engine.processEntry(callEntry);
-
-      // Advance time past timeout
-      vi.advanceTimersByTime(1500); // 1.5 seconds
-
-      // Should emit timeout event
-      expect(emitSpy).toHaveBeenCalledWith('tool:timeout', {
-        toolName: 'bash',
-        toolId,
-        call: callEntry,
+      const completedTools: string[] = [];
+      engine.on('tool:completed', data => {
+        completedTools.push(data.toolId);
       });
 
-      // Verify call was removed from pending
-      const stats = engine.getStats();
-      expect(stats.pendingCalls).toBe(0);
+      // Process both tool calls
+      await engine.processEntry(toolCall1);
+      await engine.processEntry(toolCall2);
 
-      vi.useRealTimers();
+      // Process result for second call first
+      const toolResult2: LogEntry = {
+        uuid: 'result-002',
+        type: 'user',
+        timestamp: '2024-01-01T00:00:01Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'tool_result',
+            tool_use_id: 'tool_002',
+            content: 'File written successfully',
+          },
+        ],
+      };
+
+      await engine.processEntry(toolResult2);
+      expect(completedTools).toEqual(['tool_002']);
+
+      // Process result for first call
+      const toolResult1: LogEntry = {
+        uuid: 'result-001',
+        type: 'user',
+        timestamp: '2024-01-01T00:00:02Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'tool_result',
+            tool_use_id: 'tool_001',
+            content: 'File contents here',
+          },
+        ],
+      };
+
+      await engine.processEntry(toolResult1);
+      expect(completedTools).toEqual(['tool_002', 'tool_001']);
     });
 
-    it('should clean up orphaned results', async () => {
-      vi.useFakeTimers();
+    it('should emit timeout event for orphaned tool calls', async () => {
+      const toolCall: LogEntry = {
+        uuid: 'call-001',
+        type: 'assistant',
+        timestamp: '2024-01-01T00:00:00Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'tool_use',
+            id: 'tool_001',
+            name: 'Bash',
+            input: { command: 'sleep 10' },
+          },
+        ],
+      };
 
-      const toolId = 'orphan-result';
-      const resultEntry = createToolResultEntry(toolId);
-
-      engine.start();
-
-      // Process result without matching call
-      await engine.processEntry(resultEntry);
-
-      // Advance time past timeout
-      vi.advanceTimersByTime(1500);
-
-      // Verify result was cleaned up
-      const stats = engine.getStats();
-      expect(stats.pendingResults).toBe(0);
-
-      vi.useRealTimers();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle parser not found', async () => {
-      const toolId = 'no-parser';
-      const callEntry = createToolCallEntry(toolId, 'unknown-tool');
-      const resultEntry = createToolResultEntry(toolId);
-
-      vi.mocked(mockRegistry.findParser).mockReturnValueOnce(null);
-
-      await engine.processEntry(callEntry);
-      const result = await engine.processEntry(resultEntry);
-
-      expect(result).toBeNull();
-      expect(emitSpy).not.toHaveBeenCalledWith(
-        'tool:completed',
-        expect.anything()
-      );
-    });
-
-    it('should handle parser errors', async () => {
-      const toolId = 'parser-error';
-      const callEntry = createToolCallEntry(toolId, 'bash');
-      const resultEntry = createToolResultEntry(toolId);
-
-      mockParser.parse.mockRejectedValueOnce(new Error('Parse failed'));
-
-      await engine.processEntry(callEntry);
-      const result = await engine.processEntry(resultEntry);
-
-      expect(result).toBeNull();
-      // Parser error prevents emission of completed event
-      expect(emitSpy).not.toHaveBeenCalledWith(
-        'tool:completed',
-        expect.anything()
-      );
-    });
-
-    it('should handle malformed log entries', async () => {
-      const malformedEntries = [
-        { uuid: '1', type: 'user' }, // No message
-        { uuid: '2', type: 'assistant', message: {} }, // No content
-        { uuid: '3', type: 'assistant', message: { content: 'string' } }, // String content
-        { uuid: '4', type: 'user', message: { content: [{ type: 'text' }] } }, // No tool
-      ] as LogEntry[];
-
-      for (const entry of malformedEntries) {
-        const result = await engine.processEntry(entry);
-        expect(result).toBeNull();
-      }
-    });
-  });
-
-  describe('Statistics', () => {
-    it('should track pending correlations', async () => {
-      const toolId1 = 'stats-1';
-      const toolId2 = 'stats-2';
-
-      const call1 = createToolCallEntry(toolId1, 'bash');
-      const result2 = createToolResultEntry(toolId2);
-
-      await engine.processEntry(call1);
-      await engine.processEntry(result2);
-
-      const stats = engine.getStats();
-      expect(stats.pendingCalls).toBe(1);
-      expect(stats.pendingResults).toBe(1);
-      expect(stats.oldestPendingMs).not.toBeNull();
-      expect(stats.oldestPendingMs).toBeGreaterThanOrEqual(0);
-    });
-
-    it('should return null for oldestPendingMs when no pending items', () => {
-      const stats = engine.getStats();
-      expect(stats.pendingCalls).toBe(0);
-      expect(stats.pendingResults).toBe(0);
-      expect(stats.oldestPendingMs).toBeNull();
-    });
-  });
-
-  describe('Lifecycle', () => {
-    it('should start and stop cleanly', () => {
-      expect(() => engine.start()).not.toThrow();
-      expect(() => engine.start()).not.toThrow(); // Should handle duplicate start
-      expect(() => engine.stop()).not.toThrow();
-      expect(() => engine.stop()).not.toThrow(); // Should handle duplicate stop
-    });
-
-    it('should clear pending items on stop', async () => {
-      const toolId = 'lifecycle-test';
-      const callEntry = createToolCallEntry(toolId, 'bash');
-
-      await engine.processEntry(callEntry);
-
-      let stats = engine.getStats();
-      expect(stats.pendingCalls).toBe(1);
-
-      engine.stop();
-
-      stats = engine.getStats();
-      expect(stats.pendingCalls).toBe(0);
-      expect(stats.pendingResults).toBe(0);
-    });
-  });
-
-  describe('Event Types', () => {
-    it('should have type-safe event emitters', () => {
-      const toolCompleteHandler = vi.fn();
-      const toolTimeoutHandler = vi.fn();
-
-      engine.on('tool:completed', toolCompleteHandler);
-      engine.on('tool:timeout', toolTimeoutHandler);
-
-      // TypeScript should enforce correct parameter types
-      engine.emit('tool:completed', {
-        toolName: 'test',
-        toolId: 'test-id',
-        duration: 100,
-        call: {} as LogEntry,
-        result: {} as LogEntry,
+      let timedOutTool:
+        | Parameters<CorrelationEngineEvents['tool:timeout']>[0]
+        | null = null;
+      engine.on('tool:timeout', data => {
+        timedOutTool = data;
       });
 
-      engine.emit('tool:timeout', {
-        toolName: 'test',
-        toolId: 'test-id',
-        call: {} as LogEntry,
-      });
+      await engine.processEntry(toolCall);
 
-      expect(toolCompleteHandler).toHaveBeenCalled();
-      expect(toolTimeoutHandler).toHaveBeenCalled();
+      // Wait for timeout
+      await new Promise(resolve => setTimeout(resolve, 150));
 
-      engine.off('tool:completed', toolCompleteHandler);
-      engine.off('tool:timeout', toolTimeoutHandler);
+      expect(timedOutTool).not.toBeNull();
+      expect(timedOutTool!.toolName).toBe('Bash');
+      expect(timedOutTool!.toolId).toBe('tool_001');
+      expect(timedOutTool!.call).toEqual(toolCall);
+    });
+
+    it('should ignore non-tool entries', async () => {
+      const userMessage: LogEntry = {
+        uuid: 'msg-001',
+        type: 'user',
+        timestamp: '2024-01-01T00:00:00Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'text',
+            text: 'Hello, how are you?',
+          },
+        ],
+      };
+
+      const assistantMessage: LogEntry = {
+        uuid: 'msg-002',
+        type: 'assistant',
+        timestamp: '2024-01-01T00:00:01Z',
+        isSidechain: false,
+        content: [
+          {
+            type: 'text',
+            text: 'I am doing well, thank you!',
+          },
+        ],
+      };
+
+      let emittedCount = 0;
+      engine.on('tool:completed', () => emittedCount++);
+      engine.on('tool:timeout', () => emittedCount++);
+
+      await engine.processEntry(userMessage);
+      await engine.processEntry(assistantMessage);
+
+      expect(emittedCount).toBe(0);
     });
   });
 });

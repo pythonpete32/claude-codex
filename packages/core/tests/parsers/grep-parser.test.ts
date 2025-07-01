@@ -432,8 +432,7 @@ describe('GrepToolParser - Fixture-Based Testing', () => {
           {
             type: 'tool_result',
             tool_use_id: 'test-tool-id',
-            text:
-              'Found 3 files\n/src/file1.ts\n/src/file2.ts\n/src/utils/file3.ts',
+            text: 'Found 3 files\n/src/file1.ts\n/src/file2.ts\n/src/utils/file3.ts',
           },
         ],
       };

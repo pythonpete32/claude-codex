@@ -390,8 +390,7 @@ describe('ReadToolParser - Fixture-Based Testing', () => {
           {
             type: 'tool_result',
             tool_use_id: 'test-tool-id',
-            text:
-              '     1→def hello():\n     2→    print("Hello")\n     3→\n     4→hello()',
+            text: '     1→def hello():\n     2→    print("Hello")\n     3→\n     4→hello()',
           },
         ],
       };

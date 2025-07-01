@@ -1,4 +1,9 @@
-import type { EditFixture, FixtureData, LogEntry, MessageContent } from '@claude-codex/types';
+import type {
+  EditFixture,
+  FixtureData,
+  LogEntry,
+  MessageContent,
+} from '@claude-codex/types';
 import { beforeEach, describe, expect, test } from 'vitest';
 import { EditToolParser } from '../../src/parsers/edit-parser';
 import {

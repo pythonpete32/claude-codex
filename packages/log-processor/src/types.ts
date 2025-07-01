@@ -11,12 +11,12 @@ export interface RawLogEntry {
   type: 'user' | 'assistant';
   message?: {
     role: string;
-    content: any;
+    content: unknown;
   };
-  content?: any; // Some entries might have content directly
+  content?: unknown; // Some entries might have content directly
   sessionId?: string;
   cwd?: string;
-  [key: string]: any; // Allow other fields
+  [key: string]: unknown; // Allow other fields
 }
 
 /**

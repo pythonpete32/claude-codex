@@ -40,7 +40,9 @@ export class WriteToolParser extends BaseToolParser<WriteToolProps> {
       if (!result.is_error) {
         // Parse the result message to determine if created or overwritten
         const resultContent =
-          result.content || result.text || (typeof result.output === 'string' ? result.output : '');
+          result.content ||
+          result.text ||
+          (typeof result.output === 'string' ? result.output : '');
         if (resultContent.includes('created successfully')) {
           created = true;
           overwritten = false;
@@ -53,7 +55,9 @@ export class WriteToolParser extends BaseToolParser<WriteToolProps> {
         }
       } else {
         // Extract error message from content, text, or output field
-        errorMessage = result.content || result.text || 
+        errorMessage =
+          result.content ||
+          result.text ||
           (typeof result.output === 'string' ? result.output : undefined);
       }
 

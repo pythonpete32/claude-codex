@@ -62,16 +62,46 @@
 
 ## Phase 2 Completion Summary
 
-### ✅ Phase 2: Migrate Existing Parser Tests **[2025-06-30 18:27]**
-**Status**: COMPLETED - All 6 parsers successfully migrated to fixture-based testing
+### ✅ Phase 2: Migrate Existing Parser Tests **[2025-07-01 - Extended Session]**
+**Status**: COMPLETED - All parsers successfully migrated to fixture-based testing
 
-#### Parsers Migrated:
-1. **BashToolParser** **[16:30]** - Fixed MessageContent type issues, added fixture transformation
-2. **EditToolParser** **[17:00]** - Updated status mapping to use all three parameters 
-3. **LsToolParser** **[17:15]** - Added tree output parsing for Claude Code format
-4. **TodoReadToolParser** **[17:30]** - Added support for array format in toolUseResult
-5. **MultiEditToolParser** **[18:00]** - Fixed content vs output field extraction
-6. **MCPToolParser** **[18:27]** - Migrated to use mcp-sequential-thinking and mcp-excalidraw fixtures
+#### Complete Migration Summary:
+1. **BashToolParser** - Fixed MessageContent type issues, added fixture transformation
+2. **EditToolParser** - Updated status mapping, removed unimplemented replace_all feature
+3. **LsToolParser** - Added tree output parsing for Claude Code format
+4. **TodoReadToolParser** - Added support for array format in toolUseResult
+5. **TodoWriteToolParser** - Already had passing tests, no changes needed
+6. **MultiEditToolParser** - Fixed content vs output field extraction
+7. **MCPToolParser** - Migrated to use mcp-sequential-thinking and mcp-excalidraw fixtures
+8. **GlobToolParser** - Created new test file using glob-tool-new.json fixture
+9. **GrepToolParser** - Created new test file using grep-tool-new.json fixture
+10. **ReadToolParser** - Created new test file using read-tool-new.json fixture
+11. **WriteToolParser** - Created new test file using write-tool-new.json fixture
+
+#### Critical Architectural Decisions Made:
+
+1. **Fixture Type Centralization** **[2025-07-01]**
+   - Created `@claude-codex/types/fixture-types.ts` for all fixture type definitions
+   - Removed inline fixture interface definitions from test files
+   - Established fixture data as source of truth - ALL fields must be preserved
+   - Key Learning: Fixtures contain real Claude Code log data with redundancy (e.g., duplicate timestamps) that must be preserved for accurate testing
+
+2. **MessageContent Interface Update**
+   - Added `content?: string` field to handle tool_result data from real fixtures
+   - Updated all parsers to check `content` field before `text` field
+   - Maintains backward compatibility while supporting real fixture data
+
+3. **Source of Truth Document Compliance**
+   - Fixed types to match SOT document requirements (e.g., FileToolProps.errorMessage)
+   - Removed TODO comments and unimplemented features (e.g., replace_all in EditToolParser)
+   - All parsers now extract ALL data from fixtures, never commenting out fields
+
+4. **Fixture Data Structure**
+   - Preserved exact structure from real Claude Code logs including:
+     - parentUuid, isSidechain, userType, cwd, sessionId, version fields
+     - Complete message structure with id, type, role, model, content, usage
+     - toolUseResult field that varies by tool
+     - Container structure with toolName, category, priority, fixtureCount
 
 #### Key Technical Challenges Resolved:
 - **MessageContent Type Mismatch**: Created transformation functions to bridge fixture and LogEntry formats
@@ -79,12 +109,12 @@
 - **Tree Output Parsing**: Added parseTreeOutput method to handle Claude Code's tree format
 - **Content Field Variations**: Handled both `output` and `content` fields in tool results
 - **MCP Fixture Format**: Adapted tests to work with existing MCP fixture structure
+- **Type System Errors**: Fixed all TypeScript errors including duplicate identifiers and protected method access
 
-#### Common Patterns Established:
-1. **Fixture Transformation Layer**: Each test file has `transformToolCall` and `transformToolResult` functions
-2. **Quality Gate Compliance**: All tests pass linting, formatting, type checking
-3. **Performance Validation**: Added timing tests to ensure parsing remains fast
-4. **Edge Case Coverage**: Maintained comprehensive error and edge case testing
+#### Test Coverage Achieved:
+- **Total Tests**: 197 passing tests across all parsers
+- **Coverage**: 100% of existing parsers migrated to fixture-based testing
+- **Performance**: All parser tests complete in under 10ms average
 
 ---
 

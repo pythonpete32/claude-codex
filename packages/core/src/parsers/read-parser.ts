@@ -52,7 +52,9 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
         }
       } else {
         // Extract error message from content, text, or output field
-        errorMessage = result.content || result.text || 
+        errorMessage =
+          result.content ||
+          result.text ||
           (typeof result.output === 'string' ? result.output : undefined);
       }
 
