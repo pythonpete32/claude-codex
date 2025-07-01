@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
-import { AppShell } from "@/components/layout/app-shell";
+import { AppShell } from "@/components/layout/app-shell/app-shell";
 import { cn } from "@/lib/utils";
 
 interface AppShellWrapperProps {
@@ -18,13 +18,8 @@ export function AppShellWrapper({
 }: AppShellWrapperProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [selectedSession, setSelectedSession] = React.useState<string | null>(
-    null
-  );
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
   const handleSelectSession = (sessionId: string) => {
-    setSelectedSession(sessionId);
     // Navigate to the chat page for this session
     router.push(`/chat/${sessionId}`);
   };

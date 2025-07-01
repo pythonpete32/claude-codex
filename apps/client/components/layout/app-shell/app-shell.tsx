@@ -45,16 +45,24 @@ export interface AppShellProps {
 	children: React.ReactNode;
 	className?: string;
 	onSelectSession?: (sessionId: string) => void;
+	onNavigateQuickStart?: () => void;
+	currentPath?: string;
 	hideTools?: boolean;
 	hideSidebar?: boolean;
+	hideChat?: boolean;
+	hideSessionHeader?: boolean;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
 	children,
 	className,
 	onSelectSession,
+	onNavigateQuickStart,
+	currentPath,
 	hideTools = false,
 	hideSidebar = false,
+	hideChat = false,
+	hideSessionHeader = false,
 }) => {
 	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 	const [rightDrawerOpen, setRightDrawerOpen] = useState(true);
@@ -319,7 +327,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 						{!sidebarCollapsed && (
 							<>
 								<Separator className="my-4" />
-								<ScrollArea className="flex-1">
+								<ScrollArea className="flex-1 scrollbar-hide">
 									<div className="p-2 space-y-2">
 										<div className="flex items-center justify-between mb-3 px-1">
 											<span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -460,62 +468,73 @@ export const AppShell: React.FC<AppShellProps> = ({
 				{/* Chat Area */}
 				<div
 					className={cn(
-						"flex-1 flex flex-col transition-all duration-300",
+						"flex-1 flex flex-col transition-all duration-300 relative",
 						rightDrawerOpen && !hideTools ? "mr-80" : "mr-0",
 					)}
 				>
 					{/* Chat Header */}
-					<div className="h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-6">
-						<div className="flex items-center gap-3">
-							<h1 className="text-xl font-semibold">Chat Session</h1>
-						</div>
+					{!hideSessionHeader && (
+						<div className="h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-6">
+							<div className="flex items-center gap-3">
+								<h1 className="text-xl font-semibold">Chat Session</h1>
+							</div>
 
-						<div className="flex items-center gap-2">
-							<Select value={selectedEditor} onValueChange={handleEditorChange}>
-								<SelectTrigger className="w-40">
-									<SelectValue placeholder="Open in Editor" />
-								</SelectTrigger>
-								<SelectContent>
-									{editorOptions.map((editor) => (
-										<SelectItem key={editor.value} value={editor.value}>
-											<Code className="w-3 h-3 mr-2" />
-											{editor.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<TooltipProvider>
-								<Tooltip>
-									<TooltipTrigger asChild>
-										<Button variant="outline" size="sm" onClick={handleContinueInTerminal}>
-											<Terminal className="w-3 h-3 mr-1" />
-											Open in Terminal
-										</Button>
-									</TooltipTrigger>
-									<TooltipContent>
-										<p>Copy the command to continue this session in your terminal</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
+							<div className="flex items-center gap-2">
+								<Select value={selectedEditor} onValueChange={handleEditorChange}>
+									<SelectTrigger className="w-40">
+										<SelectValue placeholder="Open in Editor" />
+									</SelectTrigger>
+									<SelectContent>
+										{editorOptions.map((editor) => (
+											<SelectItem key={editor.value} value={editor.value}>
+												<Code className="w-3 h-3 mr-2" />
+												{editor.label}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Button variant="outline" size="sm" onClick={handleContinueInTerminal}>
+												<Terminal className="w-3 h-3 mr-1" />
+												Open in Terminal
+											</Button>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>Copy the command to continue this session in your terminal</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
 						</div>
-					</div>
+					)}
 
 					{/* Chat Messages Area */}
-					<div className="flex-1 overflow-auto">
-						<div className="max-w-4xl mx-auto p-6 pb-32">{children}</div>
+					<div className="flex-1 overflow-auto scrollbar-hide">
+						<div className="max-w-4xl mx-auto p-6 pb-44">{children}</div>
 					</div>
 
-					{/* Modern Centered Chat Input */}
-					<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background to-transparent pt-6 pb-6">
-						<div className="max-w-3xl mx-auto px-4">
-							<div className="bg-background/80 backdrop-blur-sm border border-border rounded-2xl shadow-lg p-2">
-								<div className="flex flex-col gap-2">
-									{/* Integrated Controls Bar */}
-									<div className="flex items-center justify-between px-3 py-1">
+					{/* Modern Chat Input */}
+					{!hideChat && (
+						<div className="fixed bottom-0 left-0 right-0 bg-background">
+							{/* Full width separator */}
+							<Separator className="w-full" />
+							
+							<div 
+								className={cn(
+									"transition-all duration-300",
+									hideSidebar ? "ml-0" : sidebarCollapsed ? "ml-24" : "ml-72",
+									rightDrawerOpen && !hideTools ? "mr-80" : "mr-0"
+								)}
+							>
+								<div className="px-6 pt-3 pb-4">
+									{/* Controls Bar */}
+									<div className="flex items-center justify-between mb-3">
 										<div className="flex items-center gap-2">
 											{/* Model Selector */}
 											<Select value={selectedModel} onValueChange={setSelectedModel}>
-												<SelectTrigger className="h-8 text-xs border-0 bg-secondary/50 hover:bg-secondary">
+												<SelectTrigger className="h-8 w-28 text-xs">
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -527,45 +546,43 @@ export const AppShell: React.FC<AppShellProps> = ({
 												</SelectContent>
 											</Select>
 
-											<Separator orientation="vertical" className="h-4" />
-
 											{/* Action Buttons */}
-											<Button variant="ghost" size="sm" className="h-8 px-2">
+											<Button variant="ghost" size="icon" className="h-8 w-8">
 												<Play className="w-3 h-3" />
 											</Button>
-											<Button variant="ghost" size="sm" className="h-8 px-2">
+											<Button variant="ghost" size="icon" className="h-8 w-8">
 												<Pause className="w-3 h-3" />
 											</Button>
 										</div>
 
-										<div className="flex items-center gap-2">
-											{!hideTools && (
-												<Button
-													variant="ghost"
-													size="sm"
-													className="h-8 px-2"
-													onClick={() => setRightDrawerOpen(!rightDrawerOpen)}
-												>
-													<Wrench className="w-3 h-3" />
-												</Button>
-											)}
-										</div>
+										{/* Tools Settings */}
+										{!hideTools && (
+											<Button
+												variant="ghost"
+												size="sm"
+												className="h-8 px-3 gap-2"
+												onClick={() => setRightDrawerOpen(!rightDrawerOpen)}
+											>
+												<Wrench className="w-3 h-3" />
+												<span className="text-xs">Tools</span>
+											</Button>
+										)}
 									</div>
 
 									{/* Message Input Area */}
-									<div className="relative px-3 pb-2">
+									<div className="relative">
 										<Textarea
 											placeholder="Type your message..."
 											value={chatMessage}
 											onChange={(e) => setChatMessage(e.target.value)}
 											onKeyPress={handleKeyPress}
-											className="min-h-[80px] max-h-[200px] resize-none border-0 bg-transparent pr-12 focus:ring-0 text-sm"
+											className="min-h-[80px] max-h-[200px] resize-none text-sm pr-20"
 										/>
 										<Button
 											onClick={handleSendMessage}
 											disabled={!chatMessage.trim()}
-											className="absolute bottom-4 right-4 h-8 w-8 p-0 rounded-full"
-											size="sm"
+											className="absolute bottom-2 right-2 h-12 w-12 rounded-lg bg-primary hover:bg-primary/90 transition-colors"
+											size="icon"
 										>
 											<ArrowUp className="w-4 h-4" />
 										</Button>
@@ -573,7 +590,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 								</div>
 							</div>
 						</div>
-					</div>
+					)}
 				</div>
 
 				{/* Right Controls Drawer */}
@@ -598,7 +615,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 						</div>
 
 						{/* Drawer Content */}
-						<div className="flex-1 overflow-auto p-4 space-y-6">
+						<div className="flex-1 overflow-auto scrollbar-hide p-4 space-y-6">
 							{/* Built-in Tool Permissions */}
 							<Card>
 								<CardHeader className="pb-3">
