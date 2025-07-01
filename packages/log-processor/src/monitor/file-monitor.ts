@@ -9,6 +9,7 @@ import { createChildLogger } from "@claude-codex/utils";
 import * as chokidar from "chokidar";
 import type {
 	ActiveSession,
+	FileLogEntry,
 	LogMonitorEvents,
 	MonitorOptions,
 	RawLogEntry,
@@ -56,14 +57,24 @@ export class FileMonitor extends EventEmitter {
 	/**
 	 * Read all existing log entries from all JSONL files.
 	 */
-	async *readAll(): AsyncGenerator<LogEntry> {
+	async *readAll(): AsyncGenerator<FileLogEntry> {
 		const projectDirs = await this.getProjectDirectories();
 
 		for (const projectDir of projectDirs) {
 			const files = await this.getJsonlFiles(projectDir);
 
 			for (const filePath of files) {
-				yield* this.readFile(filePath);
+				const sessionId = this.extractSessionId(filePath);
+				const project = this.extractProject(filePath);
+
+				for await (const entry of this.readFile(filePath)) {
+					yield {
+						...entry,
+						filePath,
+						sessionId,
+						project,
+					};
+				}
 			}
 		}
 	}

@@ -11,7 +11,10 @@ export interface SimpleDiffResult {
 }
 
 // Simple line-by-line diff for terminal display
-export function createSimpleDiff(oldText: string, newText: string): SimpleDiffResult {
+export function createSimpleDiff(
+	oldText: string,
+	newText: string,
+): SimpleDiffResult {
 	const oldLines = oldText.split("\n");
 	const newLines = newText.split("\n");
 

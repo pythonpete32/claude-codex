@@ -4,7 +4,7 @@
  */
 
 import { formatDistanceToNow, parseISO } from "date-fns";
-import type { ProjectInfo, SessionInfo } from "@/types/api";
+import type { ProjectInfo, SessionInfo } from "../../types/api";
 
 /**
  * Format an ISO timestamp to a relative time string (e.g., "2 minutes ago")
@@ -83,7 +83,10 @@ export function sortSessionsByActivity(sessions: SessionInfo[]): SessionInfo[] {
 /**
  * Filter sessions by search query
  */
-export function filterSessionsByQuery(sessions: SessionInfo[], query: string): SessionInfo[] {
+export function filterSessionsByQuery(
+	sessions: SessionInfo[],
+	query: string,
+): SessionInfo[] {
 	if (!query.trim()) return sessions;
 
 	const lowerQuery = query.toLowerCase();
@@ -105,7 +108,9 @@ export function filterSessionsByQuery(sessions: SessionInfo[], query: string): S
 /**
  * Group sessions by project path
  */
-export function groupSessionsByProject(sessions: SessionInfo[]): Map<string, SessionInfo[]> {
+export function groupSessionsByProject(
+	sessions: SessionInfo[],
+): Map<string, SessionInfo[]> {
 	const grouped = new Map<string, SessionInfo[]>();
 
 	sessions.forEach((session) => {
@@ -134,7 +139,10 @@ export function calculateProjectStats(sessions: SessionInfo[]): {
 		};
 	}
 
-	const totalMessages = sessions.reduce((sum, session) => sum + session.messageCount, 0);
+	const totalMessages = sessions.reduce(
+		(sum, session) => sum + session.messageCount,
+		0,
+	);
 
 	const activeCount = sessions.filter((s) => s.isActive).length;
 	const hasToolUsage = sessions.some((s) => s.hasToolUsage);
@@ -159,7 +167,7 @@ export async function retryWithBackoff<T>(
 	maxRetries = 3,
 	initialDelay = 1000,
 ): Promise<T> {
-	let lastError: Error;
+	let lastError: Error | undefined;
 
 	for (let i = 0; i < maxRetries; i++) {
 		try {
@@ -174,7 +182,7 @@ export async function retryWithBackoff<T>(
 		}
 	}
 
-	throw lastError;
+	throw lastError || new Error("Max retries exceeded");
 }
 
 /**

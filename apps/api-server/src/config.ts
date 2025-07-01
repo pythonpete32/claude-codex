@@ -38,8 +38,10 @@ export function loadConfig(): ServerConfig {
 		port: Number(process.env.PORT) || 3001,
 		hostname: process.env.HOST || "localhost",
 		corsOrigins: process.env.CORS_ORIGINS?.split(",") || ["*"],
-		claudeLogsPath: process.env.CLAUDE_LOGS_PATH || join(homedir(), ".claude", "projects"),
-		activeSessionThreshold: Number(process.env.ACTIVE_SESSION_THRESHOLD) || 60000,
+		claudeLogsPath:
+			process.env.CLAUDE_LOGS_PATH || join(homedir(), ".claude", "projects"),
+		activeSessionThreshold:
+			Number(process.env.ACTIVE_SESSION_THRESHOLD) || 60000,
 		maxEntriesPerRequest: Number(process.env.MAX_ENTRIES_PER_REQUEST) || 1000,
 		cacheTTL: Number(process.env.CACHE_TTL) || 300000,
 		wsHeartbeatInterval: Number(process.env.WS_HEARTBEAT_INTERVAL) || 30000,
@@ -62,7 +64,9 @@ export function validateConfig(config: ServerConfig): void {
 	}
 
 	if (config.maxEntriesPerRequest < 1) {
-		throw new Error(`Invalid maxEntriesPerRequest: ${config.maxEntriesPerRequest}. Must be >= 1`);
+		throw new Error(
+			`Invalid maxEntriesPerRequest: ${config.maxEntriesPerRequest}. Must be >= 1`,
+		);
 	}
 }
 

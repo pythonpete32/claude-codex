@@ -48,7 +48,8 @@ function createServer() {
 					info: {
 						title: "Claude Conversation Log API",
 						version: "1.0.0",
-						description: "REST API and WebSocket server for Claude conversation logs",
+						description:
+							"REST API and WebSocket server for Claude conversation logs",
 					},
 					tags: [
 						{ name: "sessions", description: "Session management endpoints" },
@@ -91,7 +92,7 @@ function createServer() {
 				} catch (error) {
 					const responseTime = Date.now() - startTime;
 					HealthMetricsService.trackRequest(responseTime, true);
-					
+
 					console.error("Health check failed:", error);
 					set.status = 503;
 					return {
@@ -105,7 +106,8 @@ function createServer() {
 			{
 				detail: {
 					summary: "Enhanced health check",
-					description: "Comprehensive health metrics including system resources, services, and performance data",
+					description:
+						"Comprehensive health metrics including system resources, services, and performance data",
 					tags: ["health"],
 					responses: {
 						200: {
@@ -115,7 +117,10 @@ function createServer() {
 									schema: {
 										type: "object",
 										properties: {
-											status: { type: "string", enum: ["healthy", "degraded", "unhealthy"] },
+											status: {
+												type: "string",
+												enum: ["healthy", "degraded", "unhealthy"],
+											},
 											timestamp: { type: "string" },
 											version: { type: "string" },
 											uptime: { type: "number" },
@@ -201,7 +206,8 @@ function createServer() {
 
 		// Error handling
 		.onError(({ code, error, set }) => {
-			const errorMessage = error instanceof Error ? error.message : String(error);
+			const errorMessage =
+				error instanceof Error ? error.message : String(error);
 			console.error(`[API Error] ${code}:`, errorMessage);
 
 			switch (code) {
@@ -254,7 +260,9 @@ async function startServer() {
 		console.log(
 			`📚 API documentation available at http://${config.hostname}:${config.port}/api/swagger`,
 		);
-		console.log(`💡 Health check: http://${config.hostname}:${config.port}/api/health`);
+		console.log(
+			`💡 Health check: http://${config.hostname}:${config.port}/api/health`,
+		);
 
 		// Graceful shutdown
 		const shutdown = () => {

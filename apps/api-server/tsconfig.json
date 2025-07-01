@@ -15,6 +15,14 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
-		"noPropertyAccessFromIndexSignature": false
+		"noPropertyAccessFromIndexSignature": false,
+		"paths": {
+			"@claude-codex/core": ["../../packages/core/src/index.ts"],
+			"@claude-codex/log-processor": [
+				"../../packages/log-processor/src/index.ts"
+			],
+			"@claude-codex/types": ["../../packages/types/src/index.ts"],
+			"@claude-codex/utils": ["../../packages/utils/src/index.ts"]
+		}
 	}
 }

@@ -67,13 +67,19 @@ class PerformanceTracker {
 		}
 	}
 
-	getMetrics(): { averageResponseTime: number; requestCount: number; errorRate: number } {
+	getMetrics(): {
+		averageResponseTime: number;
+		requestCount: number;
+		errorRate: number;
+	} {
 		const averageResponseTime =
 			this.responseTimes.length > 0
-				? this.responseTimes.reduce((sum, time) => sum + time, 0) / this.responseTimes.length
+				? this.responseTimes.reduce((sum, time) => sum + time, 0) /
+					this.responseTimes.length
 				: 0;
 
-		const errorRate = this.requestCount > 0 ? (this.errorCount / this.requestCount) * 100 : 0;
+		const errorRate =
+			this.requestCount > 0 ? (this.errorCount / this.requestCount) * 100 : 0;
 
 		return {
 			averageResponseTime: Math.round(averageResponseTime * 100) / 100,
@@ -113,16 +119,23 @@ export class HealthMetricsService {
 
 		try {
 			// Gather all metrics in parallel
-			const [systemMetrics, fileSystemHealth, sessionMetrics, performanceMetrics] =
-				await Promise.all([
-					this.getSystemMetrics(),
-					this.checkFileSystemHealth(),
-					this.getSessionMetrics(),
-					this.getPerformanceMetrics(),
-				]);
+			const [
+				systemMetrics,
+				fileSystemHealth,
+				sessionMetrics,
+				performanceMetrics,
+			] = await Promise.all([
+				this.getSystemMetrics(),
+				this.checkFileSystemHealth(),
+				this.getSessionMetrics(),
+				this.getPerformanceMetrics(),
+			]);
 
 			// Determine overall health status
-			const status = this.determineHealthStatus(fileSystemHealth, sessionMetrics);
+			const status = this.determineHealthStatus(
+				fileSystemHealth,
+				sessionMetrics,
+			);
 
 			const metrics: HealthMetrics = {
 				status,
@@ -186,7 +199,8 @@ export class HealthMetricsService {
 
 		// Simple CPU usage approximation (not perfect but reasonable for health checks)
 		const cpuUsage = process.cpuUsage();
-		const cpuPercent = ((cpuUsage.user + cpuUsage.system) / 1000000) / process.uptime();
+		const cpuPercent =
+			(cpuUsage.user + cpuUsage.system) / 1000000 / process.uptime();
 
 		return {
 			memory: {
@@ -203,9 +217,14 @@ export class HealthMetricsService {
 	/**
 	 * Check file system health
 	 */
-	private async checkFileSystemHealth(): Promise<HealthMetrics["services"]["fileSystem"]> {
+	private async checkFileSystemHealth(): Promise<
+		HealthMetrics["services"]["fileSystem"]
+	> {
 		try {
-			const logsPath = config.claudeLogsPath.replace("~", process.env.HOME || "");
+			const logsPath = config.claudeLogsPath.replace(
+				"~",
+				process.env.HOME || "",
+			);
 			await stat(logsPath);
 
 			return {
@@ -226,7 +245,9 @@ export class HealthMetricsService {
 	/**
 	 * Get session scanner metrics
 	 */
-	private async getSessionMetrics(): Promise<HealthMetrics["services"]["sessionScanner"]> {
+	private async getSessionMetrics(): Promise<
+		HealthMetrics["services"]["sessionScanner"]
+	> {
 		try {
 			const allSessions = await this.scanner.getAllSessions({
 				limit: Number.MAX_SAFE_INTEGER,

@@ -1,6 +1,15 @@
 import type { LogEntry } from "@claude-codex/types";
 
 /**
+ * Extended LogEntry with file metadata
+ */
+export interface FileLogEntry extends LogEntry {
+	filePath: string;
+	sessionId: string;
+	project: string;
+}
+
+/**
  * Raw log entry as it appears in Claude's JSONL files
  * This is different from the LogEntry type which is our domain model
  */

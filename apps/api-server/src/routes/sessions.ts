@@ -129,7 +129,8 @@ export function createSessionRoutes() {
 					const { id } = params;
 
 					// Validate session ID format (should be UUID)
-					const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+					const uuidRegex =
+						/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 					if (!uuidRegex.test(id)) {
 						set.status = 400;
 						return {
@@ -197,7 +198,8 @@ export function createSessionRoutes() {
 					const { limit, offset, type, since } = query;
 
 					// Validate session ID format
-					const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+					const uuidRegex =
+						/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 					if (!uuidRegex.test(id)) {
 						set.status = 400;
 						return {
@@ -305,6 +307,142 @@ export function createSessionRoutes() {
 					responses: {
 						200: {
 							description: "Session history retrieved successfully",
+						},
+						400: {
+							description: "Invalid request parameters",
+						},
+						404: {
+							description: "Session not found",
+						},
+						500: {
+							description: "Internal server error",
+						},
+					},
+				},
+			},
+		)
+
+		// GET /sessions/:id/enhanced-history - Get session conversation history with parsed tool props
+		.get(
+			"/:id/enhanced-history",
+			async ({ params, query, set }) => {
+				try {
+					const { id } = params;
+					const { limit, offset, type, since } = query;
+
+					// Validate session ID format
+					const uuidRegex =
+						/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+					if (!uuidRegex.test(id)) {
+						set.status = 400;
+						return {
+							error: "INVALID_SESSION_ID",
+							message: "Session ID must be a valid UUID",
+							timestamp: new Date().toISOString(),
+						};
+					}
+
+					// Check if session exists
+					const session = await scanner.getSessionById(id);
+					if (!session) {
+						set.status = 404;
+						return {
+							error: "SESSION_NOT_FOUND",
+							message: `Session ${id} not found`,
+							timestamp: new Date().toISOString(),
+						};
+					}
+
+					// Validate pagination parameters
+					const validatedLimit = Math.min(
+						Math.max(Number(limit) || 100, 1),
+						config.maxEntriesPerRequest,
+					);
+					const validatedOffset = Math.max(Number(offset) || 0, 0);
+
+					// Validate type parameter
+					if (type && type !== "user" && type !== "assistant") {
+						set.status = 400;
+						return {
+							error: "INVALID_TYPE",
+							message: "Type must be 'user' or 'assistant'",
+							timestamp: new Date().toISOString(),
+						};
+					}
+
+					// Validate since parameter
+					if (since && Number.isNaN(Date.parse(since))) {
+						set.status = 400;
+						return {
+							error: "INVALID_SINCE",
+							message: "Since must be a valid ISO timestamp",
+							timestamp: new Date().toISOString(),
+						};
+					}
+
+					// Get session file path from monitor
+					const filePath = await scanner.getSessionFilePath(id);
+					if (!filePath) {
+						set.status = 404;
+						return {
+							error: "SESSION_FILE_NOT_FOUND",
+							message: `Session file for ${id} not found`,
+							timestamp: new Date().toISOString(),
+						};
+					}
+
+					// Read enhanced history with parsed props
+					const result = await HistoryReader.getEnhancedHistory(filePath, {
+						limit: validatedLimit,
+						offset: validatedOffset,
+						type: type as "user" | "assistant" | undefined,
+						since,
+					});
+
+					return {
+						history: result.data,
+						pagination: {
+							total: result.total,
+							limit: result.limit,
+							offset: result.offset,
+							hasMore: result.hasMore,
+						},
+						session: {
+							id: session.id,
+							projectPath: session.projectPath,
+						},
+					};
+				} catch (error) {
+					console.error(
+						`Error getting enhanced session history ${params.id}:`,
+						error,
+					);
+					set.status = 500;
+					return {
+						error: "INTERNAL_ERROR",
+						message: "Failed to retrieve enhanced session history",
+						timestamp: new Date().toISOString(),
+					};
+				}
+			},
+			{
+				params: t.Object({
+					id: t.String(),
+				}),
+				query: t.Object({
+					limit: t.Optional(t.String()),
+					offset: t.Optional(t.String()),
+					type: t.Optional(t.String()),
+					since: t.Optional(t.String()),
+				}),
+				detail: {
+					summary: "Get enhanced session history",
+					description:
+						"Retrieve conversation history with parsed tool props for a specific session with pagination and filtering",
+					tags: ["sessions"],
+					responses: {
+						200: {
+							description: "Enhanced session history retrieved successfully",
 						},
 						400: {
 							description: "Invalid request parameters",

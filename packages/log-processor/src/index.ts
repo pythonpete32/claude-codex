@@ -9,6 +9,7 @@ export type {
 	CorrelatedPair,
 	CorrelationEngineEvents,
 	CorrelationEngineOptions,
+	FileLogEntry,
 	LogMonitorEvents,
 	MonitorOptions,
 	PendingCorrelation,

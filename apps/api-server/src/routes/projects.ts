@@ -13,10 +13,13 @@ import { SessionScanner } from "../services/session-scanner";
  */
 function decodePath(encodedPath: string): string {
 	// Remove leading dash, then decode double-dashes to dots, then single dashes to slashes
-	return "/" + encodedPath
-		.slice(1) // Remove leading dash
-		.replace(/--/g, ".") // Double dashes become dots
-		.replace(/-/g, "/"); // Single dashes become slashes
+	return (
+		"/" +
+		encodedPath
+			.slice(1) // Remove leading dash
+			.replace(/--/g, ".") // Double dashes become dots
+			.replace(/-/g, "/")
+	); // Single dashes become slashes
 }
 
 /**
@@ -25,10 +28,13 @@ function decodePath(encodedPath: string): string {
  */
 function encodePath(path: string): string {
 	// Remove leading slash, encode dots to double-dashes, slashes to dashes, add leading dash
-	return "-" + path
-		.slice(1) // Remove leading slash
-		.replace(/\./g, "--") // Dots become double dashes
-		.replace(/\//g, "-"); // Slashes become single dashes
+	return (
+		"-" +
+		path
+			.slice(1) // Remove leading slash
+			.replace(/\./g, "--") // Dots become double dashes
+			.replace(/\//g, "-")
+	); // Slashes become single dashes
 }
 
 /**
@@ -100,17 +106,22 @@ export function createProjectRoutes() {
 						project.sessionCount++;
 						project.totalMessages += session.messageCount;
 						project.hasToolUsage = project.hasToolUsage || session.hasToolUsage;
-						project.hasActiveSessions = project.hasActiveSessions || session.isActive;
+						project.hasActiveSessions =
+							project.hasActiveSessions || session.isActive;
 
 						// Update last activity if this session is more recent
-						if (new Date(session.lastActivity) > new Date(project.lastActivity)) {
+						if (
+							new Date(session.lastActivity) > new Date(project.lastActivity)
+						) {
 							project.lastActivity = session.lastActivity;
 						}
 					}
 
 					// Convert to array and sort by last activity
 					const projects = Array.from(projectMap.values()).sort(
-						(a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime(),
+						(a, b) =>
+							new Date(b.lastActivity).getTime() -
+							new Date(a.lastActivity).getTime(),
 					);
 
 					// Apply pagination
@@ -147,7 +158,8 @@ export function createProjectRoutes() {
 				}),
 				detail: {
 					summary: "List projects",
-					description: "Get all projects with session metadata, sorted by last activity",
+					description:
+						"Get all projects with session metadata, sorted by last activity",
 					tags: ["projects"],
 					responses: {
 						200: {
@@ -213,7 +225,8 @@ export function createProjectRoutes() {
 					const validatedOffset = Math.max(Number(offset) || 0, 0);
 
 					// Get sessions for the specific project
-					const projectSessions = await scanner.getSessionsByProject(projectPath);
+					const projectSessions =
+						await scanner.getSessionsByProject(projectPath);
 
 					if (projectSessions.length === 0) {
 						set.status = 404;
@@ -227,14 +240,20 @@ export function createProjectRoutes() {
 					// Apply active filter if specified
 					let filteredSessions = projectSessions;
 					if (active === "true") {
-						const activeSessions = await scanner.getAllSessions({ active: true });
+						const activeSessions = await scanner.getAllSessions({
+							active: true,
+						});
 						const activeIds = new Set(activeSessions.data.map((s) => s.id));
-						filteredSessions = filteredSessions.filter((s) => activeIds.has(s.id));
+						filteredSessions = filteredSessions.filter((s) =>
+							activeIds.has(s.id),
+						);
 					}
 
 					// Sort by last activity (newest first)
 					filteredSessions.sort(
-						(a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime(),
+						(a, b) =>
+							new Date(b.lastActivity).getTime() -
+							new Date(a.lastActivity).getTime(),
 					);
 
 					// Apply pagination
@@ -259,7 +278,10 @@ export function createProjectRoutes() {
 						},
 					};
 				} catch (error) {
-					console.error(`Error getting sessions for project ${params.encodedPath}:`, error);
+					console.error(
+						`Error getting sessions for project ${params.encodedPath}:`,
+						error,
+					);
 					set.status = 500;
 					return {
 						error: "INTERNAL_ERROR",

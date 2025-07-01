@@ -17,6 +17,10 @@
       "name": "@claude-codex/api-server",
       "version": "0.1.0",
       "dependencies": {
+        "@claude-codex/core": "workspace:*",
+        "@claude-codex/log-processor": "workspace:*",
+        "@claude-codex/types": "workspace:*",
+        "@claude-codex/utils": "workspace:*",
         "@elysiajs/cors": "^1.1.0",
         "@elysiajs/swagger": "^1.1.0",
         "elysia": "^1.1.0",

@@ -3,11 +3,12 @@
  * This ensures consistent cache keys across the application
  */
 
-import type {
-	ProjectsQueryParams,
-	SessionHistoryQueryParams,
-	SessionsQueryParams,
-} from "@/types/api";
+import type { SessionHistoryQuery, SessionsQuery } from "../types/api";
+
+// Rename for consistency
+type SessionsQueryParams = SessionsQuery;
+type SessionHistoryQueryParams = SessionHistoryQuery;
+type ProjectsQueryParams = Record<string, unknown>;
 
 /**
  * Query key factory for all API endpoints
@@ -16,15 +17,18 @@ import type {
 export const QUERY_KEYS = {
 	// Root keys
 	all: ["claude-codex"] as const,
-	projects: (params?: ProjectsQueryParams) => [...QUERY_KEYS.all, "projects", params] as const,
-	sessions: (params?: SessionsQueryParams) => [...QUERY_KEYS.all, "sessions", params] as const,
+	projects: (params?: ProjectsQueryParams) =>
+		[...QUERY_KEYS.all, "projects", params] as const,
+	sessions: (params?: SessionsQueryParams) =>
+		[...QUERY_KEYS.all, "sessions", params] as const,
 
 	// Project-specific keys
 	projectSessions: (encodedPath: string, params?: SessionsQueryParams) =>
 		[...QUERY_KEYS.all, "projects", encodedPath, "sessions", params] as const,
 
 	// Session-specific keys
-	session: (sessionId: string) => [...QUERY_KEYS.all, "sessions", sessionId] as const,
+	session: (sessionId: string) =>
+		[...QUERY_KEYS.all, "sessions", sessionId] as const,
 	sessionHistory: (sessionId: string, params?: SessionHistoryQueryParams) =>
 		[...QUERY_KEYS.all, "sessions", sessionId, "history", params] as const,
 
@@ -47,10 +51,12 @@ export const QUERY_PATTERNS = {
 	allSessions: [...QUERY_KEYS.all, "sessions"] as const,
 
 	// Invalidate specific project's sessions
-	projectSessions: (encodedPath: string) => [...QUERY_KEYS.all, "projects", encodedPath] as const,
+	projectSessions: (encodedPath: string) =>
+		[...QUERY_KEYS.all, "projects", encodedPath] as const,
 
 	// Invalidate specific session and its history
-	session: (sessionId: string) => [...QUERY_KEYS.all, "sessions", sessionId] as const,
+	session: (sessionId: string) =>
+		[...QUERY_KEYS.all, "sessions", sessionId] as const,
 } as const;
 
 /**
@@ -58,7 +64,9 @@ export const QUERY_PATTERNS = {
  * @param segments - Array of key segments
  * @returns Readonly query key array
  */
-export function createQueryKey<T extends ReadonlyArray<unknown>>(...segments: T): Readonly<T> {
+export function createQueryKey<T extends ReadonlyArray<unknown>>(
+	...segments: T
+): Readonly<T> {
 	return segments as Readonly<T>;
 }
 
@@ -86,7 +94,7 @@ export class QueryKeyBuilder {
 	}
 
 	build(): readonly unknown[] {
-		return this.segments as const;
+		return [...this.segments];
 	}
 }
 

@@ -4,19 +4,84 @@
  */
 
 import { readFile } from "node:fs/promises";
-import type { LogEntry, PaginatedResponse, SessionHistoryQuery } from "../types/api";
+import type {
+	LogEntry as CoreLogEntry,
+	MessageContent,
+} from "@claude-codex/types";
+import type {
+	LogEntry as ApiLogEntry,
+	PaginatedResponse,
+	SessionHistoryQuery,
+} from "../types/api";
+import {
+	type EnhancedLogEntry,
+	TransformationService,
+} from "./transformation-service";
 
 /**
  * Service for reading and processing session history from JSONL files
  */
 export class HistoryReader {
+	private static transformationService = new TransformationService();
+
+	/**
+	 * Convert API LogEntry to Core LogEntry format
+	 */
+	private static convertToCoreLogEntry(apiEntry: ApiLogEntry): CoreLogEntry {
+		// Convert content to MessageContent format
+		let content: string | MessageContent | MessageContent[];
+
+		if (typeof apiEntry.content === "string") {
+			content = apiEntry.content;
+		} else if (apiEntry.toolUse) {
+			// Convert toolUse to MessageContent
+			const messageContent: MessageContent = {
+				type: "tool_use",
+				id: apiEntry.toolUse.id,
+				name: apiEntry.toolUse.name,
+				input: apiEntry.toolUse.input,
+			};
+
+			if (apiEntry.toolUse.result) {
+				// If we have a result, add it as a separate MessageContent
+				const resultContent: MessageContent = {
+					type: "tool_result",
+					tool_use_id: apiEntry.toolUse.id,
+					content:
+						typeof apiEntry.toolUse.result === "string"
+							? apiEntry.toolUse.result
+							: JSON.stringify(apiEntry.toolUse.result),
+					is_error: apiEntry.toolUse.status === "failed",
+				};
+				content = [messageContent, resultContent];
+			} else {
+				content = messageContent;
+			}
+		} else {
+			// Handle structured content - already validated as string | object
+			content = apiEntry.content as unknown as
+				| string
+				| MessageContent
+				| MessageContent[];
+		}
+
+		return {
+			uuid: apiEntry.uuid,
+			parentUuid: apiEntry.parentUuid,
+			timestamp: apiEntry.timestamp,
+			type: apiEntry.type,
+			content,
+			isSidechain: apiEntry.isSidechain,
+		};
+	}
+
 	/**
 	 * Read session history with pagination and filtering
 	 */
 	static async getSessionHistory(
 		filePath: string,
 		options: SessionHistoryQuery = {},
-	): Promise<PaginatedResponse<LogEntry>> {
+	): Promise<PaginatedResponse<ApiLogEntry>> {
 		const { limit = 100, offset = 0, type, since } = options;
 
 		try {
@@ -25,7 +90,7 @@ export class HistoryReader {
 			const lines = content.split("\n").filter((line) => line.trim());
 
 			// Parse all entries
-			const allEntries: LogEntry[] = [];
+			const allEntries: ApiLogEntry[] = [];
 			for (const line of lines) {
 				try {
 					const parsed = JSON.parse(line);
@@ -34,7 +99,10 @@ export class HistoryReader {
 						allEntries.push(logEntry);
 					}
 				} catch (error) {
-					console.warn(`Failed to parse JSONL line: ${line.substring(0, 100)}...`, error);
+					console.warn(
+						`Failed to parse JSONL line: ${line.substring(0, 100)}...`,
+						error,
+					);
 				}
 			}
 
@@ -43,18 +111,23 @@ export class HistoryReader {
 
 			// Filter by message type
 			if (type) {
-				filteredEntries = filteredEntries.filter((entry) => entry.type === type);
+				filteredEntries = filteredEntries.filter(
+					(entry) => entry.type === type,
+				);
 			}
 
 			// Filter by timestamp
 			if (since) {
 				const sinceDate = new Date(since);
-				filteredEntries = filteredEntries.filter((entry) => new Date(entry.timestamp) >= sinceDate);
+				filteredEntries = filteredEntries.filter(
+					(entry) => new Date(entry.timestamp) >= sinceDate,
+				);
 			}
 
 			// Sort by timestamp (chronological order)
 			filteredEntries.sort(
-				(a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+				(a, b) =>
+					new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
 			);
 
 			// Apply pagination
@@ -80,10 +153,10 @@ export class HistoryReader {
 	/**
 	 * Parse raw JSONL entry into LogEntry format
 	 */
-	private static parseLogEntry(raw: any): LogEntry | null {
+	private static parseLogEntry(raw: unknown): ApiLogEntry | null {
 		try {
 			// Extract basic fields
-			const entry: LogEntry = {
+			const entry: ApiLogEntry = {
 				uuid: raw.uuid,
 				parentUuid: raw.parentUuid || undefined,
 				sessionId: raw.sessionId,
@@ -99,10 +172,12 @@ export class HistoryReader {
 				if (Array.isArray(raw.message.content)) {
 					// Multiple content blocks (text + tool usage)
 					const textBlocks = raw.message.content
-						.filter((block: any) => block.type === "text")
-						.map((block: any) => block.text);
+						.filter((block: unknown) => block.type === "text")
+						.map((block: unknown) => block.text);
 
-					const toolUses = raw.message.content.filter((block: any) => block.type === "tool_use");
+					const toolUses = raw.message.content.filter(
+						(block: unknown) => block.type === "tool_use",
+					);
 
 					// Set main content to text
 					entry.content = textBlocks.join("\n") || "";
@@ -138,7 +213,7 @@ export class HistoryReader {
 			// Handle tool result messages (user messages with tool_result)
 			if (raw.message?.content && Array.isArray(raw.message.content)) {
 				const toolResults = raw.message.content.filter(
-					(block: any) => block.type === "tool_result",
+					(block: unknown) => block.type === "tool_result",
 				);
 
 				if (toolResults.length > 0) {
@@ -169,7 +244,10 @@ export class HistoryReader {
 	/**
 	 * Get a specific entry by UUID
 	 */
-	static async getEntryByUuid(filePath: string, uuid: string): Promise<LogEntry | null> {
+	static async getEntryByUuid(
+		filePath: string,
+		uuid: string,
+	): Promise<ApiLogEntry | null> {
 		try {
 			const content = await readFile(filePath, "utf-8");
 			const lines = content.split("\n").filter((line) => line.trim());
@@ -187,6 +265,90 @@ export class HistoryReader {
 		} catch (error) {
 			console.error(`Error reading entry ${uuid} from ${filePath}:`, error);
 			return null;
+		}
+	}
+
+	/**
+	 * Read session history with parsed tool props
+	 */
+	static async getEnhancedHistory(
+		filePath: string,
+		options: SessionHistoryQuery = {},
+	): Promise<PaginatedResponse<EnhancedLogEntry>> {
+		const { limit = 100, offset = 0, type, since } = options;
+
+		try {
+			// Read and parse JSONL file
+			const content = await readFile(filePath, "utf-8");
+			const lines = content.split("\n").filter((line) => line.trim());
+
+			// Parse all entries
+			const allEntries: CoreLogEntry[] = [];
+			for (const line of lines) {
+				try {
+					const parsed = JSON.parse(line);
+					const apiEntry = HistoryReader.parseLogEntry(parsed);
+					if (apiEntry) {
+						// Convert to core format for transformation
+						const coreEntry = HistoryReader.convertToCoreLogEntry(apiEntry);
+						allEntries.push(coreEntry);
+					}
+				} catch (error) {
+					console.warn(
+						`Failed to parse JSONL line: ${line.substring(0, 100)}...`,
+						error,
+					);
+				}
+			}
+
+			// Transform entries with parsed props
+			const enhancedEntries =
+				await HistoryReader.transformationService.transformEntries(allEntries);
+
+			// Apply filters
+			let filteredEntries = enhancedEntries;
+
+			// Filter by message type
+			if (type) {
+				filteredEntries = filteredEntries.filter(
+					(entry) => entry.type === type,
+				);
+			}
+
+			// Filter by timestamp
+			if (since) {
+				const sinceDate = new Date(since);
+				filteredEntries = filteredEntries.filter(
+					(entry) => new Date(entry.timestamp) >= sinceDate,
+				);
+			}
+
+			// Sort by timestamp (chronological order)
+			filteredEntries.sort(
+				(a, b) =>
+					new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+			);
+
+			// Apply pagination
+			const total = filteredEntries.length;
+			const paginatedEntries = filteredEntries.slice(offset, offset + limit);
+			const hasMore = offset + limit < total;
+
+			return {
+				data: paginatedEntries,
+				total,
+				limit,
+				offset,
+				hasMore,
+			};
+		} catch (error) {
+			console.error(
+				`Error reading enhanced session history from ${filePath}:`,
+				error,
+			);
+			throw new Error(
+				`Failed to read session history: ${error instanceof Error ? error.message : String(error)}`,
+			);
 		}
 	}
 
@@ -223,9 +385,12 @@ export class HistoryReader {
 					}
 
 					// Count tool usages
-					if (parsed.message?.content && Array.isArray(parsed.message.content)) {
+					if (
+						parsed.message?.content &&
+						Array.isArray(parsed.message.content)
+					) {
 						const hasToolUse = parsed.message.content.some(
-							(block: any) => block.type === "tool_use",
+							(block: unknown) => block.type === "tool_use",
 						);
 						if (hasToolUse) {
 							toolUsages++;
