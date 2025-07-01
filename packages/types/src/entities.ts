@@ -14,8 +14,8 @@ export interface MessageContent {
   content?: string;      // tool_result content (used in real Claude Code output)
   id?: string;           // tool_use_id
   name?: string;         // tool name
-  input?: Record<string, any>;  // tool input
-  output?: any;          // tool result
+  input?: Record<string, unknown>;  // tool input - SOT compliant: was Record<string, any>
+  output?: unknown;      // tool result - SOT compliant: was any
   is_error?: boolean;
   tool_use_id?: string;  // for tool_result
 }

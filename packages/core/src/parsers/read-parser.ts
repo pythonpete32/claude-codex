@@ -168,7 +168,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
     return typeMap[ext || ''] || 'plaintext';
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return [
       'basic-parsing',
       'status-mapping',

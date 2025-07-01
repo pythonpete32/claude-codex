@@ -416,7 +416,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
     return changes;
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     // Declare parser capabilities
     return [
       'basic-parsing',

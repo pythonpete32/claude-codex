@@ -75,9 +75,10 @@ describe('FileMonitor', () => {
       expect(assistantWithTool!.content).toBeDefined();
       expect(Array.isArray(assistantWithTool!.content)).toBe(true);
 
-      const toolUse = assistantWithTool!.content!.find(
-        (c: any) => c.type === 'tool_use'
-      );
+      const content = assistantWithTool!.content;
+      const toolUse = Array.isArray(content) ? content.find(
+        (c: unknown) => typeof c === 'object' && c !== null && 'type' in c && (c as { type: string }).type === 'tool_use'
+      ) : undefined;
       expect(toolUse).toBeDefined();
       expect(toolUse).toHaveProperty('type', 'tool_use');
       expect(toolUse).toHaveProperty('name');

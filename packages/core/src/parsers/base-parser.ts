@@ -109,7 +109,7 @@ export abstract class BaseToolParser<TProps extends BaseToolProps>
   /**
    * Override to specify supported features
    */
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return ['basic-parsing', 'status-mapping', 'correlation'];
   }
 

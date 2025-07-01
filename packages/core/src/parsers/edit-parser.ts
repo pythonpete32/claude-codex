@@ -149,7 +149,7 @@ export class EditToolParser extends BaseToolParser<EditToolProps> {
     return typeMap[ext || ''] || 'plaintext';
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return [
       'basic-parsing',
       'status-mapping',

@@ -166,7 +166,7 @@ export interface GrepToolProps extends SearchToolProps {
   };
 }
 
-export interface GlobToolProps extends BaseToolProps {
+export interface GlobToolProps extends BaseToolProps {  // NOTE: Should extend SearchToolProps per SOT, but returns strings not SearchResult[]
   input: {
     pattern: string;
     searchPath?: string;
@@ -216,9 +216,11 @@ export interface LsToolProps extends BaseToolProps {
     ignore?: string[];  // Ignore patterns from fixtures
   };
   
-  results?: FileEntry[];
-  entryCount?: number;  // From fixture data
-  errorMessage?: string;  // Error messages ARE in the data
+  results?: {
+    entries: FileEntry[];
+    entryCount: number;
+    errorMessage?: string;
+  };
   
   ui: {
     totalFiles: number;
@@ -231,20 +233,26 @@ export interface LsToolProps extends BaseToolProps {
 }
 
 export interface TodoReadToolProps extends BaseToolProps {
-  todos: TodoItem[];
+  input?: {
+    // TodoRead has minimal input
+  };
   
-  // Additional metadata from fixtures
-  statusCounts?: {
-    pending: number;
-    in_progress: number;
-    completed: number;
+  results?: {
+    todos: TodoItem[];
+    metadata: {
+      statusCounts?: {
+        pending: number;
+        in_progress: number;
+        completed: number;
+      };
+      priorityCounts?: {
+        high: number;
+        medium: number;
+        low: number;
+      };
+    };
+    errorMessage?: string;
   };
-  priorityCounts?: {
-    high: number;
-    medium: number;
-    low: number;
-  };
-  errorMessage?: string;
   
   ui: {
     totalTodos: number;
@@ -255,13 +263,17 @@ export interface TodoReadToolProps extends BaseToolProps {
 }
 
 export interface TodoWriteToolProps extends BaseToolProps {
-  todos: TodoItem[];
-  changes: TodoChange[];
+  input: {
+    todos: TodoItem[];
+  };
   
-  // Operation details from fixtures
-  operation?: 'create' | 'update' | 'replace' | 'clear';
-  message?: string;  // Success/error message
-  errorMessage?: string;
+  results?: {
+    todos: TodoItem[];
+    changes: TodoChange[];
+    operation?: 'create' | 'update' | 'replace' | 'clear';
+    message?: string;
+    errorMessage?: string;
+  };
   
   ui: {
     totalTodos: number;
@@ -279,7 +291,7 @@ export interface MCPPuppeteerToolProps extends BaseToolProps {
     url?: string;
     selector?: string;
     value?: string;
-    options?: Record<string, any>;
+    options?: Record<string, unknown>;  // SOT compliant: was Record<string, any>
   };
   
   output?: {
@@ -306,7 +318,7 @@ export interface MCPPuppeteerToolProps extends BaseToolProps {
 export interface MCPSequentialThinkingToolProps extends BaseToolProps {
   input: {
     workflow: string;
-    context?: Record<string, any>;
+    context?: Record<string, unknown>;  // SOT compliant: was Record<string, any>
   };
   
   workflow?: {
@@ -444,7 +456,7 @@ export interface WorkflowStep {
   status: ToolStatus;
   progress: number;
   dependencies: string[];
-  output?: any;
+  output?: unknown;  // SOT compliant: was any
   error?: string;
 }
 
@@ -598,7 +610,7 @@ export interface ExitPlanModeToolProps extends BaseToolProps {
 // Generic MCP tool props for unknown MCP tools
 export interface McpToolProps extends BaseToolProps {
   input: {
-    parameters: Record<string, any>;
+    parameters: Record<string, unknown>;  // SOT compliant: was Record<string, any>
   };
   
   results: {

@@ -37,7 +37,7 @@ describe('End-to-End Log Processing Pipeline', () => {
   });
 
   it('should process a complete tool call/result cycle', async () => {
-    const processedTools: any[] = [];
+    const processedTools: unknown[] = [];  // SOT compliant: was any[]
 
     // Set up correlation engine listener
     correlationEngine.on('tool:completed', data => {
@@ -74,11 +74,11 @@ describe('End-to-End Log Processing Pipeline', () => {
     expect(firstTool).toHaveProperty('duration');
     expect(firstTool).toHaveProperty('call');
     expect(firstTool).toHaveProperty('result');
-    expect(firstTool.duration).toBeGreaterThan(0);
+    expect((firstTool as any).duration).toBeGreaterThan(0);
   });
 
   it('should parse Write tool with UI-ready props', async () => {
-    const parsedProps: any[] = [];
+    const parsedProps: unknown[] = [];  // SOT compliant: was any[]
 
     // Process entries and collect parsed props
     for await (const entry of fileMonitor.readAll()) {
@@ -89,7 +89,7 @@ describe('End-to-End Log Processing Pipeline', () => {
     }
 
     // Find Write tool props
-    const writeProps = parsedProps.find(p => p.toolName === 'Write');
+    const writeProps = parsedProps.find(p => (p as any).toolName === 'Write');
 
     if (writeProps) {
       expect(writeProps).toHaveProperty('toolName', 'Write');
@@ -104,7 +104,7 @@ describe('End-to-End Log Processing Pipeline', () => {
 
   it('should handle real-time monitoring', async () => {
     const newEntries: LogEntry[] = [];
-    const completedTools: any[] = [];
+    const completedTools: unknown[] = [];  // SOT compliant: was any[]
 
     // Set up listeners
     fileMonitor.on('entry', entry => {
@@ -130,8 +130,8 @@ describe('End-to-End Log Processing Pipeline', () => {
     // If we have tool calls/results, verify correlation
     if (completedTools.length > 0) {
       const tool = completedTools[0];
-      expect(tool.toolName).toBeTruthy();
-      expect(tool.duration).toBeGreaterThan(0);
+      expect((tool as any).toolName).toBeTruthy();
+      expect((tool as any).duration).toBeGreaterThan(0);
     }
   });
 

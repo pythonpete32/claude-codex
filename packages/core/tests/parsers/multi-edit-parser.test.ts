@@ -38,7 +38,7 @@ interface MultiEditFixture {
       filePath: string;
       edits: EditOperation[];
       originalFileContents: string;
-      structuredPatch: any[];
+      structuredPatch: unknown[];  // SOT compliant: was any[]
       userModified: boolean;
     };
   };

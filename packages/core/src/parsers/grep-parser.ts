@@ -140,7 +140,7 @@ export class GrepToolParser extends BaseToolParser<GrepToolProps> {
     };
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return [
       'basic-parsing',
       'status-mapping',

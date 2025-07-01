@@ -317,7 +317,7 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
     return 'MultiEdit operation failed';
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     // Declare parser capabilities
     return [
       'basic-parsing',

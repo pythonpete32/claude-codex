@@ -30,9 +30,9 @@ interface McpFixture {
     message: {
       content: MessageContent[];
     };
-    toolUseResult?: any;
+    toolUseResult?: unknown;  // SOT compliant: was any
   };
-  expectedComponentData: any;
+  expectedComponentData: unknown;  // SOT compliant: was any
   mcpToolName?: string;
 }
 

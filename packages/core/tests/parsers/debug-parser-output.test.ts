@@ -52,8 +52,8 @@ describe('Debug Parser Outputs', () => {
     console.log('MultiEditToolParser output:', JSON.stringify(result, null, 2));
 
     // Log what we're actually getting
-    console.log('editsApplied value:', result.editsApplied);
-    console.log('message value:', result.message);
+    console.log('editsApplied value:', result.results?.editsApplied);
+    console.log('message value:', result.results?.message);
     console.log('input structure:', result.input);
     console.log('ui structure:', result.ui);
 

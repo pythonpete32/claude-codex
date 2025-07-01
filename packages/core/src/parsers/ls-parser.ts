@@ -373,7 +373,7 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
     return 'Failed to list directory';
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     // Declare parser capabilities
     return [
       'basic-parsing',

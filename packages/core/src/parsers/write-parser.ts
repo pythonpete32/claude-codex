@@ -131,7 +131,7 @@ export class WriteToolParser extends BaseToolParser<WriteToolProps> {
     return typeMap[ext || ''] || 'plaintext';
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return [
       'basic-parsing',
       'status-mapping',

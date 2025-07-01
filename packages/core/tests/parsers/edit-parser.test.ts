@@ -281,20 +281,18 @@ describe('EditToolParser - Fixture-Based Testing', () => {
           parentUuid: 'error-uuid',
           type: 'assistant',
           isSidechain: false,
-          message: {
-            content: [
-              {
-                type: 'tool_use',
-                id: 'error-tool-id',
-                name: 'Edit',
-                input: {
-                  file_path: '/nonexistent/file.ts',
-                  old_string: 'old text',
-                  new_string: 'new text',
-                },
+          content: [
+            {
+              type: 'tool_use' as const,
+              id: 'error-tool-id',
+              name: 'Edit',
+              input: {
+                file_path: '/nonexistent/file.ts',
+                old_string: 'old text',
+                new_string: 'new text',
               },
-            ],
-          },
+            },
+          ],
         },
         toolResult: {
           uuid: 'error-result-uuid',
@@ -302,16 +300,14 @@ describe('EditToolParser - Fixture-Based Testing', () => {
           parentUuid: 'error-uuid',
           type: 'user',
           isSidechain: false,
-          message: {
-            content: [
-              {
-                type: 'tool_result',
-                tool_use_id: 'error-tool-id',
-                output: 'File not found: /nonexistent/file.ts',
-                is_error: true,
-              },
-            ],
-          },
+          content: [
+            {
+              type: 'tool_result' as const,
+              tool_use_id: 'error-tool-id',
+              output: 'File not found: /nonexistent/file.ts',
+              is_error: true,
+            },
+          ],
         },
         expectedComponentData: {
           id: 'error-tool-id',

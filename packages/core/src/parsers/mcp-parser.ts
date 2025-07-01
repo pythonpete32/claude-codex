@@ -314,7 +314,7 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
     return 'Unknown MCP error';
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     // Declare parser capabilities
     return [
       'basic-parsing',

@@ -1,4 +1,4 @@
-import type { BashFixture, FixtureData, LogEntry } from '@claude-codex/types';
+import type { BashFixture, FixtureData, LogEntry, MessageContent } from '@claude-codex/types';
 import { beforeEach, describe, expect, test } from 'vitest';
 import { BashToolParser } from '../../src/parsers/bash-parser';
 import {
@@ -347,7 +347,7 @@ describe('BashToolParser - Fixture-Based Testing', () => {
             type: 'tool_use',
             id: 'test-tool-id',
             name: 'Bash',
-            input: undefined as unknown,
+            input: undefined,
           },
         ],
       };
@@ -413,7 +413,7 @@ describe('BashToolParser - Fixture-Based Testing', () => {
         parentUuid: errorFixture.toolCall.parentUuid,
         type: errorFixture.toolCall.type as 'assistant',
         isSidechain: errorFixture.toolCall.isSidechain,
-        content: errorFixture.toolCall.message.content,
+        content: errorFixture.toolCall.message.content as MessageContent[],
       };
 
       // Transform with error handling
@@ -423,7 +423,7 @@ describe('BashToolParser - Fixture-Based Testing', () => {
         parentUuid: errorFixture.toolResult.parentUuid,
         type: errorFixture.toolResult.type as 'user',
         isSidechain: errorFixture.toolResult.isSidechain,
-        content: errorFixture.toolResult.message.content,
+        content: errorFixture.toolResult.message.content as MessageContent[],
       };
 
       // For error cases, transform to include stderr

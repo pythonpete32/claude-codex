@@ -162,15 +162,15 @@ describe('LsToolParser - Fixture-Based Testing', () => {
 
       // Verify results
       expect(result.results).toBeDefined();
-      expect(result.results.length).toBe(12);
-      expect(result.entryCount).toBe(12);
+      expect(result.results!.entries.length).toBe(12);
+      expect(result.results!.entryCount).toBe(12);
 
       // Check some specific files
-      const sampleFile = result.results.find(r => r.name === 'sample.txt');
+      const sampleFile = result.results!.entries.find(r => r.name === 'sample.txt');
       expect(sampleFile).toBeDefined();
       expect(sampleFile?.type).toBe('file');
 
-      const subdir = result.results.find(r => r.name === 'subdir');
+      const subdir = result.results!.entries.find(r => r.name === 'subdir');
       expect(subdir).toBeDefined();
       expect(subdir?.type).toBe('directory');
 
@@ -190,7 +190,7 @@ describe('LsToolParser - Fixture-Based Testing', () => {
 
       // Should parse the tree-like output format
       expect(result.status.normalized).toBe('completed');
-      expect(result.results.length).toBe(12);
+      expect(result.results!.entries.length).toBe(12);
     });
   });
 
@@ -296,7 +296,7 @@ describe('LsToolParser - Fixture-Based Testing', () => {
             type: 'tool_use',
             id: 'test-tool-id',
             name: 'LS',
-            input: undefined as unknown,
+            input: undefined,
           },
         ],
       };
@@ -454,10 +454,10 @@ describe('LsToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, malformedResult);
 
-      expect(result.results).toHaveLength(2);
-      expect(result.results[0].name).toBe('test.txt'); // filename → name
-      expect(result.results[0].type).toBe('file'); // default
-      expect(result.results[1].name).toBe('valid.txt');
+      expect(result.results?.entries).toHaveLength(2);
+      expect(result.results!.entries[0].name).toBe('test.txt'); // filename → name
+      expect(result.results!.entries[0].type).toBe('file'); // default
+      expect(result.results!.entries[1].name).toBe('valid.txt');
     });
 
     test('should infer file types from names', () => {
@@ -498,9 +498,9 @@ describe('LsToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, typeInferenceResult);
 
-      expect(result.results[0].type).toBe('directory');
-      expect(result.results[1].type).toBe('directory');
-      expect(result.results[2].type).toBe('file');
+      expect(result.results!.entries[0].type).toBe('directory');
+      expect(result.results!.entries[1].type).toBe('directory');
+      expect(result.results!.entries[2].type).toBe('file');
     });
 
     test('should parse string output format', () => {
@@ -537,10 +537,10 @@ describe('LsToolParser - Fixture-Based Testing', () => {
       const result = parser.parse(toolCall, stringOutputResult);
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.results).toHaveLength(2);
-      expect(result.results[0].name).toBe('package.json');
-      expect(result.results[0].size).toBe(1024);
-      expect(result.results[1].type).toBe('directory');
+      expect(result.results?.entries).toHaveLength(2);
+      expect(result.results!.entries[0].name).toBe('package.json');
+      expect(result.results!.entries[0].size).toBe(1024);
+      expect(result.results!.entries[1].type).toBe('directory');
     });
   });
 

@@ -5,7 +5,7 @@ import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import * as chokidar from 'chokidar';
-import type { LogEntry } from '@claude-codex/types';
+import type { LogEntry, MessageContent } from '@claude-codex/types';
 import { createChildLogger } from '@claude-codex/utils';
 import type {
   MonitorOptions,
@@ -401,7 +401,7 @@ export class FileMonitor extends EventEmitter {
       timestamp: raw.timestamp,
       type: raw.type,
       content: content as string | MessageContent | MessageContent[],
-      isSidechain: raw.isSidechain ?? false,
+      isSidechain: Boolean(raw.isSidechain) ?? false,
     };
   }
 

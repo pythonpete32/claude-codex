@@ -82,8 +82,8 @@ export interface ParserMetadata {
  */
 export interface ParseError extends Error {
   readonly code: ParseErrorCode;
-  readonly fixture?: any;
-  readonly context?: Record<string, any>;
+  readonly fixture?: unknown;  // SOT compliant: was any
+  readonly context?: Record<string, unknown>;  // SOT compliant: was Record<string, any>
 }
 
 /**
@@ -93,8 +93,8 @@ export class ParseErrorImpl extends Error implements ParseError {
   constructor(
     message: string,
     public readonly code: ParseErrorCode,
-    public readonly fixture?: any,
-    public readonly context?: Record<string, any>
+    public readonly fixture?: unknown,  // SOT compliant: was any
+    public readonly context?: Record<string, unknown>  // SOT compliant: was Record<string, any>
   ) {
     super(message);
     this.name = "ParseError";
@@ -140,14 +140,14 @@ export interface BaseFixtureData {
     tool: {
       id: string;
       name: string;
-      input: Record<string, any>;
+      input: Record<string, unknown>;  // SOT compliant: was Record<string, any>
     };
   };
   toolResult?: {
     uuid?: string;
     timestamp?: string;
     toolUseId: string;
-    output?: any;
+    output?: unknown;  // SOT compliant: was any
     isError?: boolean;
     error?: string;
     stdout?: string;

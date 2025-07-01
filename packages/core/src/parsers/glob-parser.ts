@@ -79,7 +79,7 @@ export class GlobToolParser extends BaseToolParser<GlobToolProps> {
     return [];
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return [
       'basic-parsing',
       'status-mapping',

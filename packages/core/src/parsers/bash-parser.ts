@@ -146,7 +146,7 @@ export class BashToolParser extends BaseToolParser<BashToolProps> {
     };
   }
 
-  protected getSupportedFeatures(): string[] {
+  public getSupportedFeatures(): string[] {
     return [
       'basic-parsing',
       'status-mapping',
