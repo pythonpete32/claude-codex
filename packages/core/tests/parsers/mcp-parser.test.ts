@@ -30,9 +30,9 @@ interface McpFixture {
     message: {
       content: MessageContent[];
     };
-    toolUseResult?: unknown;  // SOT compliant: was any
+    toolUseResult?: unknown; // SOT compliant: was any
   };
-  expectedComponentData: unknown;  // SOT compliant: was any
+  expectedComponentData: unknown; // SOT compliant: was any
   mcpToolName?: string;
 }
 
@@ -78,7 +78,8 @@ describe('McpToolParser - Fixture-Based Testing', () => {
 
     // Add toolUseResult if it exists (for parser to extract)
     if (fixture.toolResult.toolUseResult) {
-      (baseEntry as any).toolUseResult = fixture.toolResult.toolUseResult;
+      (baseEntry as unknown as Record<string, unknown>).toolUseResult =
+        fixture.toolResult.toolUseResult;
     }
 
     return baseEntry;
@@ -135,8 +136,9 @@ describe('McpToolParser - Fixture-Based Testing', () => {
         expect(result.ui.serverName).toBe('mcp_excalidraw');
 
         // Extract method from tool name
-        const toolContent = fixture.toolCall.message.content[0] as any;
-        const methodMatch = toolContent.name.match(/__([^_]+)$/);
+        const toolContent = fixture.toolCall.message
+          .content[0] as unknown as Record<string, unknown>;
+        const methodMatch = (toolContent.name as string).match(/__([^_]+)$/);
         if (methodMatch) {
           expect(result.ui.methodName).toBe(methodMatch[1]);
         }
@@ -425,7 +427,7 @@ describe('McpToolParser - Fixture-Based Testing', () => {
             type: 'tool_use',
             id: 'test-id',
             name: 'mcp__test__method',
-            input: undefined as any,
+            input: {} as Record<string, unknown>,
           },
         ],
       };

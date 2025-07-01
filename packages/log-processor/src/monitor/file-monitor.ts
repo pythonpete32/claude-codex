@@ -4,13 +4,13 @@ import { readdir, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
-import * as chokidar from 'chokidar';
 import type { LogEntry, MessageContent } from '@claude-codex/types';
 import { createChildLogger } from '@claude-codex/utils';
+import * as chokidar from 'chokidar';
 import type {
-  MonitorOptions,
   ActiveSession,
   LogMonitorEvents,
+  MonitorOptions,
   RawLogEntry,
 } from '../types.js';
 
@@ -144,6 +144,13 @@ export class FileMonitor extends EventEmitter {
       lastModified: session.lastModified,
       isActive: now - session.lastModified.getTime() < this.activeThresholdMs,
     }));
+  }
+
+  /**
+   * Check if the monitor is currently watching for changes.
+   */
+  get isWatchingFiles(): boolean {
+    return this.isWatching;
   }
 
   /**
@@ -346,17 +353,17 @@ export class FileMonitor extends EventEmitter {
     }
     // Handle Unix paths (e.g., -Users becomes /Users)
     else if (decoded.startsWith('-')) {
-      decoded = '/' + decoded.slice(1);
+      decoded = `/${decoded.slice(1)}`;
     }
 
-    // Replace double dashes with dots first
-    decoded = decoded.replace(/--/g, '\u0000DOT\u0000');
+    // Replace double dashes with dots first (using safe placeholder)
+    decoded = decoded.replace(/--/g, '__TEMP_DOT_PLACEHOLDER__');
 
     // Replace remaining dashes with slashes
     decoded = decoded.replace(/-/g, '/');
 
     // Replace placeholder with dots
-    decoded = decoded.replace(/\u0000DOT\u0000/g, '.');
+    decoded = decoded.replace(/__TEMP_DOT_PLACEHOLDER__/g, '.');
 
     return decoded;
   }

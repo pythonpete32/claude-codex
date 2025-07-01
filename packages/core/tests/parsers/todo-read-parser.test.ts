@@ -106,7 +106,8 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
     // Add toolUseResult if it exists (for parser to extract)
     if (fixture.toolResult.toolUseResult) {
-      (baseEntry as any).toolUseResult = fixture.toolResult.toolUseResult;
+      (baseEntry as unknown as Record<string, unknown>).toolUseResult =
+        fixture.toolResult.toolUseResult;
     }
 
     return baseEntry;
@@ -137,7 +138,7 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
         expect(result.status.normalized).toBe(expected.status.normalized);
         // Note: mapFromError returns 'success' for original when no error
         expect(result.status.original).toBe('success');
-        expect(result.todos.length).toBe(expected.todos.length);
+        expect(result.results?.todos.length).toBe(expected.todos.length);
       }
     });
 
@@ -151,11 +152,11 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       // Verify successful execution
       expect(result.status.normalized).toBe('completed');
-      expect(result.todos).toBeDefined();
-      expect(result.todos.length).toBe(6);
+      expect(result.results?.todos).toBeDefined();
+      expect(result.results?.todos.length).toBe(6);
 
       // Check some specific todos
-      const firstTodo = result.todos.find(t => t.id === '1');
+      const firstTodo = result.results?.todos.find(t => t.id === '1');
       expect(firstTodo).toBeDefined();
       expect(firstTodo?.content).toBe(
         'Create comprehensive checklist of all tools and functions'
@@ -163,17 +164,19 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
       expect(firstTodo?.status).toBe('completed');
       expect(firstTodo?.priority).toBe('high');
 
-      const inProgressTodo = result.todos.find(t => t.status === 'in_progress');
+      const inProgressTodo = result.results?.todos.find(
+        t => t.status === 'in_progress'
+      );
       expect(inProgressTodo).toBeDefined();
       expect(inProgressTodo?.content).toBe(
         'Systematically call all safe built-in tools to generate logs'
       );
 
       // Verify counts
-      expect(result.statusCounts).toBeDefined();
-      expect(result.statusCounts?.completed).toBe(4);
-      expect(result.statusCounts?.in_progress).toBe(1);
-      expect(result.statusCounts?.pending).toBe(1);
+      expect(result.results?.metadata.statusCounts).toBeDefined();
+      expect(result.results?.metadata.statusCounts?.completed).toBe(4);
+      expect(result.results?.metadata.statusCounts?.in_progress).toBe(1);
+      expect(result.results?.metadata.statusCounts?.pending).toBe(1);
 
       // Verify UI helpers
       expect(result.ui.totalTodos).toBe(6);
@@ -192,7 +195,7 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
       const result = parser.parse(toolCallEntry, toolResultEntry);
 
       expect(result.status.normalized).toBe('completed');
-      expect(result.todos.length).toBe(6);
+      expect(result.results?.todos.length).toBe(6);
     });
   });
 
@@ -264,8 +267,8 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
       // Parse without result
       const result = parser.parse(toolCallEntry);
       expect(result.status.normalized).toBe('pending');
-      expect(result.todos).toEqual([]);
-      expect(result.errorMessage).toBeUndefined();
+      expect(result.results?.todos).toEqual([]);
+      expect(result.results?.errorMessage).toBeUndefined();
     });
 
     test('should handle empty todo list', () => {
@@ -300,7 +303,7 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, emptyResult);
       expect(result.status.normalized).toBe('completed');
-      expect(result.todos).toEqual([]);
+      expect(result.results?.todos).toEqual([]);
       expect(result.ui.totalTodos).toBe(0);
     });
 
@@ -336,8 +339,10 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, errorResult);
       expect(result.status.normalized).toBe('failed');
-      expect(result.errorMessage).toBe('Failed to access todo storage');
-      expect(result.todos).toEqual([]);
+      expect(result.results?.errorMessage).toBe(
+        'Failed to access todo storage'
+      );
+      expect(result.results?.todos).toEqual([]);
     });
 
     test('should handle interrupted operations', () => {
@@ -372,7 +377,7 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, interruptedResult);
       expect(result.status.normalized).toBe('interrupted');
-      expect(result.todos).toEqual([]);
+      expect(result.results?.todos).toEqual([]);
     });
 
     test('should parse string output format (markdown)', () => {
@@ -409,16 +414,18 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, markdownResult);
       expect(result.status.normalized).toBe('completed');
-      expect(result.todos).toHaveLength(3);
+      expect(result.results?.todos).toHaveLength(3);
 
       // Check parsed todos from markdown
-      expect(result.todos[0].content).toBe('Implement user authentication');
-      expect(result.todos[0].status).toBe('pending');
-      expect(result.todos[0].priority).toBe('high');
+      expect(result.results?.todos[0].content).toBe(
+        'Implement user authentication'
+      );
+      expect(result.results?.todos[0].status).toBe('pending');
+      expect(result.results?.todos[0].priority).toBe('high');
 
-      expect(result.todos[1].content).toBe('Write unit tests for API');
-      expect(result.todos[1].status).toBe('completed');
-      expect(result.todos[1].priority).toBe('medium');
+      expect(result.results?.todos[1].content).toBe('Write unit tests for API');
+      expect(result.results?.todos[1].status).toBe('completed');
+      expect(result.results?.todos[1].priority).toBe('medium');
     });
   });
 
@@ -462,10 +469,10 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, variousStatusResult);
 
-      expect(result.todos[0].status).toBe('in_progress');
-      expect(result.todos[1].status).toBe('completed');
-      expect(result.todos[2].status).toBe('pending');
-      expect(result.todos[3].status).toBe('completed');
+      expect(result.results?.todos[0].status).toBe('in_progress');
+      expect(result.results?.todos[1].status).toBe('completed');
+      expect(result.results?.todos[2].status).toBe('pending');
+      expect(result.results?.todos[3].status).toBe('completed');
     });
 
     test('should normalize different priority formats', () => {
@@ -507,10 +514,10 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, variousPriorityResult);
 
-      expect(result.todos[0].priority).toBe('high');
-      expect(result.todos[1].priority).toBe('high');
-      expect(result.todos[2].priority).toBe('low');
-      expect(result.todos[3].priority).toBe('medium'); // default
+      expect(result.results?.todos[0].priority).toBe('high');
+      expect(result.results?.todos[1].priority).toBe('high');
+      expect(result.results?.todos[2].priority).toBe('low');
+      expect(result.results?.todos[3].priority).toBe('medium'); // default
     });
 
     test('should handle alternative field names', () => {
@@ -561,12 +568,14 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, alternativeFieldsResult);
 
-      expect(result.todos).toHaveLength(2);
-      expect(result.todos[0].content).toBe('Alternative content field');
-      expect(result.todos[0].createdAt).toBe('2025-06-25T10:00:00Z');
-      expect(result.todos[1].content).toBe('Another content field');
-      expect(result.todos[1].updatedAt).toBe('2025-06-25T12:00:00Z');
-      expect(result.todos[1].completedAt).toBe('2025-06-25T15:00:00Z');
+      expect(result.results?.todos).toHaveLength(2);
+      expect(result.results?.todos[0].content).toBe(
+        'Alternative content field'
+      );
+      expect(result.results?.todos[0].createdAt).toBe('2025-06-25T10:00:00Z');
+      expect(result.results?.todos[1].content).toBe('Another content field');
+      expect(result.results?.todos[1].updatedAt).toBe('2025-06-25T12:00:00Z');
+      expect(result.results?.todos[1].completedAt).toBe('2025-06-25T15:00:00Z');
     });
 
     test('should parse numbered format from string output', () => {
@@ -603,13 +612,13 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, numberedResult);
 
-      expect(result.todos).toHaveLength(3);
-      expect(result.todos[0].content).toBe('Implement authentication');
-      expect(result.todos[0].priority).toBe('high');
-      expect(result.todos[1].content).toBe('Write tests');
-      expect(result.todos[1].priority).toBe('medium');
-      expect(result.todos[2].content).toBe('Deploy application');
-      expect(result.todos[2].priority).toBe('medium'); // default
+      expect(result.results?.todos).toHaveLength(3);
+      expect(result.results?.todos[0].content).toBe('Implement authentication');
+      expect(result.results?.todos[0].priority).toBe('high');
+      expect(result.results?.todos[1].content).toBe('Write tests');
+      expect(result.results?.todos[1].priority).toBe('medium');
+      expect(result.results?.todos[2].content).toBe('Deploy application');
+      expect(result.results?.todos[2].priority).toBe('medium'); // default
     });
 
     test('should handle tags in todo items', () => {
@@ -660,8 +669,8 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, tagsResult);
 
-      expect(result.todos[0].tags).toEqual(['frontend', 'urgent']); // filtered strings only
-      expect(result.todos[1].tags).toBeUndefined(); // no tags field in source data
+      expect(result.results?.todos[0].tags).toEqual(['frontend', 'urgent']); // filtered strings only
+      expect(result.results?.todos[1].tags).toBeUndefined(); // no tags field in source data
     });
   });
 

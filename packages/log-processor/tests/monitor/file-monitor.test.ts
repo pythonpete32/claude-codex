@@ -1,9 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { FileMonitor } from '../../src/monitor/file-monitor.js';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
 import type { LogEntry } from '@claude-codex/types';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { FileMonitor } from '../../src/monitor/file-monitor.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -76,9 +75,15 @@ describe('FileMonitor', () => {
       expect(Array.isArray(assistantWithTool!.content)).toBe(true);
 
       const content = assistantWithTool!.content;
-      const toolUse = Array.isArray(content) ? content.find(
-        (c: unknown) => typeof c === 'object' && c !== null && 'type' in c && (c as { type: string }).type === 'tool_use'
-      ) : undefined;
+      const toolUse = Array.isArray(content)
+        ? content.find(
+            (c: unknown) =>
+              typeof c === 'object' &&
+              c !== null &&
+              'type' in c &&
+              (c as { type: string }).type === 'tool_use'
+          )
+        : undefined;
       expect(toolUse).toBeDefined();
       expect(toolUse).toHaveProperty('type', 'tool_use');
       expect(toolUse).toHaveProperty('name');
@@ -125,7 +130,7 @@ describe('FileMonitor', () => {
 
       // The watcher might not emit for existing files on startup
       // Let's just verify the watcher is set up correctly
-      expect(monitor['isWatching']).toBe(true);
+      expect(monitor.isWatchingFiles).toBe(true);
 
       // Clean up
       await monitor.stopWatching();

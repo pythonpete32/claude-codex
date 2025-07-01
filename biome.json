@@ -13,7 +13,8 @@
       "!**/.next",
       "!**/coverage",
       "!**/*.min.js",
-      "!**/LEGACY/**"
+      "!**/LEGACY/**",
+      "!**/bash-tool.json"
     ],
     "ignoreUnknown": false
   },

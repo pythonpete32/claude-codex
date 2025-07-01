@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { createChildLogger } from '@claude-codex/utils';
@@ -285,17 +285,17 @@ export class ProjectResolver {
     }
     // Handle Unix paths (e.g., -Users becomes /Users)
     else if (decoded.startsWith('-')) {
-      decoded = '/' + decoded.slice(1);
+      decoded = `/${decoded.slice(1)}`;
     }
 
     // Replace double dashes with dots first (before single dash replacement)
-    decoded = decoded.replace(/--/g, '\u0000DOT\u0000'); // Temporary placeholder
+    decoded = decoded.replace(/--/g, '__TEMP_DOT_PLACEHOLDER__'); // Safe temporary placeholder
 
     // Replace remaining dashes with slashes
     decoded = decoded.replace(/-/g, '/');
 
     // Replace placeholder with dots
-    decoded = decoded.replace(/\u0000DOT\u0000/g, '.');
+    decoded = decoded.replace(/__TEMP_DOT_PLACEHOLDER__/g, '.');
 
     return decoded;
   }

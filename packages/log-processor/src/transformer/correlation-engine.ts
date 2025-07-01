@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
+import type { ParserRegistry } from '@claude-codex/core';
 import type { LogEntry, MessageContent } from '@claude-codex/types';
 import { createChildLogger } from '@claude-codex/utils';
-import { ParserRegistry } from '@claude-codex/core';
 
 // Define specific content types based on MessageContent
 type ToolUse = MessageContent & {
@@ -15,10 +15,11 @@ type ToolResult = MessageContent & {
   type: 'tool_result';
   tool_use_id: string;
 };
+
 import type {
-  PendingCorrelation,
   CorrelationEngineEvents,
   CorrelationEngineOptions,
+  PendingCorrelation,
 } from '../types.js';
 
 // Create logger for this module

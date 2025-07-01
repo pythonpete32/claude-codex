@@ -1,9 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { ProjectResolver } from '../../src/services/project-resolver.js';
-import { join } from 'node:path';
-import { mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { ProjectResolver } from '../../src/services/project-resolver.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,13 +31,12 @@ describe('ProjectResolver', () => {
       await mkdir(projectDir, { recursive: true });
 
       // Create a log file with cwd information
-      const logContent =
-        JSON.stringify({
-          uuid: 'test-001',
-          type: 'user',
-          cwd: '/Users/john/projects',
-          timestamp: '2024-01-01T00:00:00Z',
-        }) + '\n';
+      const logContent = `${JSON.stringify({
+        uuid: 'test-001',
+        type: 'user',
+        cwd: '/Users/john/projects',
+        timestamp: '2024-01-01T00:00:00Z',
+      })}\n`;
 
       await writeFile(join(projectDir, 'session.jsonl'), logContent);
 

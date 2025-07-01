@@ -1,4 +1,9 @@
-import type { BashFixture, FixtureData, LogEntry, MessageContent } from '@claude-codex/types';
+import type {
+  BashFixture,
+  FixtureData,
+  LogEntry,
+  MessageContent,
+} from '@claude-codex/types';
 import { beforeEach, describe, expect, test } from 'vitest';
 import { BashToolParser } from '../../src/parsers/bash-parser';
 import {

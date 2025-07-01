@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FileMonitor } from '../../src/monitor/file-monitor.js';
-import { CorrelationEngine } from '../../src/transformer/correlation-engine.js';
 import { ParserRegistry } from '@claude-codex/core';
 import type { LogEntry } from '@claude-codex/types';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { FileMonitor } from '../../src/monitor/file-monitor.js';
+import { CorrelationEngine } from '../../src/transformer/correlation-engine.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -37,7 +37,7 @@ describe('End-to-End Log Processing Pipeline', () => {
   });
 
   it('should process a complete tool call/result cycle', async () => {
-    const processedTools: unknown[] = [];  // SOT compliant: was any[]
+    const processedTools: unknown[] = []; // SOT compliant: was any[]
 
     // Set up correlation engine listener
     correlationEngine.on('tool:completed', data => {
@@ -74,11 +74,11 @@ describe('End-to-End Log Processing Pipeline', () => {
     expect(firstTool).toHaveProperty('duration');
     expect(firstTool).toHaveProperty('call');
     expect(firstTool).toHaveProperty('result');
-    expect((firstTool as any).duration).toBeGreaterThan(0);
+    expect((firstTool as Record<string, unknown>).duration).toBeGreaterThan(0);
   });
 
   it('should parse Write tool with UI-ready props', async () => {
-    const parsedProps: unknown[] = [];  // SOT compliant: was any[]
+    const parsedProps: unknown[] = []; // SOT compliant: was any[]
 
     // Process entries and collect parsed props
     for await (const entry of fileMonitor.readAll()) {
@@ -89,7 +89,9 @@ describe('End-to-End Log Processing Pipeline', () => {
     }
 
     // Find Write tool props
-    const writeProps = parsedProps.find(p => (p as any).toolName === 'Write');
+    const writeProps = parsedProps.find(
+      p => (p as Record<string, unknown>).toolName === 'Write'
+    );
 
     if (writeProps) {
       expect(writeProps).toHaveProperty('toolName', 'Write');
@@ -104,7 +106,7 @@ describe('End-to-End Log Processing Pipeline', () => {
 
   it('should handle real-time monitoring', async () => {
     const newEntries: LogEntry[] = [];
-    const completedTools: unknown[] = [];  // SOT compliant: was any[]
+    const completedTools: unknown[] = []; // SOT compliant: was any[]
 
     // Set up listeners
     fileMonitor.on('entry', entry => {
@@ -130,8 +132,8 @@ describe('End-to-End Log Processing Pipeline', () => {
     // If we have tool calls/results, verify correlation
     if (completedTools.length > 0) {
       const tool = completedTools[0];
-      expect((tool as any).toolName).toBeTruthy();
-      expect((tool as any).duration).toBeGreaterThan(0);
+      expect((tool as Record<string, unknown>).toolName).toBeTruthy();
+      expect((tool as Record<string, unknown>).duration).toBeGreaterThan(0);
     }
   });
 

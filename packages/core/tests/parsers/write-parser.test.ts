@@ -34,7 +34,7 @@ interface WriteFixture {
       type: string;
       filePath: string;
       content: string;
-      structuredPatch: unknown[];  // SOT compliant: was any[]
+      structuredPatch: unknown[]; // SOT compliant: was any[]
     };
   };
   expectedComponentData: {

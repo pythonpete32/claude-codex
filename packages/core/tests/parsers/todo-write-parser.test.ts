@@ -172,15 +172,15 @@ describe('TodoWriteToolParser', () => {
       expect(result.timestamp).toBe('2025-06-25T18:20:11.465Z');
 
       // Check input structure
-      expect(result.todos).toEqual(sampleTodos);
-      expect(result.changes).toHaveLength(3); // Should create changes for all todos
+      expect(result.input.todos).toEqual(sampleTodos);
+      expect(result.results?.changes).toHaveLength(3); // Should create changes for all todos
 
       // Check status
       expect(result.status.normalized).toBe('completed');
-      expect(result.errorMessage).toBeUndefined();
+      expect(result.results?.errorMessage).toBeUndefined();
 
       // Check operation type determination
-      expect(result.operation).toBe('create'); // All new todos
+      expect(result.results?.operation).toBe('create'); // All new todos
 
       // Check UI helpers
       expect(result.ui.totalTodos).toBe(3);
@@ -203,9 +203,13 @@ describe('TodoWriteToolParser', () => {
       expect(result.ui.deletedCount).toBe(0);
 
       // Check change tracking
-      expect(result.changes).toHaveLength(3); // 2 added + 1 updated
-      expect(result.changes.filter(c => c.type === 'add')).toHaveLength(2);
-      expect(result.changes.filter(c => c.type === 'update')).toHaveLength(1);
+      expect(result.results?.changes).toHaveLength(3); // 2 added + 1 updated
+      expect(
+        result.results?.changes.filter(c => c.type === 'add')
+      ).toHaveLength(2);
+      expect(
+        result.results?.changes.filter(c => c.type === 'update')
+      ).toHaveLength(1);
     });
 
     test('should NOT extract counts from string messages (avoid anti-pattern)', () => {
@@ -220,7 +224,7 @@ describe('TodoWriteToolParser', () => {
       expect(result.ui.modifiedCount).toBe(0);
       expect(result.ui.deletedCount).toBe(0);
       // But should preserve the message for display
-      expect(result.message).toBe(
+      expect(result.results?.message).toBe(
         'Added 2 todos, updated 1 todo, failed to process 1 todo'
       );
     });
@@ -241,10 +245,10 @@ describe('TodoWriteToolParser', () => {
 
       const result = parser.parse(sampleTodoWriteEmptyCall, emptyResult);
 
-      expect(result.operation).toBe('clear');
-      expect(result.todos).toEqual([]);
+      expect(result.results?.operation).toBe('clear');
+      expect(result.input.todos).toEqual([]);
       expect(result.ui.totalTodos).toBe(0);
-      expect(result.changes).toEqual([]);
+      expect(result.results?.changes).toEqual([]);
     });
 
     test('should parse error result', () => {
@@ -254,7 +258,7 @@ describe('TodoWriteToolParser', () => {
       );
 
       expect(result.status.normalized).toBe('failed');
-      expect(result.errorMessage).toBe(
+      expect(result.results?.errorMessage).toBe(
         'Failed to access todo storage: Permission denied'
       );
       expect(result.ui.writtenCount).toBe(0);
@@ -265,7 +269,7 @@ describe('TodoWriteToolParser', () => {
 
       expect(result.status.normalized).toBe('pending');
       expect(result.ui.writtenCount).toBe(0);
-      expect(result.errorMessage).toBeUndefined();
+      expect(result.results?.errorMessage).toBeUndefined();
     });
 
     test('should handle interrupted operations', () => {
@@ -323,7 +327,7 @@ describe('TodoWriteToolParser', () => {
       };
 
       const result = parser.parse(createCall); // No result needed for operation detection
-      expect(result.operation).toBe('create');
+      expect(result.results?.operation).toBe('create');
     });
 
     test('should detect update operation for existing todos', () => {
@@ -351,7 +355,7 @@ describe('TodoWriteToolParser', () => {
       };
 
       const result = parser.parse(updateCall); // No result needed for operation detection
-      expect(result.operation).toBe('update');
+      expect(result.results?.operation).toBe('update');
     });
 
     test('should detect replace operation for mixed todos', () => {
@@ -385,7 +389,7 @@ describe('TodoWriteToolParser', () => {
       };
 
       const result = parser.parse(replaceCall); // No result needed for operation detection
-      expect(result.operation).toBe('replace');
+      expect(result.results?.operation).toBe('replace');
     });
   });
 
@@ -396,10 +400,10 @@ describe('TodoWriteToolParser', () => {
         sampleTodoWriteDetailedResult
       );
 
-      const addChanges = result.changes.filter(c => c.type === 'add');
+      const addChanges = result.results?.changes.filter(c => c.type === 'add');
       expect(addChanges).toHaveLength(2);
-      expect(addChanges[0].newValue).toEqual(sampleTodos[0]);
-      expect(addChanges[0].todoId).toBe('todo-1');
+      expect(addChanges?.[0].newValue).toEqual(sampleTodos[0]);
+      expect(addChanges?.[0].todoId).toBe('todo-1');
     });
 
     test('should create synthetic changes for update operations', () => {
@@ -408,10 +412,12 @@ describe('TodoWriteToolParser', () => {
         sampleTodoWriteDetailedResult
       );
 
-      const updateChanges = result.changes.filter(c => c.type === 'update');
+      const updateChanges = result.results?.changes.filter(
+        c => c.type === 'update'
+      );
       expect(updateChanges).toHaveLength(1);
-      expect(updateChanges[0].newValue).toEqual(sampleTodos[2]); // 3rd todo (index 2 after 2 adds)
-      expect(updateChanges[0].oldValue?.content).toBe('Previous content');
+      expect(updateChanges?.[0].newValue).toEqual(sampleTodos[2]); // 3rd todo (index 2 after 2 adds)
+      expect(updateChanges?.[0].oldValue?.content).toBe('Previous content');
     });
 
     test('should create synthetic changes for delete operations', () => {
@@ -434,10 +440,12 @@ describe('TodoWriteToolParser', () => {
 
       const result = parser.parse(sampleTodoWriteToolCall, deleteResult);
 
-      const deleteChanges = result.changes.filter(c => c.type === 'delete');
+      const deleteChanges = result.results?.changes.filter(
+        c => c.type === 'delete'
+      );
       expect(deleteChanges).toHaveLength(2);
-      expect(deleteChanges[0].todoId).toBe('removed-0');
-      expect(deleteChanges[0].oldValue?.content).toBe('Removed item');
+      expect(deleteChanges?.[0].todoId).toBe('removed-0');
+      expect(deleteChanges?.[0].oldValue?.content).toBe('Removed item');
     });
   });
 
@@ -456,9 +464,9 @@ describe('TodoWriteToolParser', () => {
       };
 
       const result = parser.parse(noTodosEntry);
-      expect(result.todos).toEqual([]);
+      expect(result.input.todos).toEqual([]);
       expect(result.ui.totalTodos).toBe(0);
-      expect(result.operation).toBe('clear');
+      expect(result.results?.operation).toBe('clear');
     });
 
     test('should handle malformed structured output', () => {
@@ -509,7 +517,7 @@ describe('TodoWriteToolParser', () => {
       expect(result.ui.modifiedCount).toBe(0);
       expect(result.ui.deletedCount).toBe(0);
       // But should preserve the message for display
-      expect(result.message).toBe(
+      expect(result.results?.message).toBe(
         'Operation completed: 5 todos written, 3 todos added, 2 todos updated, 1 todo removed'
       );
     });

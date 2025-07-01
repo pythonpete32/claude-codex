@@ -1,23 +1,45 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { CorrelationEngine } from '../../src/transformer/correlation-engine.js';
 // import { ParserRegistry } from '@claude-codex/core';
+
+import type { ParserRegistry } from '@claude-codex/core';
 import type { LogEntry } from '@claude-codex/types';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { CorrelationEngine } from '../../src/transformer/correlation-engine.js';
 import type { CorrelationEngineEvents } from '../../src/types.js';
 
 describe('CorrelationEngine', () => {
   let engine: CorrelationEngine;
-  let mockParserRegistry: { getForEntry: ReturnType<typeof vi.fn> };
+  let mockParserRegistry: ParserRegistry;
 
   beforeEach(() => {
-    // Create a mock parser registry
-    mockParserRegistry = {
-      getForEntry: vi.fn().mockReturnValue({
-        parse: vi.fn().mockResolvedValue({
-          toolName: 'Mock Tool',
-          status: 'completed',
-        }),
+    // Create a complete mock parser registry matching the ParserRegistry interface
+    const mockParser = {
+      parse: vi.fn().mockResolvedValue({
+        toolName: 'Mock Tool',
+        status: 'completed',
+      }),
+      canParse: vi.fn().mockReturnValue(true),
+      getMetadata: vi.fn().mockReturnValue({
+        name: 'MockParser',
+        version: '1.0.0',
+        toolType: 'test',
       }),
     };
+
+    mockParserRegistry = {
+      // Required properties from ParserRegistry interface
+      parsers: new Map([['bash', mockParser]]),
+      mcpParser: mockParser,
+      register: vi.fn(),
+      get: vi.fn().mockReturnValue(mockParser),
+      getForEntry: vi.fn().mockReturnValue(mockParser),
+      list: vi.fn().mockReturnValue([mockParser.getMetadata()]),
+      parse: vi.fn().mockReturnValue({
+        toolName: 'Mock Tool',
+        status: 'completed',
+      }),
+      canParse: vi.fn().mockReturnValue(true),
+      extractToolName: vi.fn().mockReturnValue('Bash'),
+    } as unknown as ParserRegistry;
 
     engine = new CorrelationEngine(mockParserRegistry, {
       timeoutMs: 100, // 100ms for testing

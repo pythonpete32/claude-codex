@@ -111,7 +111,8 @@ describe('LsToolParser - Fixture-Based Testing', () => {
 
     // Add toolUseResult if it exists (for parser to extract)
     if (fixture.toolResult.toolUseResult) {
-      (baseEntry as any).toolUseResult = fixture.toolResult.toolUseResult;
+      (baseEntry as unknown as Record<string, unknown>).toolUseResult =
+        fixture.toolResult.toolUseResult;
     }
 
     return baseEntry;
@@ -142,7 +143,7 @@ describe('LsToolParser - Fixture-Based Testing', () => {
         expect(result.status.normalized).toBe(expected.status.normalized);
         // Note: mapFromError returns 'success' for original when no error
         expect(result.status.original).toBe('success');
-        expect(result.entryCount).toBe(expected.entryCount);
+        expect(result.results?.entryCount).toBe(expected.entryCount);
       }
     });
 
@@ -166,7 +167,9 @@ describe('LsToolParser - Fixture-Based Testing', () => {
       expect(result.results!.entryCount).toBe(12);
 
       // Check some specific files
-      const sampleFile = result.results!.entries.find(r => r.name === 'sample.txt');
+      const sampleFile = result.results!.entries.find(
+        r => r.name === 'sample.txt'
+      );
       expect(sampleFile).toBeDefined();
       expect(sampleFile?.type).toBe('file');
 
@@ -262,8 +265,8 @@ describe('LsToolParser - Fixture-Based Testing', () => {
       // Parse without result
       const result = parser.parse(toolCallEntry);
       expect(result.status.normalized).toBe('pending');
-      expect(result.results).toEqual([]);
-      expect(result.errorMessage).toBeUndefined();
+      expect(result.results?.entries).toEqual([]);
+      expect(result.results?.errorMessage).toBeUndefined();
     });
 
     test('should handle missing path parameter', () => {
@@ -375,9 +378,11 @@ describe('LsToolParser - Fixture-Based Testing', () => {
       const result = parser.parse(toolCallEntry, toolResultEntry);
 
       expect(result.status.normalized).toBe('failed');
-      expect(result.errorMessage).toBe('Permission denied: /root/private');
-      expect(result.results).toEqual([]);
-      expect(result.entryCount).toBe(0);
+      expect(result.results?.errorMessage).toBe(
+        'Permission denied: /root/private'
+      );
+      expect(result.results?.entries).toEqual([]);
+      expect(result.results?.entryCount).toBe(0);
     });
 
     test('should handle interrupted operations', () => {

@@ -38,7 +38,7 @@ interface MultiEditFixture {
       filePath: string;
       edits: EditOperation[];
       originalFileContents: string;
-      structuredPatch: unknown[];  // SOT compliant: was any[]
+      structuredPatch: unknown[]; // SOT compliant: was any[]
       userModified: boolean;
     };
   };
@@ -116,7 +116,8 @@ describe('MultiEditToolParser - Fixture-Based Testing', () => {
 
     // Add toolUseResult if it exists (for parser to extract)
     if (fixture.toolResult.toolUseResult) {
-      (baseEntry as any).toolUseResult = fixture.toolResult.toolUseResult;
+      (baseEntry as unknown as Record<string, unknown>).toolUseResult =
+        fixture.toolResult.toolUseResult;
     }
 
     return baseEntry;

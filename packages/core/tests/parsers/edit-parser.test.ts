@@ -260,7 +260,7 @@ describe('EditToolParser - Fixture-Based Testing', () => {
             type: 'tool_use',
             id: 'test-tool-id',
             name: 'Edit',
-            input: undefined as any,
+            input: {} as Record<string, unknown>,
           },
         ],
       };
@@ -281,18 +281,36 @@ describe('EditToolParser - Fixture-Based Testing', () => {
           parentUuid: 'error-uuid',
           type: 'assistant',
           isSidechain: false,
-          content: [
-            {
-              type: 'tool_use' as const,
-              id: 'error-tool-id',
-              name: 'Edit',
-              input: {
-                file_path: '/nonexistent/file.ts',
-                old_string: 'old text',
-                new_string: 'new text',
+          userType: 'human',
+          cwd: '/test',
+          sessionId: 'test-session',
+          version: '1.0.0',
+          requestId: 'test-request',
+          message: {
+            id: 'msg-id',
+            type: 'message',
+            role: 'assistant',
+            model: 'claude-3',
+            content: [
+              {
+                type: 'tool_use' as const,
+                id: 'error-tool-id',
+                name: 'Edit',
+                input: {
+                  file_path: '/nonexistent/file.ts',
+                  old_string: 'old text',
+                  new_string: 'new text',
+                },
               },
+            ],
+            usage: {
+              input_tokens: 100,
+              cache_creation_input_tokens: 0,
+              cache_read_input_tokens: 0,
+              output_tokens: 50,
+              service_tier: 'default',
             },
-          ],
+          },
         },
         toolResult: {
           uuid: 'error-result-uuid',
@@ -300,14 +318,21 @@ describe('EditToolParser - Fixture-Based Testing', () => {
           parentUuid: 'error-uuid',
           type: 'user',
           isSidechain: false,
-          content: [
-            {
-              type: 'tool_result' as const,
-              tool_use_id: 'error-tool-id',
-              output: 'File not found: /nonexistent/file.ts',
-              is_error: true,
-            },
-          ],
+          userType: 'human',
+          cwd: '/test',
+          sessionId: 'test-session',
+          version: '1.0.0',
+          message: {
+            role: 'user',
+            content: [
+              {
+                type: 'tool_result' as const,
+                tool_use_id: 'error-tool-id',
+                output: 'File not found: /nonexistent/file.ts',
+                is_error: true,
+              },
+            ],
+          },
         },
         expectedComponentData: {
           id: 'error-tool-id',
@@ -449,7 +474,7 @@ describe('EditToolParser - Fixture-Based Testing', () => {
 
   describe('feature support', () => {
     test('should declare supported features', () => {
-      const features = (parser as any).getSupportedFeatures();
+      const features = parser.getSupportedFeatures();
       expect(features).toContain('basic-parsing');
       expect(features).toContain('status-mapping');
       expect(features).toContain('diff-generation');

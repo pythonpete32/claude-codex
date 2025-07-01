@@ -48,7 +48,7 @@ export class McpToolParser extends BaseToolParser<McpToolProps> {
 
     if (!toolUse || toolUse.type !== 'tool_use') {
       throw new ParseErrorImpl(
-        `No MCP tool_use block found`,
+        'No MCP tool_use block found',
         'MISSING_REQUIRED_FIELD',
         entry
       );
