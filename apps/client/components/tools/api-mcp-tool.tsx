@@ -5,7 +5,8 @@ import { TerminalText } from "@/shared/terminal-styles"
 import { Badge } from "@/components/ui/badge"
 
 export const ApiMcpTool = createApiToolComponent((props) => {
-  const { toolType, props: toolProps } = props.parsedProps
+  const { toolType } = props.parsedProps
+  const toolProps = props.parsedProps.props
 
   // Extract server and method names
   const parts = toolType.split('__')

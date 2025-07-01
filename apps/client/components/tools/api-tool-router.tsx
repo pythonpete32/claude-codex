@@ -16,7 +16,8 @@ interface ToolRouterProps {
 
 // Generic fallback tool for unsupported tool types
 const ApiFallbackTool = createApiToolComponent((props) => {
-  const { toolType, props: toolProps } = props.parsedProps
+  const { toolType } = props.parsedProps
+  const toolProps = props.parsedProps.props
 
   return {
     renderCommand: () => toolType,

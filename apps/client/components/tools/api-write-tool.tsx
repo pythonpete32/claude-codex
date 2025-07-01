@@ -5,7 +5,7 @@ import { TerminalText } from "@/shared/terminal-styles"
 import { Badge } from "@/components/ui/badge"
 
 export const ApiWriteTool = createApiToolComponent((props) => {
-  const { toolProps } = props.parsedProps.props
+  const toolProps = props.parsedProps.props
 
   return {
     renderCommand: () => `write ${toolProps.filePath || ''}`,
@@ -52,7 +52,7 @@ export const ApiWriteTool = createApiToolComponent((props) => {
         <span className="font-mono">{props.parsedProps.correlationId.substring(0, 8)}...</span>
       </div>
     ),
-    shouldFold: () => (toolProps.content || '').length > 1000,
+    shouldFold: () => (toolProps?.content || '').length > 1000,
     maxHeight: "400px",
     showCopyButton: true,
   }
