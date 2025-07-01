@@ -8,95 +8,17 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ArrowLeft, RefreshCw, MessageSquare, Wrench, User, Bot, AlertCircle } from "lucide-react"
 import { ParsedProps, HistoryEntry } from "@/lib/api-client"
+import { ApiToolRouter } from "@/components/tools/api-tool-router"
 
 function formatTimestamp(timestamp: string) {
   return new Date(timestamp).toLocaleString()
 }
 
-function ToolDisplay({ parsedProps }: { parsedProps: ParsedProps }) {
-  const { toolType, props, correlationId } = parsedProps
-
+function ToolDisplay({ parsedProps, timestamp }: { parsedProps: ParsedProps; timestamp: string }) {
   return (
-    <Card className="ml-8">
-      <CardContent className="p-4">
-        <div className="space-y-3">
-          {/* Tool Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Wrench className="h-4 w-4" />
-              <Badge variant="outline">{toolType}</Badge>
-              <span className="text-sm text-muted-foreground">
-                {props.status?.normalized || 'unknown'}
-              </span>
-            </div>
-            <span className="text-xs text-muted-foreground font-mono">
-              {correlationId.substring(0, 8)}...
-            </span>
-          </div>
-
-          {/* Tool Input/Command */}
-          {props.command && (
-            <div className="bg-muted p-3 rounded font-mono text-sm">
-              <div className="text-muted-foreground mb-1">Command:</div>
-              <div>{props.command}</div>
-            </div>
-          )}
-
-          {props.filePath && (
-            <div className="bg-muted p-3 rounded font-mono text-sm">
-              <div className="text-muted-foreground mb-1">File:</div>
-              <div>{props.filePath}</div>
-            </div>
-          )}
-
-          {props.pattern && (
-            <div className="bg-muted p-3 rounded font-mono text-sm">
-              <div className="text-muted-foreground mb-1">Pattern:</div>
-              <div>{props.pattern}</div>
-            </div>
-          )}
-
-          {/* Tool Output */}
-          {props.output && (
-            <div className="space-y-2">
-              <div className="text-sm font-medium">Output:</div>
-              <div className="bg-black text-green-400 p-3 rounded font-mono text-sm whitespace-pre-wrap max-h-60 overflow-y-auto">
-                {props.output}
-              </div>
-            </div>
-          )}
-
-          {props.content && (
-            <div className="space-y-2">
-              <div className="text-sm font-medium">Content:</div>
-              <div className="bg-muted p-3 rounded font-mono text-sm whitespace-pre-wrap max-h-60 overflow-y-auto">
-                {props.content}
-              </div>
-            </div>
-          )}
-
-          {/* Results for complex tools */}
-          {props.results && (
-            <div className="space-y-2">
-              <div className="text-sm font-medium">Results:</div>
-              <div className="bg-muted p-3 rounded">
-                <pre className="text-sm overflow-x-auto">
-                  {JSON.stringify(props.results, null, 2)}
-                </pre>
-              </div>
-            </div>
-          )}
-
-          {/* Tool Metadata */}
-          <div className="text-xs text-muted-foreground border-t pt-2 grid grid-cols-2 gap-2">
-            <div>Duration: {props.duration || 0}ms</div>
-            <div>Status: {props.status?.original || 'unknown'}</div>
-            {props.exitCode !== undefined && <div>Exit Code: {props.exitCode}</div>}
-            {props.totalLines && <div>Lines: {props.totalLines}</div>}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="ml-8">
+      <ApiToolRouter parsedProps={parsedProps} timestamp={timestamp} />
+    </div>
   )
 }
 
@@ -167,7 +89,7 @@ function MessageDisplay({ entry }: { entry: HistoryEntry }) {
 
       {/* Show parsed props if available */}
       {entry.parsedProps && (
-        <ToolDisplay parsedProps={entry.parsedProps} />
+        <ToolDisplay parsedProps={entry.parsedProps} timestamp={entry.timestamp} />
       )}
     </div>
   )
