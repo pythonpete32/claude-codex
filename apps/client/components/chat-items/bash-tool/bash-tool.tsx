@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { motion, type MotionProps } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Terminal, Clock, CheckCircle, XCircle, Copy, Play, Square } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect } from "react";
+import { motion, type MotionProps } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Terminal,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Copy,
+  Play,
+  Square,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TypingAnimationProps extends MotionProps {
   children: string;
@@ -19,11 +27,11 @@ interface AnimatedSpanProps extends MotionProps {
   className?: string;
 }
 
-const AnimatedSpan: React.FC<AnimatedSpanProps> = ({ 
-  children, 
-  delay = 0, 
-  className, 
-  ...props 
+const AnimatedSpan: React.FC<AnimatedSpanProps> = ({
+  children,
+  delay = 0,
+  className,
+  ...props
 }) => (
   <motion.div
     initial={{ opacity: 0, y: -5 }}
@@ -36,13 +44,13 @@ const AnimatedSpan: React.FC<AnimatedSpanProps> = ({
   </motion.div>
 );
 
-const TypingAnimation: React.FC<TypingAnimationProps> = ({ 
-  children, 
-  className, 
-  duration = 60, 
-  delay = 0, 
-  as: Component = "span", 
-  ...props 
+const TypingAnimation: React.FC<TypingAnimationProps> = ({
+  children,
+  className,
+  duration = 60,
+  delay = 0,
+  as: Component = "span",
+  ...props
 }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [isComplete, setIsComplete] = useState(false);
@@ -50,12 +58,12 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!children) return;
-      
+
       let currentIndex = 0;
       const interval = setInterval(() => {
         setDisplayedText(children.slice(0, currentIndex + 1));
         currentIndex++;
-        
+
         if (currentIndex >= children.length) {
           clearInterval(interval);
           setIsComplete(true);
@@ -69,10 +77,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
   }, [children, duration, delay]);
 
   return (
-    <Component
-      className={cn("font-mono", className)}
-      {...props}
-    >
+    <Component className={cn("font-mono", className)} {...props}>
       {displayedText}
       {!isComplete && <span className="animate-pulse">|</span>}
     </Component>
@@ -83,7 +88,7 @@ export interface BashToolProps {
   command: string;
   description?: string;
   output?: string;
-  status?: 'pending' | 'running' | 'completed' | 'error';
+  status?: "pending" | "running" | "completed" | "error";
   duration?: number;
   timestamp?: string;
   showCopyButton?: boolean;
@@ -97,7 +102,7 @@ export const BashTool: React.FC<BashToolProps> = ({
   command,
   description,
   output,
-  status = 'completed',
+  status = "completed",
   duration,
   timestamp,
   showCopyButton = true,
@@ -108,13 +113,13 @@ export const BashTool: React.FC<BashToolProps> = ({
 }) => {
   const getStatusIcon = () => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return <Clock className="h-3 w-3 text-yellow-400" />;
-      case 'running':
+      case "running":
         return <Play className="h-3 w-3 text-blue-400 animate-pulse" />;
-      case 'completed':
+      case "completed":
         return <CheckCircle className="h-3 w-3 text-green-400" />;
-      case 'error':
+      case "error":
         return <XCircle className="h-3 w-3 text-red-400" />;
       default:
         return <Terminal className="h-3 w-3 text-gray-400" />;
@@ -123,16 +128,16 @@ export const BashTool: React.FC<BashToolProps> = ({
 
   const getStatusColor = () => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-900/20 text-yellow-300 border-yellow-500/30';
-      case 'running':
-        return 'bg-blue-900/20 text-blue-300 border-blue-500/30';
-      case 'completed':
-        return 'bg-green-900/20 text-green-300 border-green-500/30';
-      case 'error':
-        return 'bg-red-900/20 text-red-300 border-red-500/30';
+      case "pending":
+        return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30";
+      case "running":
+        return "bg-blue-900/20 text-blue-300 border-blue-500/30";
+      case "completed":
+        return "bg-green-900/20 text-green-300 border-green-500/30";
+      case "error":
+        return "bg-red-900/20 text-red-300 border-red-500/30";
       default:
-        return 'bg-gray-900/20 text-gray-300 border-gray-500/30';
+        return "bg-gray-900/20 text-gray-300 border-gray-500/30";
     }
   };
 
@@ -142,31 +147,36 @@ export const BashTool: React.FC<BashToolProps> = ({
   };
 
   return (
-    <div className={cn(
-      "z-0 h-full w-full max-w-4xl rounded-xl border border-border bg-black/95 backdrop-blur-sm shadow-2xl",
-      className
-    )}>
+    <div
+      className={cn(
+        "z-0 h-full w-full max-w-4xl rounded-xl border border-border bg-black/95 backdrop-blur-sm shadow-2xl",
+        className
+      )}
+    >
       {/* Terminal Header */}
       <div className="flex items-center justify-between border-b border-gray-700 p-4">
         <div className="flex items-center gap-x-3">
           <div className="flex flex-row gap-x-2">
-            <div className="h-3 w-3 rounded-full bg-red-500"></div>
-            <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-            <div className="h-3 w-3 rounded-full bg-green-500"></div>
+            <div className="h-3 w-3 rounded-full bg-red-500" />
+            <div className="h-3 w-3 rounded-full bg-yellow-500" />
+            <div className="h-3 w-3 rounded-full bg-green-500" />
           </div>
           <div className="flex items-center gap-2 text-gray-300">
             <Terminal className="h-4 w-4" />
             <span className="text-sm font-medium">bash</span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Badge variant="outline" className={getStatusColor()}>
             {getStatusIcon()}
             <span className="ml-1 capitalize text-xs">{status}</span>
           </Badge>
           {duration && (
-            <Badge variant="secondary" className="bg-gray-800 text-gray-300 border-gray-600">
+            <Badge
+              variant="secondary"
+              className="bg-gray-800 text-gray-300 border-gray-600"
+            >
               <Clock className="h-3 w-3 mr-1" />
               {duration}ms
             </Badge>
@@ -191,12 +201,8 @@ export const BashTool: React.FC<BashToolProps> = ({
             user@atomic-codex:~$
           </AnimatedSpan>
           <div className="flex-1 flex items-center justify-between">
-            {animated && status === 'running' ? (
-              <TypingAnimation 
-                duration={50} 
-                delay={500}
-                className="text-white"
-              >
+            {animated && status === "running" ? (
+              <TypingAnimation duration={50} delay={500} className="text-white">
                 {command}
               </TypingAnimation>
             ) : (
@@ -204,7 +210,7 @@ export const BashTool: React.FC<BashToolProps> = ({
                 {command}
               </AnimatedSpan>
             )}
-            
+
             <div className="flex items-center gap-1 ml-4">
               {showCopyButton && (
                 <Button
@@ -223,7 +229,7 @@ export const BashTool: React.FC<BashToolProps> = ({
                   onClick={onRun}
                   className="h-6 w-6 p-0 text-gray-400 hover:text-green-400 hover:bg-gray-700"
                 >
-                  {status === 'running' ? (
+                  {status === "running" ? (
                     <Square className="h-3 w-3" />
                   ) : (
                     <Play className="h-3 w-3" />
@@ -238,9 +244,9 @@ export const BashTool: React.FC<BashToolProps> = ({
         {output && (
           <AnimatedSpan delay={800} className="block">
             <div className="text-gray-300 whitespace-pre-wrap break-words">
-              {animated && (status === 'running' || status === 'completed') ? (
-                <TypingAnimation 
-                  duration={20} 
+              {animated && (status === "running" || status === "completed") ? (
+                <TypingAnimation
+                  duration={20}
                   delay={1000}
                   className="text-gray-300"
                 >
@@ -254,18 +260,16 @@ export const BashTool: React.FC<BashToolProps> = ({
         )}
 
         {/* Status indicator for running commands */}
-        {status === 'running' && !output && (
+        {status === "running" && !output && (
           <AnimatedSpan delay={1000} className="text-blue-400">
-            <TypingAnimation duration={200}>
-              Executing...
-            </TypingAnimation>
+            <TypingAnimation duration={200}>Executing...</TypingAnimation>
           </AnimatedSpan>
         )}
 
         {/* New prompt line after completion */}
-        {(status === 'completed' || status === 'error') && (
-          <AnimatedSpan 
-            delay={output ? 2000 : 1200} 
+        {(status === "completed" || status === "error") && (
+          <AnimatedSpan
+            delay={output ? 2000 : 1200}
             className="flex items-center gap-2 mt-4 text-green-400"
           >
             <span>user@atomic-codex:~$</span>
