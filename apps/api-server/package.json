@@ -1,0 +1,45 @@
+{
+  "name": "@claude-codex/api-server",
+  "version": "0.1.0",
+  "description": "REST API and WebSocket server for Claude conversation logs",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "dev": "bun run --watch src/server.ts",
+    "start": "bun run src/server.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "check": "bun run typecheck && bun run lint",
+    "prepublish": "bun run check && bun test",
+    "publish:jsr": "jsr publish"
+  },
+  "dependencies": {
+    "elysia": "^1.1.0",
+    "@elysiajs/cors": "^1.1.0",
+    "@elysiajs/swagger": "^1.1.0",
+    // "@dao/codex-log-monitor": "workspace:*",
+    // "@dao/transformer": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.0.0",
+    "@biomejs/biome": "latest"
+  },
+  "keywords": [
+    "dao",
+    "codex",
+    "api",
+    "claude",
+    "logs",
+    "websocket"
+  ]
+}
