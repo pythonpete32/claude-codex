@@ -1,2 +1,1 @@
-export { BashTool } from "./bash-tool";
-export type { BashToolProps } from "./bash-tool";
+export { BashTool, type BashToolProps } from './bash-tool';
