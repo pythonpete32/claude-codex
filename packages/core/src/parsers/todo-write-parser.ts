@@ -82,14 +82,18 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
       ...baseProps,
       status,
 
-      // Todos and changes
-      todos: todos || [],
-      changes,
+      // Input - structured per SOT
+      input: {
+        todos: todos || [],
+      },
 
-      // Operation details from fixtures
-      operation,
-      message,
-      errorMessage,
+      // Results - structured per SOT
+      results: {
+        changes,
+        operation,
+        message,
+        errorMessage,
+      },
 
       // UI helpers with statistics
       ui: {

@@ -36,21 +36,22 @@
 ### A. Parser Implementation Violations (3 files, 11 violations)
 
 #### ls-parser.ts
-- [ ] Line 79: Change `results: files.map(...)` to `results: { entries: files.map(...), entryCount, errorMessage }`
-- [ ] Update pending status to return `results: { entries: [], entryCount: 0 }`
-- [ ] Update error cases to use structured results
+- [x] Line 79: Change `results: files.map(...)` to `results: { entries: files.map(...), entryCount, errorMessage }` ✅ [06:47]
+- [x] Update pending status to return `results: { entries: [], entryCount: 0 }` ✅ [06:47]
+- [x] Update error cases to use structured results ✅ [06:47]
 
 #### todo-read-parser.ts  
-- [ ] Line 78: Change flat return to `results: { todos, metadata: { statusCounts, priorityCounts }, errorMessage }`
-- [ ] Update pending status to return proper empty structure
-- [ ] Update error cases to use structured results
-- [ ] Update all return statements to use new structure
+- [x] Line 78: Change flat return to `results: { todos, metadata: { statusCounts, priorityCounts }, errorMessage }` ✅ [06:48]
+- [x] Update pending status to return proper empty structure ✅ [06:48]
+- [x] Update error cases to use structured results ✅ [06:48]
+- [x] Update all return statements to use new structure ✅ [06:48]
 
 #### todo-write-parser.ts
-- [ ] Line 86: Change flat return to use `input: { todos }` and `results: { changes, operation, message }`
-- [ ] Update pending status to return proper empty structure
-- [ ] Update error cases to use structured results
-- [ ] Update all return statements to use new structure
+- [x] Line 86: Change flat return to use `input: { todos }` and `results: { changes, operation, message }` ✅ [06:49]
+- [x] Update pending status to return proper empty structure ✅ [06:49]
+- [x] Update error cases to use structured results ✅ [06:49]
+- [x] Update all return statements to use new structure ✅ [06:49]
+- [x] Fixed TodoWriteToolProps type definition to remove `todos` from results ✅ [06:49]
 
 ### B. Forbidden `as any` Usage (7 files, 13 violations)
 
@@ -288,6 +289,12 @@
 - 🚨 **[06:20]** Discovered ~100+ new errors - parser implementations don't match types
 - 🚨 **[06:25]** Realized need for Phase 5 - must align implementations with types
 - ✅ **[06:32]** Updated tracking document with all problems/solutions
+- ✅ **[06:47]** Fixed ls-parser.ts to use structured results format
+- ✅ **[06:48]** Fixed todo-read-parser.ts to use structured results with metadata
+- ✅ **[06:49]** Fixed todo-write-parser.ts to use structured input/results
+- 🚨 **[06:49]** Discovered TodoWriteToolProps type definition had `todos` in results (SOT violation)
+- ✅ **[06:49]** Fixed TodoWriteToolProps type definition to be SOT compliant
+- ✅ **[06:50]** All parser implementation errors resolved (11/11 fixed)
 
 #### Key Insights
 - **[05:30]** Most errors stem from Phase 2 fixture type changes not fully propagated to tests

@@ -74,13 +74,15 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
       ...baseProps,
       status,
 
-      // Todos array
-      todos: items,
-
-      // Additional metadata from fixtures
-      statusCounts,
-      priorityCounts,
-      errorMessage,
+      // Results - structured per SOT
+      results: {
+        todos: items,
+        metadata: {
+          statusCounts,
+          priorityCounts,
+        },
+        errorMessage,
+      },
 
       // UI helpers with statistics
       ui: {

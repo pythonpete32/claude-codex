@@ -268,7 +268,6 @@ export interface TodoWriteToolProps extends BaseToolProps {
   };
   
   results?: {
-    todos: TodoItem[];
     changes: TodoChange[];
     operation?: 'create' | 'update' | 'replace' | 'clear';
     message?: string;

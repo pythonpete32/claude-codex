@@ -75,17 +75,19 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
         ignore,
       },
 
-      // Results - renamed from entries to results per SOT
-      results: files.map(file => ({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        permissions: file.permissions,
-        lastModified: file.modified,
-        isHidden: file.name.startsWith('.'),
-      })),
-      entryCount,
-      errorMessage,
+      // Results - structured per SOT
+      results: {
+        entries: files.map(file => ({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          permissions: file.permissions,
+          lastModified: file.modified,
+          isHidden: file.name.startsWith('.'),
+        })),
+        entryCount,
+        errorMessage,
+      },
 
       // UI helpers
       ui: {
