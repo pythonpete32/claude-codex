@@ -1,0 +1,1 @@
+export { ChartAreaInteractive } from "./chart-area-interactive"

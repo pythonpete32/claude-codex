@@ -1,0 +1,35 @@
+import type { StorybookConfig } from '@storybook/react-vite';
+import path from 'path';
+
+const config: StorybookConfig = {
+  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)', '../src/**/*.mdx'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-links',
+  ],
+  framework: {
+    name: '@storybook/react-vite',
+    options: {},
+  },
+  typescript: {
+    check: false,
+    reactDocgen: false,
+    reactDocgenTypescriptOptions: {
+      skipChildrenPropWithoutDoc: false,
+    },
+  },
+  viteFinal: async (config) => {
+    return {
+      ...config,
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          '@': path.resolve(__dirname, '../src'),
+        },
+      },
+    };
+  },
+};
+
+export default config;
