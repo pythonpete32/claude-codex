@@ -31,9 +31,7 @@ export class HistoryReader {
 		// Convert content to MessageContent format
 		let content: string | MessageContent | MessageContent[];
 
-		if (typeof apiEntry.content === "string") {
-			content = apiEntry.content;
-		} else if (apiEntry.toolUse) {
+		if (apiEntry.toolUse) {
 			// Convert toolUse to MessageContent
 			const messageContent: MessageContent = {
 				type: "tool_use",
@@ -57,6 +55,9 @@ export class HistoryReader {
 			} else {
 				content = messageContent;
 			}
+		} else if (Array.isArray(apiEntry.content)) {
+			// Already in MessageContent[] format
+			content = apiEntry.content as MessageContent[];
 		} else {
 			// Handle structured content - already validated as string | object
 			content = apiEntry.content as unknown as
@@ -154,89 +155,106 @@ export class HistoryReader {
 	 * Parse raw JSONL entry into LogEntry format
 	 */
 	private static parseLogEntry(raw: unknown): ApiLogEntry | null {
+		// Type guard for basic structure
+		if (!raw || typeof raw !== "object") {
+			return null;
+		}
+		
+		const rawEntry = raw as Record<string, unknown>;
 		try {
 			// Extract basic fields
 			const entry: ApiLogEntry = {
-				uuid: raw.uuid,
-				parentUuid: raw.parentUuid || undefined,
-				sessionId: raw.sessionId,
-				timestamp: raw.timestamp,
-				type: raw.type === "assistant" ? "assistant" : "user",
+				uuid: rawEntry.uuid as string,
+				parentUuid: (rawEntry.parentUuid as string) || undefined,
+				sessionId: rawEntry.sessionId as string,
+				timestamp: rawEntry.timestamp as string,
+				type: rawEntry.type === "assistant" ? "assistant" : "user",
 				content: "",
-				isSidechain: raw.isSidechain || false,
+				isSidechain: (rawEntry.isSidechain as boolean) || false,
 			};
 
 			// Process content based on message structure
-			if (raw.message) {
+			if (rawEntry.message) {
+				const message = rawEntry.message as Record<string, unknown>;
 				// Handle structured message content
-				if (Array.isArray(raw.message.content)) {
-					// Multiple content blocks (text + tool usage)
-					const textBlocks = raw.message.content
-						.filter((block: unknown) => block.type === "text")
-						.map((block: unknown) => block.text);
-
-					const toolUses = raw.message.content.filter(
-						(block: unknown) => block.type === "tool_use",
+				if (Array.isArray(message.content)) {
+					// Check if this is a tool result message
+					const hasToolResult = message.content.some(
+						(block: unknown) => (block as Record<string, unknown>)?.type === "tool_result"
 					);
 
-					// Set main content to text
-					entry.content = textBlocks.join("\n") || "";
+					if (hasToolResult) {
+						// Keep the content as-is for proper parsing
+						entry.content = message.content;
+					} else {
+						// Multiple content blocks (text + tool usage)
+						const textBlocks = message.content
+							.filter((block: unknown) => (block as Record<string, unknown>)?.type === "text")
+							.map((block: unknown) => (block as Record<string, unknown>).text as string);
 
-					// Add tool usage information
-					if (toolUses.length > 0) {
-						const toolUse = toolUses[0]; // Take first tool use
-						entry.toolUse = {
-							id: toolUse.id,
-							name: toolUse.name,
-							input: toolUse.input,
-							status: "pending", // Will be updated when result comes
-						};
+						const toolUses = message.content.filter(
+							(block: unknown) => (block as Record<string, unknown>)?.type === "tool_use",
+						);
+
+						// Set main content to text
+						entry.content = textBlocks.join("\n") || "";
+
+						// Add tool usage information
+						if (toolUses.length > 0) {
+							const toolUse = toolUses[0] as Record<string, unknown>; // Take first tool use
+							entry.toolUse = {
+								id: toolUse.id as string,
+								name: toolUse.name as string,
+								input: toolUse.input as Record<string, unknown>,
+								status: "pending", // Will be updated when result comes
+							};
+						}
 					}
-				} else if (typeof raw.message.content === "string") {
+				} else if (typeof message.content === "string") {
 					// Simple string content
-					entry.content = raw.message.content;
-				} else if (raw.message.content?.text) {
-					// Single text block
-					entry.content = raw.message.content.text;
+					entry.content = message.content;
+				} else if (message.content && typeof message.content === "object") {
+					const content = message.content as Record<string, unknown>;
+					if (content.text) {
+						// Single text block
+						entry.content = content.text as string;
+					}
 				}
-			} else if (typeof raw.content === "string") {
+			} else if (typeof rawEntry.content === "string") {
 				// Direct content field
-				entry.content = raw.content;
+				entry.content = rawEntry.content;
 			}
 
 			// Handle tool results
-			if (raw.toolUseResult && entry.toolUse) {
-				entry.toolUse.result = raw.toolUseResult;
+			if (rawEntry.toolUseResult && entry.toolUse) {
+				entry.toolUse.result = rawEntry.toolUseResult;
 				entry.toolUse.status = "completed";
 			}
 
 			// Handle tool result messages (user messages with tool_result)
-			if (raw.message?.content && Array.isArray(raw.message.content)) {
-				const toolResults = raw.message.content.filter(
-					(block: unknown) => block.type === "tool_result",
-				);
+			if (rawEntry.message) {
+				const message = rawEntry.message as Record<string, unknown>;
+				if (message.content && Array.isArray(message.content)) {
+					const toolResults = message.content.filter(
+						(block: unknown) => (block as Record<string, unknown>)?.type === "tool_result",
+					);
 
-				if (toolResults.length > 0) {
-					const toolResult = toolResults[0];
-					entry.toolUse = {
-						id: toolResult.tool_use_id,
-						name: "unknown", // Tool name not available in result
-						input: {},
-						result: toolResult.content,
-						status: toolResult.is_error ? "failed" : "completed",
-					};
+					if (toolResults.length > 0) {
+						// Don't create a toolUse field for tool results - they are already in content
+						// The transformation service will handle correlation
+					}
 				}
 			}
 
 			// Validate required fields
 			if (!entry.uuid || !entry.sessionId || !entry.timestamp) {
-				console.warn("Invalid log entry missing required fields:", raw);
+				console.warn("Invalid log entry missing required fields:", rawEntry);
 				return null;
 			}
 
 			return entry;
 		} catch (error) {
-			console.warn("Failed to parse log entry:", error, raw);
+			console.warn("Failed to parse log entry:", error, rawEntry);
 			return null;
 		}
 	}
@@ -390,7 +408,7 @@ export class HistoryReader {
 						Array.isArray(parsed.message.content)
 					) {
 						const hasToolUse = parsed.message.content.some(
-							(block: unknown) => block.type === "tool_use",
+							(block: unknown) => (block as Record<string, unknown>)?.type === "tool_use",
 						);
 						if (hasToolUse) {
 							toolUsages++;

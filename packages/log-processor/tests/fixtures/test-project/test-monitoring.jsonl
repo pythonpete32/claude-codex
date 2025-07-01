@@ -1,0 +1,2 @@
+{"type":"user","uuid":"test-1","timestamp":"2025-06-30T12:00:00.000Z","message":{"content":[{"type":"text","text":"Test"}]}}
+{"type":"assistant","uuid":"test-2","timestamp":"2025-06-30T12:00:01.000Z","message":{"content":[{"type":"text","text":"Response"}]}}

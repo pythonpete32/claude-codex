@@ -5,18 +5,19 @@ This document provides step-by-step instructions for manually testing the Claude
 ## Prerequisites
 
 - Ensure you have `curl` and `jq` installed
-- The API server should be running on port 3456
+- The API server should be running on port 3001
 - You need Claude Code log files in `~/.claude/projects/`
 
 ## Starting the API Server
 
 ```bash
 # From the repository root
-cd apps/api-server
-bun run dev
+bun dev
 
 # Expected output:
-# 🦊 Elysia is running at localhost:3456
+# 🚀 Claude Conversation Log API server running at http://localhost:3001
+# 📚 API documentation available at http://localhost:3001/api/swagger
+# 💡 Health check: http://localhost:3001/api/health
 ```
 
 ## Test Cases
@@ -26,7 +27,7 @@ bun run dev
 **Test the server is running and healthy:**
 
 ```bash
-curl -s http://localhost:3456/health | jq '.'
+curl -s http://localhost:3001/api/health | jq '.'
 ```
 
 **Expected Response:**
@@ -48,7 +49,7 @@ curl -s http://localhost:3456/health | jq '.'
 **Get all available sessions:**
 
 ```bash
-curl -s http://localhost:3456/sessions | jq '.'
+curl -s http://localhost:3001/api/sessions | jq '.'
 ```
 
 **Expected Response:**
@@ -85,10 +86,10 @@ curl -s http://localhost:3456/sessions | jq '.'
 
 ```bash
 # First, get a session ID from the list
-SESSION_ID=$(curl -s http://localhost:3456/sessions | jq -r '.sessions[0].id')
+SESSION_ID=$(curl -s http://localhost:3001/api/sessions | jq -r '.sessions[0].id')
 
 # Then fetch its details
-curl -s http://localhost:3456/sessions/$SESSION_ID | jq '.'
+curl -s http://localhost:3001/api/sessions/$SESSION_ID | jq '.'
 ```
 
 **Expected Response:**
@@ -108,11 +109,11 @@ curl -s http://localhost:3456/sessions/$SESSION_ID | jq '.'
 **Failure Cases:**
 ```bash
 # Invalid UUID format
-curl -s http://localhost:3456/sessions/invalid-uuid | jq '.'
+curl -s http://localhost:3001/api/sessions/invalid-uuid | jq '.'
 # Expected: {"error": "INVALID_SESSION_ID", "message": "Session ID must be a valid UUID"}
 
 # Non-existent session
-curl -s http://localhost:3456/sessions/00000000-0000-0000-0000-000000000000 | jq '.'
+curl -s http://localhost:3001/api/sessions/00000000-0000-0000-0000-000000000000 | jq '.'
 # Expected: {"error": "SESSION_NOT_FOUND", "message": "Session 00000000-0000-0000-0000-000000000000 not found"}
 ```
 
@@ -122,7 +123,7 @@ curl -s http://localhost:3456/sessions/00000000-0000-0000-0000-000000000000 | jq
 
 ```bash
 # Get first 10 entries
-curl -s "http://localhost:3456/sessions/$SESSION_ID/history?limit=10" | jq '.'
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/history?limit=10" | jq '.'
 ```
 
 **Expected Response:**
@@ -185,8 +186,10 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/history?limit=10" | jq '.'
 
 ```bash
 # Get enhanced history with parsed UI props
-curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=10" | jq '.'
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/enhanced-history?limit=10" | jq '.'
 ```
+
+**Note:** Tool results come in separate user messages, not in the assistant messages. The correlation engine matches tool calls with their results based on the tool ID.
 
 **Expected Response (Success Case):**
 ```json
@@ -233,7 +236,7 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=10" |
 **Failure Cases:**
 ```bash
 # Session without tool usage
-curl -s "http://localhost:3456/sessions/$NO_TOOLS_SESSION/enhanced-history" | jq '.history[0].parsedProps'
+curl -s "http://localhost:3001/api/sessions/$NO_TOOLS_SESSION/enhanced-history" | jq '.history[0].parsedProps'
 # Expected: null (no parsedProps field for non-tool messages)
 
 # Unsupported tool type
@@ -246,7 +249,7 @@ curl -s "http://localhost:3456/sessions/$NO_TOOLS_SESSION/enhanced-history" | jq
 
 ```bash
 # Find entries with specific tools
-curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=100" | \
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/enhanced-history?limit=100" | \
   jq '.history[] | select(.parsedProps.toolType == "Bash") | .parsedProps'
 ```
 
@@ -298,7 +301,7 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=100" 
 
 ```bash
 # Get second page of results
-curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=20&offset=20" | \
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/enhanced-history?limit=20&offset=20" | \
   jq '{total: .pagination.total, returned: .history | length, offset: .pagination.offset}'
 ```
 
@@ -317,11 +320,11 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=20&of
 
 ```bash
 # Get only assistant messages
-curl -s "http://localhost:3456/sessions/$SESSION_ID/history?type=assistant" | \
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/history?type=assistant" | \
   jq '.history[] | {type, hasTools: (.toolUse != null)}'
 
 # Get only user messages  
-curl -s "http://localhost:3456/sessions/$SESSION_ID/history?type=user" | \
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/history?type=user" | \
   jq '.history[].type' | sort | uniq -c
 ```
 
@@ -330,7 +333,7 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/history?type=user" | \
 ```bash
 # Get messages from last hour
 SINCE=$(date -u -v-1H +"%Y-%m-%dT%H:%M:%SZ")
-curl -s "http://localhost:3456/sessions/$SESSION_ID/history?since=$SINCE" | \
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/history?since=$SINCE" | \
   jq '.history | length'
 ```
 
@@ -339,7 +342,7 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/history?since=$SINCE" | \
 **Get only active sessions:**
 
 ```bash
-curl -s "http://localhost:3456/sessions?active=true" | jq '.sessions | length'
+curl -s "http://localhost:3001/api/sessions?active=true" | jq '.sessions | length'
 ```
 
 **Expected:**
@@ -352,10 +355,10 @@ curl -s "http://localhost:3456/sessions?active=true" | jq '.sessions | length'
 
 ```bash
 # Time the request
-time curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=1000" > /dev/null
+time curl -s "http://localhost:3001/api/sessions/$SESSION_ID/enhanced-history?limit=1000" > /dev/null
 
 # Check response size
-curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=100" | wc -c
+curl -s "http://localhost:3001/api/sessions/$SESSION_ID/enhanced-history?limit=100" | wc -c
 ```
 
 **Expected:**
@@ -368,7 +371,7 @@ curl -s "http://localhost:3456/sessions/$SESSION_ID/enhanced-history?limit=100" 
 
 ```bash
 # Using websocat (install with: brew install websocat)
-websocat ws://localhost:3456/ws
+websocat ws://localhost:3001/api/stream
 
 # After connection, send:
 {"type":"subscribe","target":"session","sessionId":"$SESSION_ID"}
@@ -425,7 +428,7 @@ Save this as `test-api.sh`:
 ```bash
 #!/bin/bash
 
-API_URL="http://localhost:3456"
+API_URL="http://localhost:3001/api"
 
 echo "1. Testing health endpoint..."
 curl -s $API_URL/health | jq '.status' | grep -q "healthy" && echo "✅ Health check passed" || echo "❌ Health check failed"

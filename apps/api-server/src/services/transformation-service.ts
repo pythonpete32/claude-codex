@@ -33,7 +33,7 @@ export class TransformationService {
 	constructor() {
 		this.parserRegistry = new ParserRegistry();
 		this.transformer = new LogTransformer(this.parserRegistry, logger);
-		this.correlationEngine = new CorrelationEngine();
+		this.correlationEngine = new CorrelationEngine(this.parserRegistry);
 	}
 
 	/**
@@ -147,7 +147,8 @@ export class TransformationService {
 	 * Check if entry is a tool result
 	 */
 	private isToolResult(entry: LogEntry): boolean {
-		if (entry.type !== "assistant") return false;
+		// Tool results come in user messages, not assistant messages
+		if (entry.type !== "user") return false;
 
 		const content = Array.isArray(entry.content)
 			? entry.content
