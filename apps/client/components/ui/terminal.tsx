@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
 	CheckCircle,
 	ChevronDown,
@@ -132,11 +132,13 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 						>
 							{getStatusIcon()}
 							<span className="capitalize text-xs">{status}</span>
-							{isFolded ? (
-								<ChevronRight className="h-3 w-3 ml-1" />
-							) : (
-								<ChevronDown className="h-3 w-3 ml-1" />
-							)}
+							<motion.div
+								animate={{ rotate: isFolded ? -90 : 0 }}
+								transition={{ duration: 0.2 }}
+								className="ml-1"
+							>
+								<ChevronDown className="h-3 w-3" />
+							</motion.div>
 						</Button>
 					) : (
 						<Badge variant="outline" className={getStatusColor()}>
@@ -154,83 +156,123 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 			</div>
 
 			{/* Description */}
-			{description && !isFolded && (
-				<div className="px-4 py-2 border-b border-gray-700">
-					<AnimatedSpan delay={100} className="text-gray-400 text-sm">
-						{description}
-					</AnimatedSpan>
-				</div>
-			)}
+			<AnimatePresence>
+				{description && !isFolded && (
+					<motion.div
+						className="border-b border-gray-700 overflow-hidden"
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: "auto", opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{ duration: 0.2, ease: "easeInOut" }}
+					>
+						<div className="px-4 py-2">
+							<AnimatedSpan delay={100} className="text-gray-400 text-sm">
+								{description}
+							</AnimatedSpan>
+						</div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 
 			{/* Terminal Content */}
-			{!isFolded && (
-				<div className="p-4 font-mono text-sm">
-					{/* Command Line */}
-					<div className="flex items-start gap-2 mb-4">
-						<AnimatedSpan delay={200} className="text-green-400 select-none">
-							user@atomic-codex:~$
-						</AnimatedSpan>
-						<div className="flex-1 flex items-center justify-between">
-							<AnimatedSpan delay={300} className="text-white">
-								{command}
-							</AnimatedSpan>
+			<AnimatePresence>
+				{!isFolded && (
+					<motion.div
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: "auto", opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{ duration: 0.3, ease: "easeInOut" }}
+						className="overflow-hidden"
+					>
+						<div className="p-4 font-mono text-sm">
+							{/* Command Line */}
+							<div className="flex items-start gap-2 mb-4">
+								<AnimatedSpan delay={200} className="text-green-400 select-none">
+									user@atomic-codex:~$
+								</AnimatedSpan>
+								<div className="flex-1 flex items-center justify-between">
+									<AnimatedSpan delay={300} className="text-white">
+										{command}
+									</AnimatedSpan>
 
-							{showCopyButton && (
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={handleCopy}
-									className="h-6 w-6 p-0 text-gray-400 hover:text-white hover:bg-gray-700 ml-4"
-								>
-									<Copy className="h-3 w-3" />
-								</Button>
+									{showCopyButton && (
+										<Button
+											variant="ghost"
+											size="sm"
+											onClick={handleCopy}
+											className="h-6 w-6 p-0 text-gray-400 hover:text-white hover:bg-gray-700 ml-4"
+										>
+											<Copy className="h-3 w-3" />
+										</Button>
+									)}
+								</div>
+							</div>
+
+							{/* Output */}
+							{output && (
+								<AnimatedSpan delay={500} className="block">
+									<div
+										className="text-gray-300 whitespace-pre-wrap break-words overflow-auto"
+										style={{ maxHeight: foldable ? maxHeight : "none" }}
+									>
+										{output}
+									</div>
+								</AnimatedSpan>
+							)}
+
+							{/* New prompt line after completion */}
+							{(status === "completed" || status === "error") && (
+								<AnimatedSpan delay={800} className="flex items-center gap-2 mt-4 text-green-400">
+									<span>user@atomic-codex:~$</span>
+									<span className="animate-pulse">|</span>
+								</AnimatedSpan>
 							)}
 						</div>
-					</div>
-
-					{/* Output */}
-					{output && (
-						<AnimatedSpan delay={500} className="block">
-							<div
-								className="text-gray-300 whitespace-pre-wrap break-words overflow-auto"
-								style={{ maxHeight: foldable ? maxHeight : "none" }}
-							>
-								{output}
-							</div>
-						</AnimatedSpan>
-					)}
-
-					{/* New prompt line after completion */}
-					{(status === "completed" || status === "error") && (
-						<AnimatedSpan delay={800} className="flex items-center gap-2 mt-4 text-green-400">
-							<span>user@atomic-codex:~$</span>
-							<span className="animate-pulse">|</span>
-						</AnimatedSpan>
-					)}
-				</div>
-			)}
+					</motion.div>
+				)}
+			</AnimatePresence>
 
 			{/* Collapsed state */}
-			{isFolded && (
-				<div className="px-4 py-2 text-gray-500 text-sm font-mono">
-					<span className="text-green-400">user@atomic-codex:~$</span> {command}
-					{description && <span className="ml-2 text-gray-600">// {description}</span>}
-				</div>
-			)}
+			<AnimatePresence>
+				{isFolded && (
+					<motion.div
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: "auto", opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{ duration: 0.2, ease: "easeInOut" }}
+						className="overflow-hidden"
+					>
+						<div className="px-4 py-2 text-gray-500 text-sm font-mono">
+							<span className="text-green-400">user@atomic-codex:~$</span> {command}
+							{description && <span className="ml-2 text-gray-600">// {description}</span>}
+						</div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 
 			{/* Footer */}
-			{!isFolded && (footer || timestamp) && (
-				<div className="border-t border-gray-700 px-4 py-2">
-					{footer ? (
-						footer
-					) : (
-						<div className="flex items-center justify-end text-xs text-gray-500">
-							<Clock className="h-3 w-3 mr-1" />
-							{timestamp}
+			<AnimatePresence>
+				{!isFolded && (footer || timestamp) && (
+					<motion.div
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: "auto", opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{ duration: 0.2, ease: "easeInOut" }}
+						className="overflow-hidden border-t border-gray-700"
+					>
+						<div className="px-4 py-2">
+							{footer ? (
+								footer
+							) : (
+								<div className="flex items-center justify-end text-xs text-gray-500">
+									<Clock className="h-3 w-3 mr-1" />
+									{timestamp}
+								</div>
+							)}
 						</div>
-					)}
-				</div>
-			)}
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 };
