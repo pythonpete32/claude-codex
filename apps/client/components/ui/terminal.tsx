@@ -33,9 +33,11 @@ const AnimatedSpan: React.FC<AnimatedSpanProps> = ({ children, delay = 0, classN
 
 export interface TerminalProps {
 	command: string;
+	commandName?: string; // The name to show in header (e.g., "cat", "ls", "grep")
 	description?: string;
 	output?: React.ReactNode;
-	status?: "pending" | "running" | "completed" | "error";
+	footer?: React.ReactNode; // Optional footer content
+	status?: "pending" | "running" | "completed" | "error" | "failed" | "interrupted" | "unknown";
 	duration?: number;
 	timestamp?: string;
 	showCopyButton?: boolean;
@@ -47,8 +49,10 @@ export interface TerminalProps {
 
 export const TerminalWindow: React.FC<TerminalProps> = ({
 	command,
+	commandName = "bash",
 	description,
 	output,
+	footer,
 	status = "completed",
 	duration,
 	timestamp,
@@ -111,34 +115,40 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 					</div>
 					<div className="flex items-center gap-2 text-gray-300">
 						<Terminal className="h-4 w-4" />
-						<span className="text-sm font-medium">bash</span>
+						<span className="text-sm font-medium">{commandName}</span>
 					</div>
 				</div>
 
 				<div className="flex items-center gap-2">
-					<Badge variant="outline" className={getStatusColor()}>
-						{getStatusIcon()}
-						<span className="ml-1 capitalize text-xs">{status}</span>
-					</Badge>
+					{foldable ? (
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setIsFolded(!isFolded)}
+							className={cn(
+								"h-7 px-2 py-1 flex items-center gap-1",
+								getStatusColor()
+							)}
+						>
+							{getStatusIcon()}
+							<span className="capitalize text-xs">{status}</span>
+							{isFolded ? (
+								<ChevronRight className="h-3 w-3 ml-1" />
+							) : (
+								<ChevronDown className="h-3 w-3 ml-1" />
+							)}
+						</Button>
+					) : (
+						<Badge variant="outline" className={getStatusColor()}>
+							{getStatusIcon()}
+							<span className="ml-1 capitalize text-xs">{status}</span>
+						</Badge>
+					)}
 					{duration && (
 						<Badge variant="secondary" className="bg-gray-800 text-gray-300 border-gray-600">
 							<Clock className="h-3 w-3 mr-1" />
 							{duration}ms
 						</Badge>
-					)}
-					{foldable && (
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={() => setIsFolded(!isFolded)}
-							className="h-6 w-6 p-0 text-gray-400 hover:text-white hover:bg-gray-700"
-						>
-							{isFolded ? (
-								<ChevronRight className="h-3 w-3" />
-							) : (
-								<ChevronDown className="h-3 w-3" />
-							)}
-						</Button>
 					)}
 				</div>
 			</div>
@@ -208,13 +218,17 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 				</div>
 			)}
 
-			{/* Footer with timestamp */}
-			{timestamp && !isFolded && (
+			{/* Footer */}
+			{!isFolded && (footer || timestamp) && (
 				<div className="border-t border-gray-700 px-4 py-2">
-					<div className="flex items-center text-xs text-gray-500">
-						<Clock className="h-3 w-3 mr-1" />
-						{timestamp}
-					</div>
+					{footer ? (
+						footer
+					) : (
+						<div className="flex items-center justify-end text-xs text-gray-500">
+							<Clock className="h-3 w-3 mr-1" />
+							{timestamp}
+						</div>
+					)}
 				</div>
 			)}
 		</div>
