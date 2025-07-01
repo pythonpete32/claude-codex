@@ -1,5 +1,5 @@
 // Parser exports
-export * from './parsers';
+export * from "./parsers";
 
 // Project domain exports
-export { ProjectPathResolver } from './project/project-path-resolver';
+export { ProjectPathResolver } from "./project/project-path-resolver";

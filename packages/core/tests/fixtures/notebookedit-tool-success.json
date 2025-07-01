@@ -1,107 +1,107 @@
 {
-  "toolName": "NotebookEdit",
-  "category": "core",
-  "priority": "high",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "1539513a-0491-41ef-b007-fe7b771f2eb3",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "20304939-a518-4a36-af19-71055997e2ef",
-        "version": "1.0.35",
-        "message": {
-          "id": "msg_012hqajwZaBFBFV4j3UbQAjm",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_019qUVjPuuY6DXSd8b3Y8Mvh",
-              "name": "NotebookEdit",
-              "input": {
-                "notebook_path": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb",
-                "new_source": "print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
-                "edit_mode": "insert",
-                "cell_type": "code"
-              }
-            }
-          ],
-          "stop_reason": null,
-          "stop_sequence": null,
-          "usage": {
-            "input_tokens": 9,
-            "cache_creation_input_tokens": 642,
-            "cache_read_input_tokens": 101193,
-            "output_tokens": 1,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeStZtxat9icFBGCPjZf",
-        "type": "assistant",
-        "uuid": "ddf1ad3c-3ff0-4996-b8b4-4c9b557f1afb",
-        "timestamp": "2025-06-30T13:00:07.698Z"
-      },
-      "toolResult": {
-        "parentUuid": "b0aa4335-28c5-478e-a0d9-0cec47dfa712",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "20304939-a518-4a36-af19-71055997e2ef",
-        "version": "1.0.35",
-        "type": "user",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "tool_use_id": "toolu_019qUVjPuuY6DXSd8b3Y8Mvh",
-              "type": "tool_result",
-              "content": "Inserted cell undefined with print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")"
-            }
-          ]
-        },
-        "uuid": "ceeb37e5-3ba6-4e9d-be5e-fd5312a9d483",
-        "timestamp": "2025-06-30T13:00:08.729Z",
-        "toolUseResult": {
-          "new_source": "print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
-          "cell_type": "code",
-          "language": "python",
-          "edit_mode": "insert",
-          "error": ""
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_019qUVjPuuY6DXSd8b3Y8Mvh",
-        "uuid": "ddf1ad3c-3ff0-4996-b8b4-4c9b557f1afb",
-        "parentUuid": "1539513a-0491-41ef-b007-fe7b771f2eb3",
-        "timestamp": "2025-06-30T13:00:07.698Z",
-        "duration": 1031,
-        "status": {
-          "normalized": "completed",
-          "original": "success"
-        },
-        "filePath": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb",
-        "input": {
-          "newSource": "print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
-          "cellType": "code",
-          "editMode": "insert"
-        },
-        "results": {
-          "success": true,
-          "message": "Inserted cell undefined with print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
-          "cellId": "undefined",
-          "operation": "insert"
-        },
-        "ui": {
-          "operationType": "Insert new code cell",
-          "affectedCellId": "undefined",
-          "showDiff": false,
-          "previewAvailable": true
-        }
-      }
-    }
-  ]
+	"toolName": "NotebookEdit",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "1539513a-0491-41ef-b007-fe7b771f2eb3",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "20304939-a518-4a36-af19-71055997e2ef",
+				"version": "1.0.35",
+				"message": {
+					"id": "msg_012hqajwZaBFBFV4j3UbQAjm",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_019qUVjPuuY6DXSd8b3Y8Mvh",
+							"name": "NotebookEdit",
+							"input": {
+								"notebook_path": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb",
+								"new_source": "print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
+								"edit_mode": "insert",
+								"cell_type": "code"
+							}
+						}
+					],
+					"stop_reason": null,
+					"stop_sequence": null,
+					"usage": {
+						"input_tokens": 9,
+						"cache_creation_input_tokens": 642,
+						"cache_read_input_tokens": 101193,
+						"output_tokens": 1,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeStZtxat9icFBGCPjZf",
+				"type": "assistant",
+				"uuid": "ddf1ad3c-3ff0-4996-b8b4-4c9b557f1afb",
+				"timestamp": "2025-06-30T13:00:07.698Z"
+			},
+			"toolResult": {
+				"parentUuid": "b0aa4335-28c5-478e-a0d9-0cec47dfa712",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "20304939-a518-4a36-af19-71055997e2ef",
+				"version": "1.0.35",
+				"type": "user",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_019qUVjPuuY6DXSd8b3Y8Mvh",
+							"type": "tool_result",
+							"content": "Inserted cell undefined with print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")"
+						}
+					]
+				},
+				"uuid": "ceeb37e5-3ba6-4e9d-be5e-fd5312a9d483",
+				"timestamp": "2025-06-30T13:00:08.729Z",
+				"toolUseResult": {
+					"new_source": "print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
+					"cell_type": "code",
+					"language": "python",
+					"edit_mode": "insert",
+					"error": ""
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_019qUVjPuuY6DXSd8b3Y8Mvh",
+				"uuid": "ddf1ad3c-3ff0-4996-b8b4-4c9b557f1afb",
+				"parentUuid": "1539513a-0491-41ef-b007-fe7b771f2eb3",
+				"timestamp": "2025-06-30T13:00:07.698Z",
+				"duration": 1031,
+				"status": {
+					"normalized": "completed",
+					"original": "success"
+				},
+				"filePath": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb",
+				"input": {
+					"newSource": "print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
+					"cellType": "code",
+					"editMode": "insert"
+				},
+				"results": {
+					"success": true,
+					"message": "Inserted cell undefined with print(\"Added test cell for logging\")\ntest_var = 42\nprint(f\"Test variable: {test_var}\")",
+					"cellId": "undefined",
+					"operation": "insert"
+				},
+				"ui": {
+					"operationType": "Insert new code cell",
+					"affectedCellId": "undefined",
+					"showDiff": false,
+					"previewAvailable": true
+				}
+			}
+		}
+	]
 }

@@ -1,157 +1,157 @@
 {
-  "basic": [
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_001",
-        "name": "Read",
-        "input": {
-          "file_path": "/Users/example/project/src/index.ts"
-        }
-      },
-      "toolResult": {
-        "output": {
-          "content": "     1→import { createServer } from 'http';\n     2→\n     3→const server = createServer((req, res) => {\n     4→  res.writeHead(200, { 'Content-Type': 'text/plain' });\n     5→  res.end('Hello World\\n');\n     6→});\n     7→\n     8→server.listen(3000, () => {\n     9→  console.log('Server running at http://localhost:3000/');\n    10→});",
-          "totalLines": 10,
-          "linesRead": 10,
-          "truncated": false
-        },
-        "status": "completed"
-      }
-    },
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_002",
-        "name": "Read",
-        "input": {
-          "file_path": "/etc/hosts"
-        }
-      },
-      "toolResult": {
-        "output": {
-          "content": "     1→127.0.0.1   localhost\n     2→::1         localhost\n     3→127.0.0.1   example.local",
-          "totalLines": 3,
-          "linesRead": 3,
-          "truncated": false
-        },
-        "status": "completed"
-      }
-    }
-  ],
-  "withOffsetAndLimit": [
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_003",
-        "name": "Read",
-        "input": {
-          "file_path": "/Users/example/large-file.log",
-          "offset": 100,
-          "limit": 50
-        }
-      },
-      "toolResult": {
-        "output": {
-          "content": "   100→[2024-01-15 10:23:45] INFO: Processing request #12345\n   101→[2024-01-15 10:23:46] DEBUG: Validating input parameters\n   102→[2024-01-15 10:23:46] INFO: Request validated successfully\n   ...\n   149→[2024-01-15 10:24:12] INFO: Request completed",
-          "totalLines": 5000,
-          "linesRead": 50,
-          "truncated": true
-        },
-        "status": "completed"
-      }
-    }
-  ],
-  "errors": [
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_004",
-        "name": "Read",
-        "input": {
-          "file_path": "/nonexistent/file.txt"
-        }
-      },
-      "toolResult": {
-        "output": "Error: ENOENT: no such file or directory, open '/nonexistent/file.txt'",
-        "status": "failed"
-      }
-    },
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_005",
-        "name": "Read",
-        "input": {
-          "file_path": "/root/secret.key"
-        }
-      },
-      "toolResult": {
-        "output": "Error: EACCES: permission denied, open '/root/secret.key'",
-        "status": "failed"
-      }
-    }
-  ],
-  "edgeCases": [
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_006",
-        "name": "Read",
-        "input": {
-          "file_path": "/Users/example/empty.txt"
-        }
-      },
-      "toolResult": {
-        "output": {
-          "content": "",
-          "totalLines": 0,
-          "linesRead": 0,
-          "truncated": false
-        },
-        "status": "completed"
-      }
-    },
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_007",
-        "name": "Read",
-        "input": {
-          "file_path": "/Users/example/files/very-long-filename-that-might-cause-display-issues-in-the-ui-component-when-rendered.txt"
-        }
-      },
-      "toolResult": {
-        "output": {
-          "content": "     1→This file has a very long name.",
-          "totalLines": 1,
-          "linesRead": 1,
-          "truncated": false
-        },
-        "status": "completed"
-      }
-    },
-    {
-      "type": "tool_use",
-      "toolUse": {
-        "type": "tool_use",
-        "id": "read_008",
-        "name": "Read",
-        "input": {
-          "file_path": "/Users/example/binary-file.jpg"
-        }
-      },
-      "toolResult": {
-        "output": "Binary file detected: /Users/example/binary-file.jpg",
-        "status": "failed"
-      }
-    }
-  ]
+	"basic": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_001",
+				"name": "Read",
+				"input": {
+					"file_path": "/Users/example/project/src/index.ts"
+				}
+			},
+			"toolResult": {
+				"output": {
+					"content": "     1→import { createServer } from 'http';\n     2→\n     3→const server = createServer((req, res) => {\n     4→  res.writeHead(200, { 'Content-Type': 'text/plain' });\n     5→  res.end('Hello World\\n');\n     6→});\n     7→\n     8→server.listen(3000, () => {\n     9→  console.log('Server running at http://localhost:3000/');\n    10→});",
+					"totalLines": 10,
+					"linesRead": 10,
+					"truncated": false
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_002",
+				"name": "Read",
+				"input": {
+					"file_path": "/etc/hosts"
+				}
+			},
+			"toolResult": {
+				"output": {
+					"content": "     1→127.0.0.1   localhost\n     2→::1         localhost\n     3→127.0.0.1   example.local",
+					"totalLines": 3,
+					"linesRead": 3,
+					"truncated": false
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"withOffsetAndLimit": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_003",
+				"name": "Read",
+				"input": {
+					"file_path": "/Users/example/large-file.log",
+					"offset": 100,
+					"limit": 50
+				}
+			},
+			"toolResult": {
+				"output": {
+					"content": "   100→[2024-01-15 10:23:45] INFO: Processing request #12345\n   101→[2024-01-15 10:23:46] DEBUG: Validating input parameters\n   102→[2024-01-15 10:23:46] INFO: Request validated successfully\n   ...\n   149→[2024-01-15 10:24:12] INFO: Request completed",
+					"totalLines": 5000,
+					"linesRead": 50,
+					"truncated": true
+				},
+				"status": "completed"
+			}
+		}
+	],
+	"errors": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_004",
+				"name": "Read",
+				"input": {
+					"file_path": "/nonexistent/file.txt"
+				}
+			},
+			"toolResult": {
+				"output": "Error: ENOENT: no such file or directory, open '/nonexistent/file.txt'",
+				"status": "failed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_005",
+				"name": "Read",
+				"input": {
+					"file_path": "/root/secret.key"
+				}
+			},
+			"toolResult": {
+				"output": "Error: EACCES: permission denied, open '/root/secret.key'",
+				"status": "failed"
+			}
+		}
+	],
+	"edgeCases": [
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_006",
+				"name": "Read",
+				"input": {
+					"file_path": "/Users/example/empty.txt"
+				}
+			},
+			"toolResult": {
+				"output": {
+					"content": "",
+					"totalLines": 0,
+					"linesRead": 0,
+					"truncated": false
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_007",
+				"name": "Read",
+				"input": {
+					"file_path": "/Users/example/files/very-long-filename-that-might-cause-display-issues-in-the-ui-component-when-rendered.txt"
+				}
+			},
+			"toolResult": {
+				"output": {
+					"content": "     1→This file has a very long name.",
+					"totalLines": 1,
+					"linesRead": 1,
+					"truncated": false
+				},
+				"status": "completed"
+			}
+		},
+		{
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "read_008",
+				"name": "Read",
+				"input": {
+					"file_path": "/Users/example/binary-file.jpg"
+				}
+			},
+			"toolResult": {
+				"output": "Binary file detected: /Users/example/binary-file.jpg",
+				"status": "failed"
+			}
+		}
+	]
 }

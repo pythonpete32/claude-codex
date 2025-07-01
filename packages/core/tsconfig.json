@@ -1,24 +1,24 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "lib": ["ES2022"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "rootDir": ".",
-    "outDir": "./dist",
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "noEmit": false
-  },
-  "include": ["src/**/*", "tests/**/*"],
-  "exclude": ["node_modules", "dist"],
-  "references": [{ "path": "../types" }, { "path": "../utils" }]
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"lib": ["ES2022"],
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"rootDir": ".",
+		"outDir": "./dist",
+		"composite": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"noEmit": false
+	},
+	"include": ["src/**/*", "tests/**/*"],
+	"exclude": ["node_modules", "dist"],
+	"references": [{ "path": "../types" }, { "path": "../utils" }]
 }

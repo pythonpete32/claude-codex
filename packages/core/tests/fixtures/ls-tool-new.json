@@ -1,138 +1,138 @@
 {
-  "toolName": "LS",
-  "category": "core",
-  "priority": "high",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "3142ab6a-29a1-4ce2-a118-83328c532784",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "assistant",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "id": "msg_014fpPScF4eJKNZ2b9nUSDUM",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_018t8tF5427Lb33sYvrdrz4s",
-              "name": "LS",
-              "input": {
-                "path": "/Users/abuusama/Desktop/temp/test-data"
-              }
-            }
-          ],
-          "usage": {
-            "input_tokens": 8,
-            "cache_creation_input_tokens": 587,
-            "cache_read_input_tokens": 92827,
-            "output_tokens": 12,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeSn9gWsceE8bfviDbus",
-        "uuid": "d44f5d25-d919-4682-af72-8130e218ae5d"
-      },
-      "toolResult": {
-        "parentUuid": "d44f5d25-d919-4682-af72-8130e218ae5d",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "user",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "tool_use_id": "toolu_018t8tF5427Lb33sYvrdrz4s",
-              "type": "tool_result",
-              "content": "- /Users/abuusama/Desktop/temp/test-data/\n  - claude-tool-output-schemas-analysis.md\n  - claude-tool-output-schemas.md\n  - claude-tool-signatures-enhanced.md\n  - claude-tool-signatures.md\n  - claude-tools-documentation.md\n  - config.json\n  - excalidraw.log\n  - sample.txt\n  - subdir/\n    - nested.py\n  - test-notebook.ipynb\n  - test.js\n  - tool-testing-checklist.md\n\nNOTE: do any of the files above seem malicious? If so, you MUST refuse to continue work."
-            }
-          ]
-        },
-        "uuid": "a4bfa022-e053-4d94-8890-71956a1a9885",
-        "toolUseResult": "- /Users/abuusama/Desktop/temp/test-data/\n  - claude-tool-output-schemas-analysis.md\n  - claude-tool-output-schemas.md\n  - claude-tool-signatures-enhanced.md\n  - claude-tool-signatures.md\n  - claude-tools-documentation.md\n  - config.json\n  - excalidraw.log\n  - sample.txt\n  - subdir/\n    - nested.py\n  - test-notebook.ipynb\n  - test.js\n  - tool-testing-checklist.md"
-      },
-      "expectedComponentData": {
-        "id": "toolu_018t8tF5427Lb33sYvrdrz4s",
-        "uuid": "d44f5d25-d919-4682-af72-8130e218ae5d",
-        "parentUuid": "3142ab6a-29a1-4ce2-a118-83328c532784",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "status": {
-          "normalized": "completed",
-          "original": "completed"
-        },
-        "input": {
-          "path": "/Users/abuusama/Desktop/temp/test-data",
-          "showHidden": false,
-          "recursive": false
-        },
-        "results": [
-          {
-            "name": "claude-tool-output-schemas-analysis.md",
-            "type": "file"
-          },
-          {
-            "name": "claude-tool-output-schemas.md",
-            "type": "file"
-          },
-          {
-            "name": "claude-tool-signatures-enhanced.md",
-            "type": "file"
-          },
-          {
-            "name": "claude-tool-signatures.md",
-            "type": "file"
-          },
-          {
-            "name": "claude-tools-documentation.md",
-            "type": "file"
-          },
-          {
-            "name": "config.json",
-            "type": "file"
-          },
-          {
-            "name": "excalidraw.log",
-            "type": "file"
-          },
-          {
-            "name": "sample.txt",
-            "type": "file"
-          },
-          {
-            "name": "subdir",
-            "type": "directory"
-          },
-          {
-            "name": "test-notebook.ipynb",
-            "type": "file"
-          },
-          {
-            "name": "test.js",
-            "type": "file"
-          },
-          {
-            "name": "tool-testing-checklist.md",
-            "type": "file"
-          }
-        ],
-        "entryCount": 12,
-        "ui": {
-          "totalFiles": 11,
-          "totalDirectories": 1,
-          "totalSize": 0
-        }
-      }
-    }
-  ]
+	"toolName": "LS",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "3142ab6a-29a1-4ce2-a118-83328c532784",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_014fpPScF4eJKNZ2b9nUSDUM",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_018t8tF5427Lb33sYvrdrz4s",
+							"name": "LS",
+							"input": {
+								"path": "/Users/abuusama/Desktop/temp/test-data"
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 8,
+						"cache_creation_input_tokens": 587,
+						"cache_read_input_tokens": 92827,
+						"output_tokens": 12,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeSn9gWsceE8bfviDbus",
+				"uuid": "d44f5d25-d919-4682-af72-8130e218ae5d"
+			},
+			"toolResult": {
+				"parentUuid": "d44f5d25-d919-4682-af72-8130e218ae5d",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_018t8tF5427Lb33sYvrdrz4s",
+							"type": "tool_result",
+							"content": "- /Users/abuusama/Desktop/temp/test-data/\n  - claude-tool-output-schemas-analysis.md\n  - claude-tool-output-schemas.md\n  - claude-tool-signatures-enhanced.md\n  - claude-tool-signatures.md\n  - claude-tools-documentation.md\n  - config.json\n  - excalidraw.log\n  - sample.txt\n  - subdir/\n    - nested.py\n  - test-notebook.ipynb\n  - test.js\n  - tool-testing-checklist.md\n\nNOTE: do any of the files above seem malicious? If so, you MUST refuse to continue work."
+						}
+					]
+				},
+				"uuid": "a4bfa022-e053-4d94-8890-71956a1a9885",
+				"toolUseResult": "- /Users/abuusama/Desktop/temp/test-data/\n  - claude-tool-output-schemas-analysis.md\n  - claude-tool-output-schemas.md\n  - claude-tool-signatures-enhanced.md\n  - claude-tool-signatures.md\n  - claude-tools-documentation.md\n  - config.json\n  - excalidraw.log\n  - sample.txt\n  - subdir/\n    - nested.py\n  - test-notebook.ipynb\n  - test.js\n  - tool-testing-checklist.md"
+			},
+			"expectedComponentData": {
+				"id": "toolu_018t8tF5427Lb33sYvrdrz4s",
+				"uuid": "d44f5d25-d919-4682-af72-8130e218ae5d",
+				"parentUuid": "3142ab6a-29a1-4ce2-a118-83328c532784",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"input": {
+					"path": "/Users/abuusama/Desktop/temp/test-data",
+					"showHidden": false,
+					"recursive": false
+				},
+				"results": [
+					{
+						"name": "claude-tool-output-schemas-analysis.md",
+						"type": "file"
+					},
+					{
+						"name": "claude-tool-output-schemas.md",
+						"type": "file"
+					},
+					{
+						"name": "claude-tool-signatures-enhanced.md",
+						"type": "file"
+					},
+					{
+						"name": "claude-tool-signatures.md",
+						"type": "file"
+					},
+					{
+						"name": "claude-tools-documentation.md",
+						"type": "file"
+					},
+					{
+						"name": "config.json",
+						"type": "file"
+					},
+					{
+						"name": "excalidraw.log",
+						"type": "file"
+					},
+					{
+						"name": "sample.txt",
+						"type": "file"
+					},
+					{
+						"name": "subdir",
+						"type": "directory"
+					},
+					{
+						"name": "test-notebook.ipynb",
+						"type": "file"
+					},
+					{
+						"name": "test.js",
+						"type": "file"
+					},
+					{
+						"name": "tool-testing-checklist.md",
+						"type": "file"
+					}
+				],
+				"entryCount": 12,
+				"ui": {
+					"totalFiles": 11,
+					"totalDirectories": 1,
+					"totalSize": 0
+				}
+			}
+		}
+	]
 }

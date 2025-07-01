@@ -107,6 +107,15 @@ export default function ToolsPage() {
 					<p className="text-gray-400 text-lg">
 						Interactive examples of all tool components using parser-generated props
 					</p>
+					<div className="mt-4">
+						<Link
+							href="/tools/compare"
+							className="inline-flex items-center gap-2 px-4 py-2 bg-green-900/20 border border-green-500/30 rounded-lg text-green-400 hover:bg-green-900/30 transition-colors"
+						>
+							<span>View Refactoring Comparison</span>
+							<ArrowRight className="h-4 w-4" />
+						</Link>
+					</div>
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

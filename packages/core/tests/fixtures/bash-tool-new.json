@@ -1,87 +1,87 @@
 {
-  "toolName": "Bash",
-  "category": "core",
-  "priority": "critical",
-  "fixtureCount": 3,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "assistant",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "id": "msg_01VdMH3o3bXAwxE8WRRSzwsn",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_01YC53jvPk1RQ4MmDhkQUogS",
-              "name": "Bash",
-              "input": {
-                "command": "echo \"Testing bash tool for log generation\"",
-                "description": "Test bash command execution"
-              }
-            }
-          ],
-          "usage": {
-            "input_tokens": 221,
-            "cache_creation_input_tokens": 1184,
-            "cache_read_input_tokens": 93414,
-            "output_tokens": 10,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeSo7JRTnNAL5aQFuQBC",
-        "uuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f"
-      },
-      "toolResult": {
-        "parentUuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "user",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "tool_use_id": "toolu_01YC53jvPk1RQ4MmDhkQUogS",
-              "type": "tool_result",
-              "content": "Testing bash tool for log generation"
-            }
-          ]
-        },
-        "uuid": "bash-result-uuid",
-        "toolUseResult": {
-          "type": "bash",
-          "command": "echo \"Testing bash tool for log generation\"",
-          "exitCode": 0,
-          "output": "Testing bash tool for log generation"
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_01YC53jvPk1RQ4MmDhkQUogS",
-        "uuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
-        "parentUuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "status": {
-          "normalized": "completed",
-          "original": "completed"
-        },
-        "command": "echo \"Testing bash tool for log generation\"",
-        "output": "Testing bash tool for log generation",
-        "exitCode": 0,
-        "workingDirectory": "/Users/abuusama/Desktop/temp/test-data"
-      }
-    }
-  ]
+	"toolName": "Bash",
+	"category": "core",
+	"priority": "critical",
+	"fixtureCount": 3,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_01VdMH3o3bXAwxE8WRRSzwsn",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01YC53jvPk1RQ4MmDhkQUogS",
+							"name": "Bash",
+							"input": {
+								"command": "echo \"Testing bash tool for log generation\"",
+								"description": "Test bash command execution"
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 221,
+						"cache_creation_input_tokens": 1184,
+						"cache_read_input_tokens": 93414,
+						"output_tokens": 10,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeSo7JRTnNAL5aQFuQBC",
+				"uuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f"
+			},
+			"toolResult": {
+				"parentUuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01YC53jvPk1RQ4MmDhkQUogS",
+							"type": "tool_result",
+							"content": "Testing bash tool for log generation"
+						}
+					]
+				},
+				"uuid": "bash-result-uuid",
+				"toolUseResult": {
+					"type": "bash",
+					"command": "echo \"Testing bash tool for log generation\"",
+					"exitCode": 0,
+					"output": "Testing bash tool for log generation"
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01YC53jvPk1RQ4MmDhkQUogS",
+				"uuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
+				"parentUuid": "e8c7d3c3-2a78-4ac9-81cd-027d7ca9806f",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"command": "echo \"Testing bash tool for log generation\"",
+				"output": "Testing bash tool for log generation",
+				"exitCode": 0,
+				"workingDirectory": "/Users/abuusama/Desktop/temp/test-data"
+			}
+		}
+	]
 }

@@ -1,14 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./dist",
-    "composite": true
-  },
-  "include": ["src/**/*", "tests/**/*"],
-  "references": [
-    { "path": "../types" },
-    { "path": "../utils" },
-    { "path": "../core" }
-  ]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"outDir": "./dist",
+		"composite": true
+	},
+	"include": ["src/**/*", "tests/**/*"],
+	"references": [
+		{ "path": "../types" },
+		{ "path": "../utils" },
+		{ "path": "../core" }
+	]
 }

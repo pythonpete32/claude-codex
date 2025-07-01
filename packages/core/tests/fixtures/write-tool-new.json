@@ -1,88 +1,88 @@
 {
-  "toolName": "Write",
-  "category": "core",
-  "priority": "critical",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "2cfa051c-3d10-462f-aa62-50daece1a74d",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "assistant",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "id": "msg_01MLrHD6r7rbz4EATbujnoB3",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_01XFnEKWuoM1G1HXQv1a8hzN",
-              "name": "Write",
-              "input": {
-                "file_path": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
-                "content": "# Claude Code Tools Documentation\n\n## Built-in Tools\n\n### Core Development Tools\n\n#### Task\n- **Description**: Launch a new agent that has access to comprehensive tool suite for searches and research\n- **Purpose**: Perform complex searches, file exploration, and research tasks autonomously\n- **Usage**: When searching for keywords, files, or patterns across large codebases\n- **Parameters**: description, prompt\n\n#### Bash\n- **Description**: Execute bash commands in persistent shell session\n- **Purpose**: Run system commands, git operations, build processes, tests\n- **Parameters**: command, description (optional), timeout (optional)\n- **Features**: \n  - Persistent shell session\n  - Proper path quoting for spaces\n  - Git integration for commits and PRs\n  - GitHub CLI support\n\n### File Management Tools\n\n#### Read\n- **Description**: Read files from local filesystem\n- **Purpose**: Access and view file contents\n- **Parameters**: file_path, limit (optional), offset (optional)\n- **Features**:\n  - Supports images (PNG, JPG, etc.)\n  - Line-numbered output\n  - Handles large files with offset/limit\n  - Screenshot reading capability\n\n#### Write\n- **Description**: Write content to files\n- **Purpose**: Create new files or overwrite existing ones\n- **Parameters**: file_path, content\n- **Requirements**: Must read existing files before overwriting\n\n#### Edit\n- **Description**: Perform exact string replacements in files\n- **Purpose**: Make precise edits to existing files\n- **Parameters**: file_path, old_string, new_string, replace_all (optional)\n- **Requirements**: Must read file before editing\n\n#### MultiEdit\n- **Description**: Make multiple edits to single file in one operation\n- **Purpose**: Efficiently perform multiple find-and-replace operations\n- **Parameters**: file_path, edits (array of edit objects)\n- **Features**: Atomic operations - all edits succeed or none apply\n\n### Search and Discovery Tools\n\n#### Glob\n- **Description**: Fast file pattern matching with glob patterns\n- **Purpose**: Find files by name patterns\n- **Parameters**: pattern, path (optional)\n- **Examples**: \"**/*.js\", \"src/**/*.ts\"\n\n#### Grep\n- **Description**: Fast content search using regular expressions\n- **Purpose**: Find files containing specific patterns\n- **Parameters**: pattern, path (optional), include (optional)\n- **Features**: Full regex support, file filtering\n\n#### LS\n- **Description**: List files and directories\n- **Purpose**: Directory exploration\n- **Parameters**: path, ignore (optional)\n- **Requirements**: Must use absolute paths\n\n### Jupyter Notebook Tools\n\n#### NotebookRead\n- **Description**: Read Jupyter notebook files (.ipynb)\n- **Purpose**: Access notebook cells and outputs\n- **Parameters**: notebook_path, cell_id (optional)\n\n#### NotebookEdit\n- **Description**: Edit Jupyter notebook cells\n- **Purpose**: Modify notebook content\n- **Parameters**: notebook_path, new_source, cell_id (optional), cell_type (optional), edit_mode (optional)\n- **Modes**: replace, insert, delete\n\n### Task Management Tools\n\n#### TodoRead\n- **Description**: Read current todo list for session\n- **Purpose**: Track task progress and status\n- **Parameters**: None\n- **Usage**: Should be used frequently to maintain task awareness\n\n#### TodoWrite\n- **Description**: Create and manage structured task lists\n- **Purpose**: Organize complex tasks and track progress\n- **Parameters**: todos (array of todo objects)\n- **Features**: Status tracking (pending, in_progress, completed), priority levels\n\n### Web and Network Tools\n\n#### WebFetch\n- **Description**: Fetch and analyze web content\n- **Purpose**: Retrieve and process web pages\n- **Parameters**: url, prompt\n- **Features**: HTML to markdown conversion, AI processing\n\n#### WebSearch\n- **Description**: Search the web for current information\n- **Purpose**: Access up-to-date information beyond knowledge cutoff\n- **Parameters**: query, allowed_domains (optional), blocked_domains (optional)\n- **Availability**: US only\n\n### Utility Tools\n\n#### exit_plan_mode\n- **Description**: Exit planning mode when ready to implement\n- **Purpose**: Transition from planning to execution\n- **Parameters**: plan\n- **Usage**: Only for implementation tasks requiring code writing\n\n## MCP (Model Context Protocol) Tools\n\n### MCP Resource Management\n\n#### ListMcpResourcesTool\n- **Description**: List available resources from configured MCP servers\n- **Parameters**: server (optional)\n- **Purpose**: Discover available MCP resources\n\n#### ReadMcpResourceTool\n- **Description**: Read specific resource from MCP server\n- **Parameters**: server, uri\n- **Purpose**: Access MCP server resources\n\n### Excalidraw Integration (mcp__mcp_excalidraw__)\n\n#### mcp__mcp_excalidraw__create_element\n- **Description**: Create new Excalidraw element\n- **Parameters**: type, x, y, width, height, text, styling options\n- **Element Types**: rectangle, ellipse, diamond, arrow, text, label, freedraw, line, arrowLabel\n\n#### mcp__mcp_excalidraw__update_element\n- **Description**: Update existing Excalidraw element\n- **Parameters**: id, plus any updateable properties\n\n#### mcp__mcp_excalidraw__delete_element\n- **Description**: Delete Excalidraw element\n- **Parameters**: id\n\n#### mcp__mcp_excalidraw__query_elements\n- **Description**: Query Excalidraw elements with filters\n- **Parameters**: type (optional), filter (optional)\n\n#### mcp__mcp_excalidraw__get_resource\n- **Description**: Get Excalidraw resource\n- **Parameters**: resource (scene, library, theme, elements)\n\n#### mcp__mcp_excalidraw__group_elements\n- **Description**: Group multiple elements together\n- **Parameters**: elementIds (array)\n\n#### mcp__mcp_excalidraw__ungroup_elements\n- **Description**: Ungroup elements\n- **Parameters**: groupId\n\n#### mcp__mcp_excalidraw__align_elements\n- **Description**: Align elements to specific position\n- **Parameters**: elementIds, alignment (left, center, right, top, middle, bottom)\n\n#### mcp__mcp_excalidraw__distribute_elements\n- **Description**: Distribute elements evenly\n- **Parameters**: elementIds, direction (horizontal, vertical)\n\n#### mcp__mcp_excalidraw__lock_elements\n- **Description**: Lock elements to prevent modification\n- **Parameters**: elementIds\n\n#### mcp__mcp_excalidraw__unlock_elements\n- **Description**: Unlock elements to allow modification\n- **Parameters**: elementIds\n\n### Sequential Thinking (mcp__sequential-thinking__)\n\n#### mcp__sequential-thinking__sequentialthinking\n- **Description**: Dynamic problem-solving through structured thoughts\n- **Purpose**: Break down complex problems, plan solutions, analyze step-by-step\n- **Parameters**: \n  - thought (current thinking step)\n  - nextThoughtNeeded (boolean)\n  - thoughtNumber, totalThoughts\n  - isRevision, revisesThought (optional)\n  - branchFromThought, branchId (optional)\n- **Features**: \n  - Adaptive thought count\n  - Revision and branching support\n  - Hypothesis generation and verification\n\n### Context7 Library Documentation (mcp__context7__)\n\n#### mcp__context7__resolve-library-id\n- **Description**: Resolve package names to Context7-compatible library IDs\n- **Parameters**: libraryName\n- **Purpose**: Find correct library ID before fetching documentation\n\n#### mcp__context7__get-library-docs\n- **Description**: Fetch up-to-date library documentation\n- **Parameters**: context7CompatibleLibraryID, tokens (optional), topic (optional)\n- **Purpose**: Access current library documentation and examples\n\n### Puppeteer Browser Automation (mcp__puppeteer__)\n\n#### mcp__puppeteer__puppeteer_navigate\n- **Description**: Navigate to URL in browser\n- **Parameters**: url, launchOptions (optional), allowDangerous (optional)\n\n#### mcp__puppeteer__puppeteer_screenshot\n- **Description**: Take screenshot of page or element\n- **Parameters**: name, selector (optional), width, height, encoded (optional)\n\n#### mcp__puppeteer__puppeteer_click\n- **Description**: Click element on page\n- **Parameters**: selector\n\n#### mcp__puppeteer__puppeteer_fill\n- **Description**: Fill input field\n- **Parameters**: selector, value\n\n#### mcp__puppeteer__puppeteer_select\n- **Description**: Select option from dropdown\n- **Parameters**: selector, value\n\n#### mcp__puppeteer__puppeteer_hover\n- **Description**: Hover over element\n- **Parameters**: selector\n\n#### mcp__puppeteer__puppeteer_evaluate\n- **Description**: Execute JavaScript in browser console\n- **Parameters**: script\n\n### Screenshot Management (mcp__snap-happy__)\n\n#### mcp__snap-happy__GetLastScreenshot\n- **Description**: Get most recent screenshot as base64 PNG\n- **Parameters**: None\n\n#### mcp__snap-happy__TakeScreenshot\n- **Description**: Take new screenshot\n- **Parameters**: windowId (optional, macOS only)\n- **Purpose**: Capture full screen or specific window\n\n#### mcp__snap-happy__ListWindows\n- **Description**: List all visible windows (macOS only)\n- **Parameters**: None\n- **Purpose**: Get window IDs for targeted screenshots\n\n### Supabase Integration (mcp__supabase__)\n\n#### Project Management\n- **mcp__supabase__list_organizations**: List user's organizations\n- **mcp__supabase__get_organization**: Get organization details\n- **mcp__supabase__list_projects**: List all Supabase projects\n- **mcp__supabase__get_project**: Get project details\n- **mcp__supabase__create_project**: Create new project (requires cost confirmation)\n- **mcp__supabase__pause_project**: Pause project\n- **mcp__supabase__restore_project**: Restore project\n\n#### Branch Management\n- **mcp__supabase__create_branch**: Create development branch\n- **mcp__supabase__list_branches**: List project branches\n- **mcp__supabase__delete_branch**: Delete branch\n- **mcp__supabase__merge_branch**: Merge branch to production\n- **mcp__supabase__reset_branch**: Reset branch migrations\n- **mcp__supabase__rebase_branch**: Rebase branch on production\n\n#### Database Operations\n- **mcp__supabase__list_tables**: List database tables\n- **mcp__supabase__list_extensions**: List database extensions\n- **mcp__supabase__list_migrations**: List migrations\n- **mcp__supabase__apply_migration**: Apply DDL migration\n- **mcp__supabase__execute_sql**: Execute raw SQL queries\n\n#### Utilities\n- **mcp__supabase__get_cost**: Get cost estimates\n- **mcp__supabase__confirm_cost**: Confirm cost understanding\n- **mcp__supabase__get_logs**: Retrieve service logs\n- **mcp__supabase__get_advisors**: Get security/performance advisories\n- **mcp__supabase__get_project_url**: Get API URL\n- **mcp__supabase__get_anon_key**: Get anonymous API key\n- **mcp__supabase__generate_typescript_types**: Generate TypeScript types\n- **mcp__supabase__search_docs**: Search Supabase documentation\n- **mcp__supabase__list_edge_functions**: List Edge Functions\n- **mcp__supabase__deploy_edge_function**: Deploy Edge Function\n\n### Linear Project Management (mcp__linear__)\n\n#### Issue Management\n- **mcp__linear__get_issue**: Get issue details\n- **mcp__linear__list_issues**: List issues with filters\n- **mcp__linear__create_issue**: Create new issue\n- **mcp__linear__update_issue**: Update existing issue\n- **mcp__linear__list_my_issues**: List current user's issues\n\n#### Comments\n- **mcp__linear__list_comments**: Get issue comments\n- **mcp__linear__create_comment**: Add comment to issue\n\n#### Project Management\n- **mcp__linear__list_projects**: List projects\n- **mcp__linear__get_project**: Get project details\n- **mcp__linear__create_project**: Create new project\n- **mcp__linear__update_project**: Update project\n\n#### Organization\n- **mcp__linear__list_teams**: List teams\n- **mcp__linear__get_team**: Get team details\n- **mcp__linear__list_users**: List workspace users\n- **mcp__linear__get_user**: Get user details\n- **mcp__linear__list_issue_statuses**: List available statuses\n- **mcp__linear__get_issue_status**: Get specific status\n- **mcp__linear__list_issue_labels**: List available labels\n\n#### Documentation\n- **mcp__linear__list_documents**: List documents\n- **mcp__linear__get_document**: Get document details\n- **mcp__linear__search_documentation**: Search Linear docs\n\n---\n\n*This documentation covers all available tools in Claude Code as of the current session. Each tool includes its primary purpose, parameters, and key features for comprehensive reference.*"
-              }
-            }
-          ],
-          "usage": {
-            "input_tokens": 4,
-            "cache_creation_input_tokens": 345,
-            "cache_read_input_tokens": 31776,
-            "output_tokens": 3242,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeRP62jfsBBaTmdQZaWf",
-        "uuid": "446eb36e-beb5-4558-a88c-e7f2667f7cf8"
-      },
-      "toolResult": {
-        "parentUuid": "446eb36e-beb5-4558-a88c-e7f2667f7cf8",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "user",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "tool_use_id": "toolu_01XFnEKWuoM1G1HXQv1a8hzN",
-              "type": "tool_result",
-              "content": "File created successfully at: /Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md"
-            }
-          ]
-        },
-        "uuid": "6bd6d02d-671f-40ed-a4af-98e6d6e0f3b8",
-        "toolUseResult": {
-          "type": "create",
-          "filePath": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
-          "content": "# Claude Code Tools Documentation\n\n[Content truncated for brevity]",
-          "structuredPatch": []
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_01XFnEKWuoM1G1HXQv1a8hzN",
-        "uuid": "446eb36e-beb5-4558-a88c-e7f2667f7cf8",
-        "parentUuid": "2cfa051c-3d10-462f-aa62-50daece1a74d",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "status": {
-          "normalized": "completed",
-          "original": "completed"
-        },
-        "filePath": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
-        "content": "# Claude Code Tools Documentation\n\n## Built-in Tools\n\n### Core Development Tools\n\n#### Task\n- **Description**: Launch a new agent that has access to comprehensive tool suite for searches and research\n- **Purpose**: Perform complex searches, file exploration, and research tasks autonomously\n- **Usage**: When searching for keywords, files, or patterns across large codebases\n- **Parameters**: description, prompt\n\n#### Bash\n- **Description**: Execute bash commands in persistent shell session\n- **Purpose**: Run system commands, git operations, build processes, tests\n- **Parameters**: command, description (optional), timeout (optional)\n- **Features**: \n  - Persistent shell session\n  - Proper path quoting for spaces\n  - Git integration for commits and PRs\n  - GitHub CLI support\n\n[Content continues...]",
-        "created": true,
-        "overwritten": false,
-        "fileType": "md"
-      }
-    }
-  ]
+	"toolName": "Write",
+	"category": "core",
+	"priority": "critical",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "2cfa051c-3d10-462f-aa62-50daece1a74d",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_01MLrHD6r7rbz4EATbujnoB3",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01XFnEKWuoM1G1HXQv1a8hzN",
+							"name": "Write",
+							"input": {
+								"file_path": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
+								"content": "# Claude Code Tools Documentation\n\n## Built-in Tools\n\n### Core Development Tools\n\n#### Task\n- **Description**: Launch a new agent that has access to comprehensive tool suite for searches and research\n- **Purpose**: Perform complex searches, file exploration, and research tasks autonomously\n- **Usage**: When searching for keywords, files, or patterns across large codebases\n- **Parameters**: description, prompt\n\n#### Bash\n- **Description**: Execute bash commands in persistent shell session\n- **Purpose**: Run system commands, git operations, build processes, tests\n- **Parameters**: command, description (optional), timeout (optional)\n- **Features**: \n  - Persistent shell session\n  - Proper path quoting for spaces\n  - Git integration for commits and PRs\n  - GitHub CLI support\n\n### File Management Tools\n\n#### Read\n- **Description**: Read files from local filesystem\n- **Purpose**: Access and view file contents\n- **Parameters**: file_path, limit (optional), offset (optional)\n- **Features**:\n  - Supports images (PNG, JPG, etc.)\n  - Line-numbered output\n  - Handles large files with offset/limit\n  - Screenshot reading capability\n\n#### Write\n- **Description**: Write content to files\n- **Purpose**: Create new files or overwrite existing ones\n- **Parameters**: file_path, content\n- **Requirements**: Must read existing files before overwriting\n\n#### Edit\n- **Description**: Perform exact string replacements in files\n- **Purpose**: Make precise edits to existing files\n- **Parameters**: file_path, old_string, new_string, replace_all (optional)\n- **Requirements**: Must read file before editing\n\n#### MultiEdit\n- **Description**: Make multiple edits to single file in one operation\n- **Purpose**: Efficiently perform multiple find-and-replace operations\n- **Parameters**: file_path, edits (array of edit objects)\n- **Features**: Atomic operations - all edits succeed or none apply\n\n### Search and Discovery Tools\n\n#### Glob\n- **Description**: Fast file pattern matching with glob patterns\n- **Purpose**: Find files by name patterns\n- **Parameters**: pattern, path (optional)\n- **Examples**: \"**/*.js\", \"src/**/*.ts\"\n\n#### Grep\n- **Description**: Fast content search using regular expressions\n- **Purpose**: Find files containing specific patterns\n- **Parameters**: pattern, path (optional), include (optional)\n- **Features**: Full regex support, file filtering\n\n#### LS\n- **Description**: List files and directories\n- **Purpose**: Directory exploration\n- **Parameters**: path, ignore (optional)\n- **Requirements**: Must use absolute paths\n\n### Jupyter Notebook Tools\n\n#### NotebookRead\n- **Description**: Read Jupyter notebook files (.ipynb)\n- **Purpose**: Access notebook cells and outputs\n- **Parameters**: notebook_path, cell_id (optional)\n\n#### NotebookEdit\n- **Description**: Edit Jupyter notebook cells\n- **Purpose**: Modify notebook content\n- **Parameters**: notebook_path, new_source, cell_id (optional), cell_type (optional), edit_mode (optional)\n- **Modes**: replace, insert, delete\n\n### Task Management Tools\n\n#### TodoRead\n- **Description**: Read current todo list for session\n- **Purpose**: Track task progress and status\n- **Parameters**: None\n- **Usage**: Should be used frequently to maintain task awareness\n\n#### TodoWrite\n- **Description**: Create and manage structured task lists\n- **Purpose**: Organize complex tasks and track progress\n- **Parameters**: todos (array of todo objects)\n- **Features**: Status tracking (pending, in_progress, completed), priority levels\n\n### Web and Network Tools\n\n#### WebFetch\n- **Description**: Fetch and analyze web content\n- **Purpose**: Retrieve and process web pages\n- **Parameters**: url, prompt\n- **Features**: HTML to markdown conversion, AI processing\n\n#### WebSearch\n- **Description**: Search the web for current information\n- **Purpose**: Access up-to-date information beyond knowledge cutoff\n- **Parameters**: query, allowed_domains (optional), blocked_domains (optional)\n- **Availability**: US only\n\n### Utility Tools\n\n#### exit_plan_mode\n- **Description**: Exit planning mode when ready to implement\n- **Purpose**: Transition from planning to execution\n- **Parameters**: plan\n- **Usage**: Only for implementation tasks requiring code writing\n\n## MCP (Model Context Protocol) Tools\n\n### MCP Resource Management\n\n#### ListMcpResourcesTool\n- **Description**: List available resources from configured MCP servers\n- **Parameters**: server (optional)\n- **Purpose**: Discover available MCP resources\n\n#### ReadMcpResourceTool\n- **Description**: Read specific resource from MCP server\n- **Parameters**: server, uri\n- **Purpose**: Access MCP server resources\n\n### Excalidraw Integration (mcp__mcp_excalidraw__)\n\n#### mcp__mcp_excalidraw__create_element\n- **Description**: Create new Excalidraw element\n- **Parameters**: type, x, y, width, height, text, styling options\n- **Element Types**: rectangle, ellipse, diamond, arrow, text, label, freedraw, line, arrowLabel\n\n#### mcp__mcp_excalidraw__update_element\n- **Description**: Update existing Excalidraw element\n- **Parameters**: id, plus any updateable properties\n\n#### mcp__mcp_excalidraw__delete_element\n- **Description**: Delete Excalidraw element\n- **Parameters**: id\n\n#### mcp__mcp_excalidraw__query_elements\n- **Description**: Query Excalidraw elements with filters\n- **Parameters**: type (optional), filter (optional)\n\n#### mcp__mcp_excalidraw__get_resource\n- **Description**: Get Excalidraw resource\n- **Parameters**: resource (scene, library, theme, elements)\n\n#### mcp__mcp_excalidraw__group_elements\n- **Description**: Group multiple elements together\n- **Parameters**: elementIds (array)\n\n#### mcp__mcp_excalidraw__ungroup_elements\n- **Description**: Ungroup elements\n- **Parameters**: groupId\n\n#### mcp__mcp_excalidraw__align_elements\n- **Description**: Align elements to specific position\n- **Parameters**: elementIds, alignment (left, center, right, top, middle, bottom)\n\n#### mcp__mcp_excalidraw__distribute_elements\n- **Description**: Distribute elements evenly\n- **Parameters**: elementIds, direction (horizontal, vertical)\n\n#### mcp__mcp_excalidraw__lock_elements\n- **Description**: Lock elements to prevent modification\n- **Parameters**: elementIds\n\n#### mcp__mcp_excalidraw__unlock_elements\n- **Description**: Unlock elements to allow modification\n- **Parameters**: elementIds\n\n### Sequential Thinking (mcp__sequential-thinking__)\n\n#### mcp__sequential-thinking__sequentialthinking\n- **Description**: Dynamic problem-solving through structured thoughts\n- **Purpose**: Break down complex problems, plan solutions, analyze step-by-step\n- **Parameters**: \n  - thought (current thinking step)\n  - nextThoughtNeeded (boolean)\n  - thoughtNumber, totalThoughts\n  - isRevision, revisesThought (optional)\n  - branchFromThought, branchId (optional)\n- **Features**: \n  - Adaptive thought count\n  - Revision and branching support\n  - Hypothesis generation and verification\n\n### Context7 Library Documentation (mcp__context7__)\n\n#### mcp__context7__resolve-library-id\n- **Description**: Resolve package names to Context7-compatible library IDs\n- **Parameters**: libraryName\n- **Purpose**: Find correct library ID before fetching documentation\n\n#### mcp__context7__get-library-docs\n- **Description**: Fetch up-to-date library documentation\n- **Parameters**: context7CompatibleLibraryID, tokens (optional), topic (optional)\n- **Purpose**: Access current library documentation and examples\n\n### Puppeteer Browser Automation (mcp__puppeteer__)\n\n#### mcp__puppeteer__puppeteer_navigate\n- **Description**: Navigate to URL in browser\n- **Parameters**: url, launchOptions (optional), allowDangerous (optional)\n\n#### mcp__puppeteer__puppeteer_screenshot\n- **Description**: Take screenshot of page or element\n- **Parameters**: name, selector (optional), width, height, encoded (optional)\n\n#### mcp__puppeteer__puppeteer_click\n- **Description**: Click element on page\n- **Parameters**: selector\n\n#### mcp__puppeteer__puppeteer_fill\n- **Description**: Fill input field\n- **Parameters**: selector, value\n\n#### mcp__puppeteer__puppeteer_select\n- **Description**: Select option from dropdown\n- **Parameters**: selector, value\n\n#### mcp__puppeteer__puppeteer_hover\n- **Description**: Hover over element\n- **Parameters**: selector\n\n#### mcp__puppeteer__puppeteer_evaluate\n- **Description**: Execute JavaScript in browser console\n- **Parameters**: script\n\n### Screenshot Management (mcp__snap-happy__)\n\n#### mcp__snap-happy__GetLastScreenshot\n- **Description**: Get most recent screenshot as base64 PNG\n- **Parameters**: None\n\n#### mcp__snap-happy__TakeScreenshot\n- **Description**: Take new screenshot\n- **Parameters**: windowId (optional, macOS only)\n- **Purpose**: Capture full screen or specific window\n\n#### mcp__snap-happy__ListWindows\n- **Description**: List all visible windows (macOS only)\n- **Parameters**: None\n- **Purpose**: Get window IDs for targeted screenshots\n\n### Supabase Integration (mcp__supabase__)\n\n#### Project Management\n- **mcp__supabase__list_organizations**: List user's organizations\n- **mcp__supabase__get_organization**: Get organization details\n- **mcp__supabase__list_projects**: List all Supabase projects\n- **mcp__supabase__get_project**: Get project details\n- **mcp__supabase__create_project**: Create new project (requires cost confirmation)\n- **mcp__supabase__pause_project**: Pause project\n- **mcp__supabase__restore_project**: Restore project\n\n#### Branch Management\n- **mcp__supabase__create_branch**: Create development branch\n- **mcp__supabase__list_branches**: List project branches\n- **mcp__supabase__delete_branch**: Delete branch\n- **mcp__supabase__merge_branch**: Merge branch to production\n- **mcp__supabase__reset_branch**: Reset branch migrations\n- **mcp__supabase__rebase_branch**: Rebase branch on production\n\n#### Database Operations\n- **mcp__supabase__list_tables**: List database tables\n- **mcp__supabase__list_extensions**: List database extensions\n- **mcp__supabase__list_migrations**: List migrations\n- **mcp__supabase__apply_migration**: Apply DDL migration\n- **mcp__supabase__execute_sql**: Execute raw SQL queries\n\n#### Utilities\n- **mcp__supabase__get_cost**: Get cost estimates\n- **mcp__supabase__confirm_cost**: Confirm cost understanding\n- **mcp__supabase__get_logs**: Retrieve service logs\n- **mcp__supabase__get_advisors**: Get security/performance advisories\n- **mcp__supabase__get_project_url**: Get API URL\n- **mcp__supabase__get_anon_key**: Get anonymous API key\n- **mcp__supabase__generate_typescript_types**: Generate TypeScript types\n- **mcp__supabase__search_docs**: Search Supabase documentation\n- **mcp__supabase__list_edge_functions**: List Edge Functions\n- **mcp__supabase__deploy_edge_function**: Deploy Edge Function\n\n### Linear Project Management (mcp__linear__)\n\n#### Issue Management\n- **mcp__linear__get_issue**: Get issue details\n- **mcp__linear__list_issues**: List issues with filters\n- **mcp__linear__create_issue**: Create new issue\n- **mcp__linear__update_issue**: Update existing issue\n- **mcp__linear__list_my_issues**: List current user's issues\n\n#### Comments\n- **mcp__linear__list_comments**: Get issue comments\n- **mcp__linear__create_comment**: Add comment to issue\n\n#### Project Management\n- **mcp__linear__list_projects**: List projects\n- **mcp__linear__get_project**: Get project details\n- **mcp__linear__create_project**: Create new project\n- **mcp__linear__update_project**: Update project\n\n#### Organization\n- **mcp__linear__list_teams**: List teams\n- **mcp__linear__get_team**: Get team details\n- **mcp__linear__list_users**: List workspace users\n- **mcp__linear__get_user**: Get user details\n- **mcp__linear__list_issue_statuses**: List available statuses\n- **mcp__linear__get_issue_status**: Get specific status\n- **mcp__linear__list_issue_labels**: List available labels\n\n#### Documentation\n- **mcp__linear__list_documents**: List documents\n- **mcp__linear__get_document**: Get document details\n- **mcp__linear__search_documentation**: Search Linear docs\n\n---\n\n*This documentation covers all available tools in Claude Code as of the current session. Each tool includes its primary purpose, parameters, and key features for comprehensive reference.*"
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 4,
+						"cache_creation_input_tokens": 345,
+						"cache_read_input_tokens": 31776,
+						"output_tokens": 3242,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeRP62jfsBBaTmdQZaWf",
+				"uuid": "446eb36e-beb5-4558-a88c-e7f2667f7cf8"
+			},
+			"toolResult": {
+				"parentUuid": "446eb36e-beb5-4558-a88c-e7f2667f7cf8",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01XFnEKWuoM1G1HXQv1a8hzN",
+							"type": "tool_result",
+							"content": "File created successfully at: /Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md"
+						}
+					]
+				},
+				"uuid": "6bd6d02d-671f-40ed-a4af-98e6d6e0f3b8",
+				"toolUseResult": {
+					"type": "create",
+					"filePath": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
+					"content": "# Claude Code Tools Documentation\n\n[Content truncated for brevity]",
+					"structuredPatch": []
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01XFnEKWuoM1G1HXQv1a8hzN",
+				"uuid": "446eb36e-beb5-4558-a88c-e7f2667f7cf8",
+				"parentUuid": "2cfa051c-3d10-462f-aa62-50daece1a74d",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"filePath": "/Users/abuusama/Desktop/temp/test-data/claude-tools-documentation.md",
+				"content": "# Claude Code Tools Documentation\n\n## Built-in Tools\n\n### Core Development Tools\n\n#### Task\n- **Description**: Launch a new agent that has access to comprehensive tool suite for searches and research\n- **Purpose**: Perform complex searches, file exploration, and research tasks autonomously\n- **Usage**: When searching for keywords, files, or patterns across large codebases\n- **Parameters**: description, prompt\n\n#### Bash\n- **Description**: Execute bash commands in persistent shell session\n- **Purpose**: Run system commands, git operations, build processes, tests\n- **Parameters**: command, description (optional), timeout (optional)\n- **Features**: \n  - Persistent shell session\n  - Proper path quoting for spaces\n  - Git integration for commits and PRs\n  - GitHub CLI support\n\n[Content continues...]",
+				"created": true,
+				"overwritten": false,
+				"fileType": "md"
+			}
+		}
+	]
 }

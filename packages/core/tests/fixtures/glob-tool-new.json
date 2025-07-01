@@ -1,94 +1,94 @@
 {
-  "toolName": "Glob",
-  "category": "core",
-  "priority": "high",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "assistant",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "id": "msg_01VdMH3o3bXAwxE8WRRSzwsn",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_01Dw9EfmrPfSLNPz6RNSpY88",
-              "name": "Glob",
-              "input": {
-                "pattern": "**/*.py",
-                "path": "/Users/abuusama/Desktop/temp/test-data"
-              }
-            }
-          ],
-          "usage": {
-            "input_tokens": 221,
-            "cache_creation_input_tokens": 1184,
-            "cache_read_input_tokens": 93414,
-            "output_tokens": 10,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeSo7JRTnNAL5aQFuQBC",
-        "uuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6"
-      },
-      "toolResult": {
-        "parentUuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "user",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "tool_use_id": "toolu_01Dw9EfmrPfSLNPz6RNSpY88",
-              "type": "tool_result",
-              "content": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"
-            }
-          ]
-        },
-        "uuid": "glob-result-uuid",
-        "toolUseResult": {
-          "filenames": [
-            "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"
-          ],
-          "durationMs": 82,
-          "numFiles": 1,
-          "truncated": false
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_01Dw9EfmrPfSLNPz6RNSpY88",
-        "uuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "status": {
-          "normalized": "completed",
-          "original": "completed"
-        },
-        "input": {
-          "pattern": "**/*.py",
-          "searchPath": "/Users/abuusama/Desktop/temp/test-data"
-        },
-        "results": ["/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"],
-        "ui": {
-          "totalMatches": 1,
-          "filesWithMatches": 1,
-          "searchTime": 82
-        }
-      }
-    }
-  ]
+	"toolName": "Glob",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_01VdMH3o3bXAwxE8WRRSzwsn",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01Dw9EfmrPfSLNPz6RNSpY88",
+							"name": "Glob",
+							"input": {
+								"pattern": "**/*.py",
+								"path": "/Users/abuusama/Desktop/temp/test-data"
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 221,
+						"cache_creation_input_tokens": 1184,
+						"cache_read_input_tokens": 93414,
+						"output_tokens": 10,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeSo7JRTnNAL5aQFuQBC",
+				"uuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6"
+			},
+			"toolResult": {
+				"parentUuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01Dw9EfmrPfSLNPz6RNSpY88",
+							"type": "tool_result",
+							"content": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"
+						}
+					]
+				},
+				"uuid": "glob-result-uuid",
+				"toolUseResult": {
+					"filenames": [
+						"/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"
+					],
+					"durationMs": 82,
+					"numFiles": 1,
+					"truncated": false
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01Dw9EfmrPfSLNPz6RNSpY88",
+				"uuid": "2bdf2ae6-1aa1-4fb4-b84c-b2d026125cc6",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"input": {
+					"pattern": "**/*.py",
+					"searchPath": "/Users/abuusama/Desktop/temp/test-data"
+				},
+				"results": ["/Users/abuusama/Desktop/temp/test-data/subdir/nested.py"],
+				"ui": {
+					"totalMatches": 1,
+					"filesWithMatches": 1,
+					"searchTime": 82
+				}
+			}
+		}
+	]
 }

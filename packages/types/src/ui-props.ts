@@ -6,48 +6,54 @@
 // Base interfaces
 export interface BaseToolProps {
   // Correlation (ESSENTIAL - required for linking tool calls with results)
-  id: string;              // tool_use_id for API correlation
-  uuid: string;            // toolCall.uuid for internal correlation  
-  parentUuid?: string;     // Links to parent call for nested operations
-  
+  id: string; // tool_use_id for API correlation
+  uuid: string; // toolCall.uuid for internal correlation
+  parentUuid?: string; // Links to parent call for nested operations
+
   // Core execution data
-  timestamp: string;       // ISO timestamp
-  duration?: number;       // Execution time in milliseconds
-  
+  timestamp: string; // ISO timestamp
+  duration?: number; // Execution time in milliseconds
+
   // Harmonized status (handles MCP variability)
   status: ToolStatus;
-  
+
   // Optional UI helpers
   className?: string;
   metadata?: ToolMetadata;
 }
 
 export interface ToolStatus {
-  normalized: "pending" | "running" | "completed" | "failed" | "interrupted" | "unknown";
-  original?: string;       // Preserve original MCP status for debugging
+  normalized:
+    | "pending"
+    | "running"
+    | "completed"
+    | "failed"
+    | "interrupted"
+    | "unknown";
+  original?: string; // Preserve original MCP status for debugging
   details?: {
-    progress?: number;     // 0-100 for progress tracking
-    substatus?: string;    // Additional status context
+    progress?: number; // 0-100 for progress tracking
+    substatus?: string; // Additional status context
     interrupted?: boolean; // Whether the tool execution was interrupted
   };
 }
 
 export interface ToolMetadata {
-  executionId?: string;    // For tracking across systems
-  interactive?: boolean;   // Whether tool supports interactions
-  metrics?: Record<string, number>;  // Performance metrics
+  executionId?: string; // For tracking across systems
+  interactive?: boolean; // Whether tool supports interactions
+  metrics?: Record<string, number>; // Performance metrics
 }
 
 // Categorical base interfaces
 export interface CommandToolProps extends BaseToolProps {
-  command: string;                    // The command executed
-  output?: string;                    // Combined stdout/stderr
-  errorOutput?: string;               // Separate error output if needed
-  exitCode?: number;                  // Command exit code
-  workingDirectory?: string;          // Execution context
+  command: string; // The command executed
+  output?: string; // Combined stdout/stderr
+  errorOutput?: string; // Separate error output if needed
+  exitCode?: number; // Command exit code
+  workingDirectory?: string; // Execution context
   environment?: Record<string, string>; // Environment variables
-  interrupted?: boolean;              // Whether execution was interrupted
-  
+  interrupted?: boolean; // Whether execution was interrupted
+
   // UI interactions
   showCopyButton?: boolean;
   onCopy?: () => void;
@@ -55,38 +61,38 @@ export interface CommandToolProps extends BaseToolProps {
 }
 
 export interface FileToolProps extends BaseToolProps {
-  filePath: string;                   // Target file path
-  content?: string;                   // File content
-  fileSize?: number;                  // Size in bytes
-  totalLines?: number;                // Line count
-  fileType?: string;                  // For syntax highlighting
-  encoding?: string;                  // File encoding
-  errorMessage?: string;              // Error details for failed operations
-  
+  filePath: string; // Target file path
+  content?: string; // File content
+  fileSize?: number; // Size in bytes
+  totalLines?: number; // Line count
+  fileType?: string; // For syntax highlighting
+  encoding?: string; // File encoding
+  errorMessage?: string; // Error details for failed operations
+
   // Display options
   showLineNumbers?: boolean;
   wordWrap?: boolean;
   maxHeight?: string;
-  
+
   // UI interactions
   onFileClick?: (filePath: string) => void;
 }
 
 export interface SearchToolProps extends BaseToolProps {
   input: {
-    pattern: string;                  // Search pattern
-    scope?: string;                   // Search scope/directory
-    options?: Record<string, unknown>;    // Tool-specific options
+    pattern: string; // Search pattern
+    scope?: string; // Search scope/directory
+    options?: Record<string, unknown>; // Tool-specific options
   };
-  
-  results?: SearchResult[];           // Structured search results
-  
+
+  results?: SearchResult[]; // Structured search results
+
   ui: {
     totalMatches: number;
     filesWithMatches: number;
     searchTime?: number;
   };
-  
+
   // UI interactions
   onMatchClick?: (filePath: string, lineNumber?: number) => void;
   onRefineSearch?: (newPattern: string) => void;
@@ -96,24 +102,24 @@ export interface MCPToolProps extends BaseToolProps {
   input: {
     parameters: Record<string, unknown>; // MCP tool parameters
   };
-  
+
   results?: {
-    output?: unknown;                   // MCP response data
-    errorMessage?: string;              // Error details
+    output?: unknown; // MCP response data
+    errorMessage?: string; // Error details
   };
-  
+
   ui: {
-    toolName: string;                   // Full tool name (mcp__server__method)
-    serverName: string;                 // MCP server name
-    methodName: string;                 // MCP method name
-    displayMode: 'text' | 'json' | 'table' | 'list' | 'empty';
-    isStructured: boolean;              // Has nested data
-    hasNestedData: boolean;             // Contains objects/arrays
-    keyCount: number;                   // Number of top-level keys
-    showRawJson?: boolean;              // Show JSON view toggle
-    collapsible?: boolean;              // Can collapse sections
-    isComplex?: boolean;                // Complex data structure
-    isLarge?: boolean;                  // Large data set
+    toolName: string; // Full tool name (mcp__server__method)
+    serverName: string; // MCP server name
+    methodName: string; // MCP method name
+    displayMode: "text" | "json" | "table" | "list" | "empty";
+    isStructured: boolean; // Has nested data
+    hasNestedData: boolean; // Contains objects/arrays
+    keyCount: number; // Number of top-level keys
+    showRawJson?: boolean; // Show JSON view toggle
+    collapsible?: boolean; // Can collapse sections
+    isComplex?: boolean; // Complex data structure
+    isLarge?: boolean; // Large data set
   };
 }
 
@@ -130,7 +136,7 @@ export interface ReadToolProps extends FileToolProps {
   filePath: string;
   content: string;
   truncated?: boolean;
-  language?: string;        // For syntax highlighting
+  language?: string; // For syntax highlighting
 }
 
 export interface WriteToolProps extends FileToolProps {
@@ -156,9 +162,9 @@ export interface GrepToolProps extends SearchToolProps {
     caseSensitive?: boolean;
     useRegex?: boolean;
   };
-  
+
   results?: SearchResult[];
-  
+
   ui: {
     totalMatches: number;
     filesWithMatches: number;
@@ -166,14 +172,15 @@ export interface GrepToolProps extends SearchToolProps {
   };
 }
 
-export interface GlobToolProps extends BaseToolProps {  // NOTE: Should extend SearchToolProps per SOT, but returns strings not SearchResult[]
+export interface GlobToolProps extends BaseToolProps {
+  // NOTE: Should extend SearchToolProps per SOT, but returns strings not SearchResult[]
   input: {
     pattern: string;
     searchPath?: string;
   };
-  
-  results?: string[];  // File paths, not SearchResult objects
-  
+
+  results?: string[]; // File paths, not SearchResult objects
+
   ui: {
     totalMatches: number;
     filesWithMatches: number;
@@ -183,26 +190,26 @@ export interface GlobToolProps extends BaseToolProps {  // NOTE: Should extend S
 
 export interface MultiEditToolProps extends BaseToolProps {
   input: {
-    filePath: string;  // From fixtures
+    filePath: string; // From fixtures
     edits: EditOperation[];
   };
-  
+
   results?: {
     message: string;
     editsApplied: number;
     totalEdits: number;
     allSuccessful: boolean;
-    editDetails: EditDetail[];  // Detailed results per edit
+    editDetails: EditDetail[]; // Detailed results per edit
     errorMessage?: string;
   };
-  
+
   ui: {
     totalEdits: number;
     successfulEdits: number;
     failedEdits: number;
     changeSummary?: string;
   };
-  
+
   // UI interactions
   onFileReview?: (filePath: string) => void;
   onRevert?: (filePath: string) => void;
@@ -213,30 +220,28 @@ export interface LsToolProps extends BaseToolProps {
     path: string;
     showHidden?: boolean;
     recursive?: boolean;
-    ignore?: string[];  // Ignore patterns from fixtures
+    ignore?: string[]; // Ignore patterns from fixtures
   };
-  
+
   results?: {
     entries: FileEntry[];
     entryCount: number;
     errorMessage?: string;
   };
-  
+
   ui: {
     totalFiles: number;
     totalDirectories: number;
     totalSize?: number;
   };
-  
+
   // UI interactions
   onEntryClick?: (entry: FileEntry) => void;
 }
 
 export interface TodoReadToolProps extends BaseToolProps {
-  input?: {
-    // TodoRead has minimal input
-  };
-  
+  input?: Record<string, unknown>;
+
   results?: {
     todos: TodoItem[];
     metadata: {
@@ -253,12 +258,12 @@ export interface TodoReadToolProps extends BaseToolProps {
     };
     errorMessage?: string;
   };
-  
+
   ui: {
     totalTodos: number;
     completedTodos: number;
     pendingTodos: number;
-    inProgressTodos?: number;  // Add missing status
+    inProgressTodos?: number; // Add missing status
   };
 }
 
@@ -266,20 +271,20 @@ export interface TodoWriteToolProps extends BaseToolProps {
   input: {
     todos: TodoItem[];
   };
-  
+
   results?: {
     changes: TodoChange[];
-    operation?: 'create' | 'update' | 'replace' | 'clear';
+    operation?: "create" | "update" | "replace" | "clear";
     message?: string;
     errorMessage?: string;
   };
-  
+
   ui: {
     totalTodos: number;
     addedCount: number;
     modifiedCount: number;
     deletedCount: number;
-    writtenCount?: number;  // Total written from fixtures
+    writtenCount?: number; // Total written from fixtures
   };
 }
 
@@ -290,11 +295,11 @@ export interface MCPPuppeteerToolProps extends BaseToolProps {
     url?: string;
     selector?: string;
     value?: string;
-    options?: Record<string, unknown>;  // SOT compliant: was Record<string, any>
+    options?: Record<string, unknown>; // SOT compliant: was Record<string, any>
   };
-  
+
   output?: {
-    screenshot?: string;      // Base64 or URL
+    screenshot?: string; // Base64 or URL
     pageData?: {
       title: string;
       url: string;
@@ -306,7 +311,7 @@ export interface MCPPuppeteerToolProps extends BaseToolProps {
       selector?: string;
     };
   };
-  
+
   ui: {
     title: string;
     description: string;
@@ -317,16 +322,16 @@ export interface MCPPuppeteerToolProps extends BaseToolProps {
 export interface MCPSequentialThinkingToolProps extends BaseToolProps {
   input: {
     workflow: string;
-    context?: Record<string, unknown>;  // SOT compliant: was Record<string, any>
+    context?: Record<string, unknown>; // SOT compliant: was Record<string, any>
   };
-  
+
   workflow?: {
     steps: WorkflowStep[];
     currentStep: number;
     overallProgress: number;
     dependencies: StepDependency[];
   };
-  
+
   ui: {
     title: string;
     description: string;
@@ -343,13 +348,13 @@ export interface MCPContext7ToolProps extends BaseToolProps {
     topic?: string;
     tokens?: number;
   };
-  
+
   output?: {
     libraries?: LibraryMatch[];
     documentation?: string;
     error?: string;
   };
-  
+
   ui: {
     title: string;
     description: string;
@@ -380,9 +385,9 @@ export interface EditOperation {
   old_string: string;
   new_string: string;
   replace_all?: boolean;
-  lineNumber?: number;  // Added by parser
-  isGlobal?: boolean;   // Added by parser
-  index?: number;       // Added by parser
+  lineNumber?: number; // Added by parser
+  isGlobal?: boolean; // Added by parser
+  index?: number; // Added by parser
 }
 
 // EditDetail represents the result of each edit operation
@@ -414,7 +419,7 @@ export interface DiffLine {
 export interface FileInfo {
   name: string;
   path: string;
-  type: 'file' | 'directory' | 'symlink';
+  type: "file" | "directory" | "symlink";
   size?: number;
   permissions?: string;
   modified?: string;
@@ -455,7 +460,7 @@ export interface WorkflowStep {
   status: ToolStatus;
   progress: number;
   dependencies: string[];
-  output?: unknown;  // SOT compliant: was any
+  output?: unknown; // SOT compliant: was any
   error?: string;
 }
 
@@ -476,8 +481,8 @@ export interface LibraryMatch {
 // === TASK TOOL SUPPORTING TYPES ===
 
 export interface TaskContent {
-  type: 'text' | 'tool_use' | 'tool_result';
-  text?: string;           // For text content
+  type: "text" | "tool_use" | "tool_result";
+  text?: string; // For text content
   // Additional fields for tool_use/tool_result if needed
 }
 
@@ -485,7 +490,7 @@ export interface TaskContent {
 
 export interface NotebookCell {
   id: string;
-  cell_type: 'code' | 'markdown' | 'raw';
+  cell_type: "code" | "markdown" | "raw";
   source: string[];
   outputs?: NotebookOutput[];
   execution_count?: number | null;
@@ -493,7 +498,7 @@ export interface NotebookCell {
 }
 
 export interface NotebookOutput {
-  output_type: 'stream' | 'display_data' | 'execute_result' | 'error';
+  output_type: "stream" | "display_data" | "execute_result" | "error";
   text?: string[];
   data?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
@@ -514,14 +519,14 @@ export interface NotebookMetadata {
 // Task tool - Complex tool for agent delegation with execution metrics
 export interface TaskToolProps extends BaseToolProps {
   input: {
-    description: string;     // Short task description (3-5 words)
-    prompt: string;          // Full task prompt for agent
+    description: string; // Short task description (3-5 words)
+    prompt: string; // Full task prompt for agent
   };
-  
+
   results?: {
-    content: TaskContent[];  // Agent output content array
+    content: TaskContent[]; // Agent output content array
     totalDurationMs: number; // Total execution time
-    totalTokens: number;     // Total tokens used
+    totalTokens: number; // Total tokens used
     totalToolUseCount: number; // Number of tools used by agent
     usage: {
       input_tokens: number;
@@ -532,28 +537,33 @@ export interface TaskToolProps extends BaseToolProps {
     };
     wasInterrupted: boolean; // Whether execution was interrupted
   };
-  
+
   ui: {
-    taskSummary: string;     // Computed from description
-    agentStatus: 'delegating' | 'executing' | 'completed' | 'failed' | 'interrupted';
-    executionTime: string;   // Human-readable duration
-    tokensUsed: string;      // Formatted token count
-    toolsUsed: number;       // Number of tools agent used
-    showMetrics: boolean;    // Whether to show detailed metrics
+    taskSummary: string; // Computed from description
+    agentStatus:
+      | "delegating"
+      | "executing"
+      | "completed"
+      | "failed"
+      | "interrupted";
+    executionTime: string; // Human-readable duration
+    tokensUsed: string; // Formatted token count
+    toolsUsed: number; // Number of tools agent used
+    showMetrics: boolean; // Whether to show detailed metrics
   };
 }
 
 // NotebookRead tool - Complex tool for Jupyter notebook reading
 export interface NotebookReadToolProps extends FileToolProps {
-  filePath: string;        // Inherited + required
-  
+  filePath: string; // Inherited + required
+
   results?: {
     cells: NotebookCell[];
     metadata: NotebookMetadata;
     nbformat: number;
     nbformat_minor: number;
   };
-  
+
   ui: {
     totalCells: number;
     codeCells: number;
@@ -561,7 +571,7 @@ export interface NotebookReadToolProps extends FileToolProps {
     hasOutputs: boolean;
     cellsWithErrors: number;
   };
-  
+
   // UI interactions
   onCellClick?: (cellId: string) => void;
   onRunCell?: (cellId: string) => void;
@@ -569,24 +579,24 @@ export interface NotebookReadToolProps extends FileToolProps {
 
 // NotebookEdit tool - Complex tool for Jupyter notebook editing
 export interface NotebookEditToolProps extends FileToolProps {
-  filePath: string;        // Inherited + required
-  
+  filePath: string; // Inherited + required
+
   input: {
     newSource: string;
     cellId?: string;
-    cellType?: 'code' | 'markdown';
-    editMode?: 'replace' | 'insert' | 'delete';
+    cellType?: "code" | "markdown";
+    editMode?: "replace" | "insert" | "delete";
   };
-  
+
   results?: {
     success: boolean;
     message: string;
     cellId: string;
-    operation: 'replace' | 'insert' | 'delete';
+    operation: "replace" | "insert" | "delete";
   };
-  
+
   ui: {
-    operationType: string;   // Human-readable operation
+    operationType: string; // Human-readable operation
     affectedCellId?: string;
     showDiff: boolean;
     previewAvailable: boolean;
@@ -595,13 +605,13 @@ export interface NotebookEditToolProps extends FileToolProps {
 
 // exit_plan_mode tool - Simple tool for planning workflow completion
 export interface ExitPlanModeToolProps extends BaseToolProps {
-  plan: string;            // Direct prop (simple tool pattern)
-  success?: boolean;       // Direct prop
-  message?: string;        // Direct prop
-  
+  plan: string; // Direct prop (simple tool pattern)
+  success?: boolean; // Direct prop
+  message?: string; // Direct prop
+
   // UI helpers
   showApprovalButtons?: boolean;
-  planPreview?: string;    // Rendered markdown preview
+  planPreview?: string; // Rendered markdown preview
   onApprove?: () => void;
   onReject?: () => void;
 }
@@ -609,19 +619,19 @@ export interface ExitPlanModeToolProps extends BaseToolProps {
 // Generic MCP tool props for unknown MCP tools
 export interface McpToolProps extends BaseToolProps {
   input: {
-    parameters: Record<string, unknown>;  // SOT compliant: was Record<string, any>
+    parameters: Record<string, unknown>; // SOT compliant: was Record<string, any>
   };
-  
+
   results: {
     output?: unknown;
     errorMessage?: string;
   };
-  
+
   ui: {
     toolName: string;
     serverName: string;
     methodName: string;
-    displayMode: 'text' | 'json' | 'table' | 'list' | 'empty';
+    displayMode: "text" | "json" | "table" | "list" | "empty";
     isStructured: boolean;
     hasNestedData: boolean;
     keyCount: number;
@@ -633,7 +643,7 @@ export interface McpToolProps extends BaseToolProps {
 }
 
 // Union type for all tool props
-export type ToolProps = 
+export type ToolProps =
   | BashToolProps
   | ReadToolProps
   | WriteToolProps
@@ -671,7 +681,7 @@ export enum ToolType {
   ExitPlanMode = "exit_plan_mode",
   MCPPuppeteer = "mcp_puppeteer",
   MCPSequentialThinking = "mcp_sequential_thinking",
-  MCPContext7 = "mcp_context7"
+  MCPContext7 = "mcp_context7",
 }
 
 // Message props
@@ -689,7 +699,7 @@ export interface AssistantMessageProps {
   uuid: string;
   timestamp: string;
   content: string;
-  toolCalls?: string[];  // UUIDs of associated tool calls
+  toolCalls?: string[]; // UUIDs of associated tool calls
 }
 
 export interface ThinkingBlockProps {
@@ -739,7 +749,7 @@ export interface ParsedToolOutput {
 }
 
 // Complete chat item union
-export type ChatItemProps = 
+export type ChatItemProps =
   | UserMessageProps
   | AssistantMessageProps
   | ThinkingBlockProps

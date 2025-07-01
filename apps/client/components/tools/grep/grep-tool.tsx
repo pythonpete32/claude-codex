@@ -1,140 +1,84 @@
-import type React from "react"
-import { Search, Clock, FileText } from "lucide-react"
-import { TerminalWindow } from "@/components/ui/terminal"
-import { TerminalText } from "@/shared/terminal-styles"
-import type { GrepToolProps as GrepToolParserProps } from "@claude-codex/types"
+"use client"
 
-// Component extends parser props with UI-specific options
-export interface GrepToolProps extends GrepToolParserProps {
+import React from "react"
+import type { GrepToolProps, SearchResult } from "@claude-codex/types"
+import { Clock, FileText, Search } from "lucide-react"
+import { TerminalText } from "@/shared/terminal-styles"
+import { createToolComponent } from "../base/base-tool"
+
+interface GrepToolUIProps extends GrepToolProps {
 	description?: string
 	onMatchClick?: (filePath: string, lineNumber?: number) => void
 }
 
-export const GrepTool: React.FC<GrepToolProps> = ({
-	// From BaseToolProps
-	id,
-	uuid,
-	parentUuid,
-	timestamp,
-	duration,
-	status,
-	className,
-	metadata,
+export const GrepTool = createToolComponent<GrepToolUIProps>((props) => {
+	const { input, results, ui, onMatchClick } = props
 
-	// From SearchToolProps
-	// (none - SearchToolProps has no additional props)
-
-	// From GrepToolProps
-	input,
-	results,
-	ui,
-
-	// UI-specific
-	description,
-	onMatchClick,
-}) => {
-	const command = `grep -r "${input.pattern}"${input.searchPath ? ` "${input.searchPath}"` : ""}${input.filePatterns ? ` --include="${input.filePatterns.join(",")}"` : ""}`
 	const commandName = "grep"
+	const pattern = input.pattern
+	const searchPath = input.searchPath || "."
+	const { totalMatches, filesWithMatches } = ui
 
-	// Use normalized status from parser
-	const normalizedStatus = status.normalized
-
-	// Error case
-	if (normalizedStatus === "failed") {
-		const output = (
-			<div className="text-center py-4">
-				<TerminalText variant="stderr" className="mb-2">
-					grep: search failed
-				</TerminalText>
-			</div>
-		)
-
-		return (
-			<TerminalWindow
-				command={command}
-				commandName={commandName}
-				description={description}
-				output={output}
-				status={normalizedStatus}
-				timestamp={timestamp}
-				foldable={false}
-				className={className}
-			/>
-		)
+	// Build grep command with options
+	const buildCommand = () => {
+		const parts = [commandName]
+		if (input.useRegex) parts.push("-E")
+		if (!input.caseSensitive) parts.push("-i")
+		if (input.filePatterns?.length) {
+			parts.push("--include=" + input.filePatterns.join(","))
+		}
+		parts.push(`"${pattern}"`)
+		parts.push(searchPath)
+		return parts.join(" ")
 	}
 
-	// Pending case
-	if (normalizedStatus === "pending" || normalizedStatus === "running") {
-		const output = (
-			<div className="text-center py-4">
-				<TerminalText variant="stdout" className="text-gray-400 italic">
-					Searching for pattern &quot;{input.pattern}&quot;{input.searchPath && ` in ${input.searchPath}`}...
-				</TerminalText>
-			</div>
-		)
-
-		return (
-			<TerminalWindow
-				command={command}
-				commandName={commandName}
-				description={description}
-				output={output}
-				status={normalizedStatus}
-				timestamp={timestamp}
-				foldable={false}
-				className={className}
-			/>
-		)
-	}
-
-	// Format search results
-	const formatSearchResults = () => {
+	// Render search results
+	const renderResults = () => {
 		if (!results || results.length === 0) {
 			return (
-				<TerminalText variant="stdout" className="text-gray-500 italic">
-					grep: no matches found
-				</TerminalText>
+				<div className="text-center py-8">
+					<Search className="h-12 w-12 text-gray-600 mx-auto mb-3" />
+					<TerminalText variant="stdout" className="text-gray-400">
+						No matches found for &quot;{pattern}&quot;
+					</TerminalText>
+				</div>
 			)
 		}
 
 		return (
-			<div className="space-y-3">
-				{results.map((result, index) => (
-					<div key={index} className="border border-gray-700 rounded-md p-3 bg-gray-900/50">
-						{/* File header */}
-						<div
-							className="flex items-center gap-2 mb-2 cursor-pointer hover:text-purple-300"
-							onClick={() => onMatchClick?.(result.filePath)}
-						>
-							<FileText className="h-4 w-4 text-purple-400" />
-							<span className="font-mono text-sm text-purple-400">{result.filePath}</span>
-							<span className="text-xs text-gray-500">
-								({result.totalMatches} match{result.totalMatches !== 1 ? "es" : ""})
+			<div className="space-y-4">
+				{results.map((result: SearchResult, fileIndex: number) => (
+					<div key={fileIndex} className="border-l-2 border-gray-700 pl-4">
+						<div className="flex items-center gap-2 mb-2">
+							<FileText className="h-4 w-4 text-blue-400" />
+							<span
+								className="text-blue-400 hover:underline cursor-pointer font-medium"
+								onClick={() => onMatchClick?.(result.filePath)}
+							>
+								{result.filePath}
+							</span>
+							<span className="text-gray-500 text-sm">
+								({result.matchCount} {result.matchCount === 1 ? "match" : "matches"})
 							</span>
 						</div>
-
-						{/* Matches */}
-						<div className="space-y-1">
-							{result.matches.map((match, matchIndex) => {
-								const beforeMatch = match.content.substring(0, match.matchStart)
-								const matchText = match.content.substring(match.matchStart, match.matchEnd)
-								const afterMatch = match.content.substring(match.matchEnd)
-
-								return (
-									<div
-										key={matchIndex}
-										className="font-mono text-sm hover:bg-gray-800/30 px-2 py-1 rounded cursor-pointer"
-										onClick={() => onMatchClick?.(result.filePath, match.line)}
-									>
-										<span className="text-gray-500 mr-3 select-none min-w-[3rem] inline-block text-right">
-											{match.line}:
+						<div className="space-y-1 ml-6">
+							{result.matches.map((match, matchIndex) => (
+								<div
+									key={matchIndex}
+									className="flex gap-2 hover:bg-gray-800/50 px-2 py-1 rounded cursor-pointer group"
+									onClick={() => onMatchClick?.(result.filePath, match.lineNumber)}
+								>
+									<span className="text-gray-500 select-none w-12 text-right flex-shrink-0">{match.lineNumber}</span>
+									<span className="text-gray-600 select-none">│</span>
+									<span className="flex-1 font-mono text-sm whitespace-pre-wrap break-all">
+										{match.lineContent.substring(0, match.matchStart)}
+										<span className="bg-yellow-500/30 text-yellow-200">
+											{match.lineContent.substring(match.matchStart, match.matchEnd)}
 										</span>
-										<span className="text-gray-300">{beforeMatch}</span>
-										<span className="bg-yellow-600 text-black px-1 rounded">{matchText}</span>
-										<span className="text-gray-300">{afterMatch}</span>
-									</div>
-								)
-							})}
+										{match.lineContent.substring(match.matchEnd)}
+									</span>
+								</div>
+							))}
 						</div>
 					</div>
 				))}
@@ -142,66 +86,30 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 		)
 	}
 
-	const output = (
-		<div>
-			{/* Success message */}
-			<div className="flex items-center gap-2 mb-4">
-				<Search className="h-4 w-4 text-green-400" />
-				<TerminalText variant="stdout" className="text-green-400">
-					{ui.totalMatches > 0
-						? `Found ${ui.totalMatches} matches in ${ui.filesWithMatches} files`
-						: "Search completed - no matches found"}
-				</TerminalText>
-				{ui.searchTime > 0 && <span className="text-xs text-gray-500">({ui.searchTime}ms)</span>}
+	return {
+		renderCommand: buildCommand,
+		renderCommandName: () => commandName,
+		renderOutput: renderResults,
+		renderFooter: () => (
+			<div className="flex items-center justify-between gap-4 text-xs text-gray-500">
+				<div>
+					Found <span className="text-yellow-400 font-medium">{totalMatches}</span>{" "}
+					{totalMatches === 1 ? "match" : "matches"} in{" "}
+					<span className="text-blue-400 font-medium">{filesWithMatches}</span>{" "}
+					{filesWithMatches === 1 ? "file" : "files"}
+				</div>
+				<div className="flex items-center gap-2">
+					{ui.searchTime !== undefined && <span>Search completed in {ui.searchTime}ms</span>}
+					<Clock className="h-3 w-3" />
+					<span>{new Date(props.timestamp).toLocaleTimeString()}</span>
+				</div>
 			</div>
-
-			{/* Search results */}
-			<div className="max-h-96 overflow-y-auto">{formatSearchResults()}</div>
-		</div>
-	)
-
-	// Determine if content should be foldable
-	const shouldFold = ui.totalMatches > 10
-	const defaultFolded = ui.totalMatches > 20
-
-	// Build metadata info
-	const metadataInfo: string[] = []
-	if (input.caseSensitive) metadataInfo.push("case-sensitive")
-	if (input.useRegex) metadataInfo.push("regex")
-	if (input.filePatterns && input.filePatterns.length > 0) {
-		metadataInfo.push(`include: ${input.filePatterns.join(", ")}`)
+		),
+		renderPendingMessage: () => "Preparing search...",
+		renderRunningMessage: () => `Searching for "${pattern}"...`,
+		shouldFold: () => totalMatches > 20,
+		defaultFolded: () => totalMatches > 100,
+		maxHeight: "600px",
+		showCopyButton: true,
 	}
-	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(", ")})` : ""
-
-	// Create footer with metadata
-	const footer = (
-		<div className="flex items-center justify-between text-xs text-gray-500">
-			<span>
-				Pattern: &quot;{input.pattern}&quot;{metadataString}
-			</span>
-			{timestamp && (
-				<span className="flex items-center">
-					<Clock className="h-3 w-3 mr-1" />
-					{new Date(timestamp).toLocaleString()}
-				</span>
-			)}
-		</div>
-	)
-
-	return (
-		<TerminalWindow
-			command={command}
-			commandName={commandName}
-			description={description || `Searching for "${input.pattern}"`}
-			output={output}
-			footer={footer}
-			status={normalizedStatus}
-			timestamp={timestamp}
-			foldable={shouldFold}
-			defaultFolded={defaultFolded}
-			maxHeight="600px"
-			showCopyButton={true}
-			className={className}
-		/>
-	)
-}
+})

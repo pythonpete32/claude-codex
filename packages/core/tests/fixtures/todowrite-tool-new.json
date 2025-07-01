@@ -1,185 +1,185 @@
 {
-  "toolName": "TodoWrite",
-  "category": "core",
-  "priority": "high",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "73d30a2a-6fdf-4ce1-939b-a1543f4c9a0f",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "assistant",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "id": "msg_01TJqi5Tv6FyeBWEy2mhuzY4",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_01WfKSnrcNP3RP1o6HHGkGVp",
-              "name": "TodoWrite",
-              "input": {
-                "todos": [
-                  {
-                    "id": "1",
-                    "content": "Create comprehensive tool documentation listing all built-in tools",
-                    "status": "pending",
-                    "priority": "high"
-                  },
-                  {
-                    "id": "2",
-                    "content": "Document all MCP tools and their functions",
-                    "status": "pending",
-                    "priority": "high"
-                  },
-                  {
-                    "id": "3",
-                    "content": "Organize documentation into clear sections with descriptions",
-                    "status": "pending",
-                    "priority": "medium"
-                  }
-                ]
-              }
-            }
-          ],
-          "usage": {
-            "input_tokens": 3,
-            "cache_creation_input_tokens": 31437,
-            "cache_read_input_tokens": 0,
-            "output_tokens": 1,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeRN5gsKJxdRDe1d2Uzi",
-        "uuid": "04d428ca-2190-4fbc-b442-3843efa57f66"
-      },
-      "toolResult": {
-        "parentUuid": "04d428ca-2190-4fbc-b442-3843efa57f66",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
-        "version": "1.0.35",
-        "type": "user",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "tool_use_id": "toolu_01WfKSnrcNP3RP1o6HHGkGVp",
-              "type": "tool_result",
-              "content": "Todos have been modified successfully. Ensure that you continue to use the todo list to track your progress. Please proceed with the current tasks if applicable"
-            }
-          ]
-        },
-        "uuid": "2bf9da04-87fe-47f3-82e7-9e12ea91f4d3",
-        "toolUseResult": {
-          "oldTodos": [],
-          "newTodos": [
-            {
-              "content": "Create comprehensive tool documentation listing all built-in tools",
-              "status": "pending",
-              "priority": "high",
-              "id": "1"
-            },
-            {
-              "content": "Document all MCP tools and their functions",
-              "status": "pending",
-              "priority": "high",
-              "id": "2"
-            },
-            {
-              "content": "Organize documentation into clear sections with descriptions",
-              "status": "pending",
-              "priority": "medium",
-              "id": "3"
-            }
-          ]
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_01WfKSnrcNP3RP1o6HHGkGVp",
-        "uuid": "04d428ca-2190-4fbc-b442-3843efa57f66",
-        "parentUuid": "73d30a2a-6fdf-4ce1-939b-a1543f4c9a0f",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "status": {
-          "normalized": "completed",
-          "original": "completed"
-        },
-        "todos": [
-          {
-            "id": "1",
-            "content": "Create comprehensive tool documentation listing all built-in tools",
-            "status": "pending",
-            "priority": "high"
-          },
-          {
-            "id": "2",
-            "content": "Document all MCP tools and their functions",
-            "status": "pending",
-            "priority": "high"
-          },
-          {
-            "id": "3",
-            "content": "Organize documentation into clear sections with descriptions",
-            "status": "pending",
-            "priority": "medium"
-          }
-        ],
-        "changes": [
-          {
-            "type": "add",
-            "todoId": "1",
-            "oldValue": null,
-            "newValue": {
-              "id": "1",
-              "content": "Create comprehensive tool documentation listing all built-in tools",
-              "status": "pending",
-              "priority": "high",
-              "createdAt": "2025-06-30T13:02:18.515Z"
-            }
-          },
-          {
-            "type": "add",
-            "todoId": "2",
-            "oldValue": null,
-            "newValue": {
-              "id": "2",
-              "content": "Document all MCP tools and their functions",
-              "status": "pending",
-              "priority": "high",
-              "createdAt": "2025-06-30T13:02:18.515Z"
-            }
-          },
-          {
-            "type": "add",
-            "todoId": "3",
-            "oldValue": null,
-            "newValue": {
-              "id": "3",
-              "content": "Organize documentation into clear sections with descriptions",
-              "status": "pending",
-              "priority": "medium",
-              "createdAt": "2025-06-30T13:02:18.515Z"
-            }
-          }
-        ],
-        "operation": "create",
-        "message": "Todos have been modified successfully. Ensure that you continue to use the todo list to track your progress. Please proceed with the current tasks if applicable",
-        "ui": {
-          "totalTodos": 3,
-          "addedCount": 3,
-          "modifiedCount": 0,
-          "deletedCount": 0,
-          "writtenCount": 3
-        }
-      }
-    }
-  ]
+	"toolName": "TodoWrite",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "73d30a2a-6fdf-4ce1-939b-a1543f4c9a0f",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_01TJqi5Tv6FyeBWEy2mhuzY4",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01WfKSnrcNP3RP1o6HHGkGVp",
+							"name": "TodoWrite",
+							"input": {
+								"todos": [
+									{
+										"id": "1",
+										"content": "Create comprehensive tool documentation listing all built-in tools",
+										"status": "pending",
+										"priority": "high"
+									},
+									{
+										"id": "2",
+										"content": "Document all MCP tools and their functions",
+										"status": "pending",
+										"priority": "high"
+									},
+									{
+										"id": "3",
+										"content": "Organize documentation into clear sections with descriptions",
+										"status": "pending",
+										"priority": "medium"
+									}
+								]
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 3,
+						"cache_creation_input_tokens": 31437,
+						"cache_read_input_tokens": 0,
+						"output_tokens": 1,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeRN5gsKJxdRDe1d2Uzi",
+				"uuid": "04d428ca-2190-4fbc-b442-3843efa57f66"
+			},
+			"toolResult": {
+				"parentUuid": "04d428ca-2190-4fbc-b442-3843efa57f66",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01WfKSnrcNP3RP1o6HHGkGVp",
+							"type": "tool_result",
+							"content": "Todos have been modified successfully. Ensure that you continue to use the todo list to track your progress. Please proceed with the current tasks if applicable"
+						}
+					]
+				},
+				"uuid": "2bf9da04-87fe-47f3-82e7-9e12ea91f4d3",
+				"toolUseResult": {
+					"oldTodos": [],
+					"newTodos": [
+						{
+							"content": "Create comprehensive tool documentation listing all built-in tools",
+							"status": "pending",
+							"priority": "high",
+							"id": "1"
+						},
+						{
+							"content": "Document all MCP tools and their functions",
+							"status": "pending",
+							"priority": "high",
+							"id": "2"
+						},
+						{
+							"content": "Organize documentation into clear sections with descriptions",
+							"status": "pending",
+							"priority": "medium",
+							"id": "3"
+						}
+					]
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01WfKSnrcNP3RP1o6HHGkGVp",
+				"uuid": "04d428ca-2190-4fbc-b442-3843efa57f66",
+				"parentUuid": "73d30a2a-6fdf-4ce1-939b-a1543f4c9a0f",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"todos": [
+					{
+						"id": "1",
+						"content": "Create comprehensive tool documentation listing all built-in tools",
+						"status": "pending",
+						"priority": "high"
+					},
+					{
+						"id": "2",
+						"content": "Document all MCP tools and their functions",
+						"status": "pending",
+						"priority": "high"
+					},
+					{
+						"id": "3",
+						"content": "Organize documentation into clear sections with descriptions",
+						"status": "pending",
+						"priority": "medium"
+					}
+				],
+				"changes": [
+					{
+						"type": "add",
+						"todoId": "1",
+						"oldValue": null,
+						"newValue": {
+							"id": "1",
+							"content": "Create comprehensive tool documentation listing all built-in tools",
+							"status": "pending",
+							"priority": "high",
+							"createdAt": "2025-06-30T13:02:18.515Z"
+						}
+					},
+					{
+						"type": "add",
+						"todoId": "2",
+						"oldValue": null,
+						"newValue": {
+							"id": "2",
+							"content": "Document all MCP tools and their functions",
+							"status": "pending",
+							"priority": "high",
+							"createdAt": "2025-06-30T13:02:18.515Z"
+						}
+					},
+					{
+						"type": "add",
+						"todoId": "3",
+						"oldValue": null,
+						"newValue": {
+							"id": "3",
+							"content": "Organize documentation into clear sections with descriptions",
+							"status": "pending",
+							"priority": "medium",
+							"createdAt": "2025-06-30T13:02:18.515Z"
+						}
+					}
+				],
+				"operation": "create",
+				"message": "Todos have been modified successfully. Ensure that you continue to use the todo list to track your progress. Please proceed with the current tasks if applicable",
+				"ui": {
+					"totalTodos": 3,
+					"addedCount": 3,
+					"modifiedCount": 0,
+					"deletedCount": 0,
+					"writtenCount": 3
+				}
+			}
+		}
+	]
 }

@@ -1,233 +1,198 @@
-import type React from "react"
-import { useMemo } from "react"
-import { FileEdit, Clock } from "lucide-react"
-import { TerminalWindow } from "@/components/ui/terminal"
+"use client"
+
+import React from "react"
+import type { EditToolProps, DiffLine } from "@claude-codex/types"
+import { Clock, FileEdit } from "lucide-react"
 import { TerminalText } from "@/shared/terminal-styles"
-import type { EditToolProps as EditToolParserProps } from "@claude-codex/types"
+import { createToolComponent } from "../base/base-tool"
 
-// Component extends parser props with UI-specific options
-export interface EditToolProps extends EditToolParserProps {
-	description?: string
+interface EditToolUIProps extends EditToolProps {
+  description?: string
+  onFileClick?: (filePath: string) => void
+  onLineClick?: (lineNumber: number) => void
 }
 
-export const EditTool: React.FC<EditToolProps> = ({
-	// From BaseToolProps
-	id,
-	uuid,
-	parentUuid,
-	timestamp,
-	duration,
-	status,
-	className,
-	metadata,
-
-	// From FileToolProps
-	filePath,
-	content,
-	fileSize,
-	totalLines,
-	fileType,
-	encoding,
-	errorMessage,
-	showLineNumbers = true,
-	wordWrap,
-	maxHeight = "500px",
-	onFileClick,
-
-	// From EditToolProps
-	oldContent,
-	newContent,
-	diff,
-
-	// UI-specific
-	description,
-}) => {
-	const fileName = filePath.split("/").pop() || filePath
-	const command = `sed -i '' 's/${oldContent.substring(0, 30)}${oldContent.length > 30 ? "..." : ""}/${newContent.substring(0, 30)}${newContent.length > 30 ? "..." : ""}/g' "${filePath}"`
-	const commandName = "sed"
-
-	// Use normalized status from parser
-	const normalizedStatus = status.normalized
-
-	// Calculate diff stats
-	const diffStats = useMemo(() => {
-		if (!diff || diff.length === 0) return null
-
-		let added = 0
-		let removed = 0
-		let unchanged = 0
-
-		diff.forEach((line) => {
-			if (line.type === "added") added++
-			else if (line.type === "removed") removed++
-			else unchanged++
-		})
-
-		return { added, removed, unchanged }
-	}, [diff])
-
-	// Error case
-	if (normalizedStatus === "failed" || errorMessage) {
-		const output = (
-			<div className="text-center py-4">
-				<TerminalText variant="stderr" className="mb-2">
-					{errorMessage || `Failed to edit ${fileName}`}
-				</TerminalText>
-			</div>
-		)
-
-		return (
-			<TerminalWindow
-				command={command}
-				commandName={commandName}
-				description={description}
-				output={output}
-				status={normalizedStatus}
-				timestamp={timestamp}
-				foldable={false}
-				className={className}
-			/>
-		)
-	}
-
-	// Pending case
-	if (normalizedStatus === "pending" || normalizedStatus === "running") {
-		const output = (
-			<div className="text-center py-4">
-				<TerminalText variant="stdout" className="text-gray-400 italic">
-					Editing file...
-				</TerminalText>
-			</div>
-		)
-
-		return (
-			<TerminalWindow
-				command={command}
-				commandName={commandName}
-				description={description}
-				output={output}
-				status={normalizedStatus}
-				timestamp={timestamp}
-				foldable={false}
-				className={className}
-			/>
-		)
-	}
-
-	// Format diff output
-	const formatDiffOutput = () => {
-		if (!diff || diff.length === 0) {
-			return (
-				<TerminalText variant="comment" className="italic">
-					No changes detected
-				</TerminalText>
-			)
-		}
-
-		return (
-			<div className="space-y-0">
-				{diff.map((line, index) => {
-					const prefix = line.type === "removed" ? "-" : line.type === "added" ? "+" : " "
-					const color =
-						line.type === "removed" ? "text-red-400" : line.type === "added" ? "text-green-400" : "text-gray-400"
-					const bgColor = line.type === "removed" ? "bg-red-900/20" : line.type === "added" ? "bg-green-900/20" : ""
-
-					if (showLineNumbers && line.lineNumber !== undefined) {
-						return (
-							<div key={index} className={`flex font-mono text-sm ${bgColor}`}>
-								<span
-									className="text-gray-500 mr-2 select-none min-w-[4rem] text-right cursor-pointer hover:text-gray-400"
-									onClick={() => onFileClick?.(filePath)}
-								>
-									{line.lineNumber}
-								</span>
-								<span className={`${color} mr-2`}>{prefix}</span>
-								<span className={`text-gray-300 ${wordWrap ? "whitespace-pre-wrap break-all" : "whitespace-pre"}`}>
-									{line.content || " "}
-								</span>
-							</div>
-						)
-					}
-
-					return (
-						<div key={index} className={`font-mono text-sm px-1 ${bgColor}`}>
-							<span className={`${color} mr-2`}>{prefix}</span>
-							<span className={`text-gray-300 ${wordWrap ? "whitespace-pre-wrap break-all" : "whitespace-pre"}`}>
-								{line.content || " "}
-							</span>
-						</div>
-					)
-				})}
-			</div>
-		)
-	}
-
-	const output = (
-		<div>
-			{/* Success message */}
-			<div className="flex items-center gap-2 mb-4">
-				<FileEdit className="h-4 w-4 text-blue-400" />
-				<TerminalText variant="stdout" className="text-blue-400">
-					File edited successfully
-					{diffStats && (
-						<span className="ml-2 text-gray-400">
-							(+{diffStats.added} -{diffStats.removed})
-						</span>
-					)}
-				</TerminalText>
-			</div>
-
-			{/* Diff output */}
-			<div className="border border-gray-700 rounded-md p-2 bg-gray-900/50">
-				<div className="max-h-96 overflow-y-auto" style={{ maxHeight }}>
-					{formatDiffOutput()}
-				</div>
-			</div>
-		</div>
-	)
-
-	// Determine if content should be foldable
-	const shouldFold = diff && diff.length > 20
-	const defaultFolded = diff && diff.length > 50
-
-	// Build metadata info
-	const metadataInfo: string[] = []
-	if (diffStats) {
-		metadataInfo.push(`+${diffStats.added} -${diffStats.removed}`)
-	}
-	if (fileType) metadataInfo.push(fileType.toUpperCase())
-	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(", ")})` : ""
-
-	// Create footer with metadata
-	const footer = (
-		<div className="flex items-center justify-between text-xs text-gray-500">
-			<span>
-				{fileName}
-				{metadataString}
-			</span>
-			{timestamp && (
-				<span className="flex items-center">
-					<Clock className="h-3 w-3 mr-1" />
-					{new Date(timestamp).toLocaleString()}
-				</span>
-			)}
-		</div>
-	)
-
-	return (
-		<TerminalWindow
-			command={command}
-			commandName={commandName}
-			description={description}
-			output={output}
-			footer={footer}
-			status={normalizedStatus}
-			timestamp={timestamp}
-			foldable={shouldFold}
-			defaultFolded={defaultFolded}
-			maxHeight={maxHeight}
-			showCopyButton={true}
-			className={className}
-		/>
-	)
-}
+export const EditTool = createToolComponent<EditToolUIProps>((props) => {
+  const {
+    filePath,
+    oldContent,
+    newContent,
+    diff,
+    errorMessage,
+    wordWrap,
+    maxHeight = "500px",
+    onFileClick,
+    onLineClick,
+  } = props
+  
+  const commandName = "edit"
+  const fileName = filePath.split("/").pop() || filePath
+  const fileExtension = filePath.match(/\.(\w+)$/)?.[1] || ""
+  
+  // Generate simple diff if not provided
+  const generateSimpleDiff = (): DiffLine[] => {
+    const oldLines = oldContent.split("\n")
+    const newLines = newContent.split("\n")
+    const result: DiffLine[] = []
+    
+    // Simple line-by-line comparison
+    const maxLines = Math.max(oldLines.length, newLines.length)
+    
+    for (let i = 0; i < maxLines; i++) {
+      if (i >= oldLines.length) {
+        // New lines added
+        result.push({
+          type: "added",
+          content: newLines[i],
+          newLineNumber: i + 1,
+        })
+      } else if (i >= newLines.length) {
+        // Lines removed
+        result.push({
+          type: "removed",
+          content: oldLines[i],
+          oldLineNumber: i + 1,
+        })
+      } else if (oldLines[i] !== newLines[i]) {
+        // Lines changed
+        result.push({
+          type: "removed",
+          content: oldLines[i],
+          oldLineNumber: i + 1,
+        })
+        result.push({
+          type: "added",
+          content: newLines[i],
+          newLineNumber: i + 1,
+        })
+      } else {
+        // Lines unchanged
+        result.push({
+          type: "unchanged",
+          content: oldLines[i],
+          oldLineNumber: i + 1,
+          newLineNumber: i + 1,
+        })
+      }
+    }
+    
+    return result
+  }
+  
+  const actualDiff = diff || generateSimpleDiff()
+  
+  // Calculate stats
+  const stats = {
+    additions: actualDiff.filter(line => line.type === "added").length,
+    deletions: actualDiff.filter(line => line.type === "removed").length,
+    unchanged: actualDiff.filter(line => line.type === "unchanged").length,
+  }
+  
+  // Render diff
+  const renderDiff = () => {
+    if (actualDiff.length === 0) {
+      return (
+        <div className="text-center py-4">
+          <TerminalText variant="stdout" className="text-gray-400 italic">
+            No changes detected
+          </TerminalText>
+        </div>
+      )
+    }
+    
+    return (
+      <div
+        className={`font-mono text-sm overflow-x-auto ${
+          wordWrap ? "whitespace-pre-wrap break-all" : "whitespace-pre"
+        }`}
+      >
+        {actualDiff.map((line, index) => {
+          const lineNumber = line.oldLineNumber || line.newLineNumber || index + 1
+          
+          return (
+            <div
+              key={index}
+              className={`group ${
+                line.type === "added"
+                  ? "bg-green-900/20 hover:bg-green-900/30"
+                  : line.type === "removed"
+                  ? "bg-red-900/20 hover:bg-red-900/30"
+                  : "hover:bg-gray-800/50"
+              }`}
+            >
+              <span
+                className={`inline-block w-12 text-right select-none mr-2 cursor-pointer ${
+                  line.type === "added"
+                    ? "text-green-500"
+                    : line.type === "removed"
+                    ? "text-red-500"
+                    : "text-gray-500"
+                } hover:text-gray-300`}
+                onClick={() => onLineClick?.(lineNumber)}
+              >
+                {lineNumber}
+              </span>
+              <span
+                className={`select-none mr-2 ${
+                  line.type === "added"
+                    ? "text-green-500"
+                    : line.type === "removed"
+                    ? "text-red-500"
+                    : "text-gray-600"
+                }`}
+              >
+                {line.type === "added" ? "+" : line.type === "removed" ? "-" : " "}
+              </span>
+              <span
+                className={
+                  line.type === "added"
+                    ? "text-green-300"
+                    : line.type === "removed"
+                    ? "text-red-300"
+                    : "text-gray-300"
+                }
+              >
+                {line.content || " "}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+  
+  return {
+    renderCommand: () => `${commandName} ${filePath}`,
+    renderCommandName: () => commandName,
+    renderOutput: renderDiff,
+    renderFooter: () => (
+      <div className="flex items-center justify-between gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-2">
+          <span
+            className="text-blue-400 hover:underline cursor-pointer"
+            onClick={() => onFileClick?.(filePath)}
+          >
+            {fileName}
+          </span>
+          {fileExtension && (
+            <span className="text-gray-500">({fileExtension})</span>
+          )}
+          <span className="text-green-400">+{stats.additions}</span>
+          <span className="text-red-400">-{stats.deletions}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Clock className="h-3 w-3" />
+          <span>{new Date(props.timestamp).toLocaleTimeString()}</span>
+        </div>
+      </div>
+    ),
+    renderPendingMessage: () => "Preparing to edit file...",
+    renderRunningMessage: () => "Applying changes...",
+    renderFailedMessage: () => errorMessage || "Failed to edit file",
+    shouldFold: () => actualDiff.length > 50,
+    defaultFolded: () => actualDiff.length > 100,
+    maxHeight,
+    showCopyButton: true,
+    errorMessage,
+  }
+})

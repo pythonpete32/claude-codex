@@ -1,106 +1,106 @@
 {
-  "toolName": "Task",
-  "category": "core",
-  "priority": "critical",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "uuid": "43fffbdc-ffa5-4b96-a5cf-220d57ae2d68",
-        "parentUuid": "cc17021f-a0bd-4efd-9167-fe742033843d",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "type": "assistant",
-        "content": [
-          {
-            "type": "tool_use",
-            "id": "toolu_01NxN5cZJgPvsrYTtjtYLX4u",
-            "name": "Task",
-            "input": {
-              "description": "Analyze tool output schemas",
-              "prompt": "I need you to analyze all the Claude Code tools and determine what each tool outputs. Please examine the tool signatures document I created at `/Users/abuusama/Desktop/temp/test-data/claude-tool-signatures.md` and infer/research what the output schema would be for each tool.\n\nFor each tool, I need you to determine:\n1. The structure of the response object\n2. What fields are included in successful responses\n3. What error responses look like\n4. Any special return formats (like base64 images, JSON objects, plain text, etc.)\n\nPlease create a comprehensive analysis that covers:\n- Built-in tools (Task, Bash, Read, Write, Edit, etc.)\n- MCP tools (all the mcp__ prefixed tools)\n\nFocus on being thorough and accurate. If you can't determine the exact schema, make reasonable inferences based on the tool's purpose and provide your reasoning.\n\nReturn your analysis in a structured format that I can use to enhance the tool signatures document with complete input/output specifications."
-            }
-          }
-        ]
-      },
-      "toolResult": {
-        "uuid": "5d929d54-962c-4a08-b2d9-237ab6976687",
-        "parentUuid": "43fffbdc-ffa5-4b96-a5cf-220d57ae2d68",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "type": "user",
-        "content": [
-          {
-            "tool_use_id": "toolu_01NxN5cZJgPvsrYTtjtYLX4u",
-            "type": "tool_result",
-            "content": [
-              {
-                "type": "text",
-                "text": "## Analysis Complete\n\nI've created a comprehensive analysis of Claude Code tool output schemas at `/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md`. This document provides:\n\n### **Key Findings:**\n\n**Built-in Tools (13 tools analyzed):**\n- **Task**: Returns execution status and results\n- **Bash**: Returns stdout/stderr, exit codes, and timing\n- **Glob/Grep**: Return file arrays with search results\n- **LS**: Returns directory entries with metadata\n- **Read**: Returns file content (text with line numbers, images as base64)\n- **Edit/MultiEdit/Write**: Return success status and operation details\n- **Notebook tools**: Return Jupyter cell structures and metadata\n- **Web tools**: Return processed content and search results\n- **Todo tools**: Return structured todo lists\n\n**MCP Tools (50+ tools analyzed):**\n- **Excalidraw**: Returns drawing element data and canvas resources\n- **Sequential Thinking**: Returns structured thought processes\n- **Context7**: Returns library documentation and search results\n- **Puppeteer**: Returns browser automation results and screenshots (base64)\n- **Snap-happy**: Returns screenshot data and window information\n- **Supabase**: Returns database results, project data, costs, and API responses\n- **Linear**: Returns issue tracking data, comments, projects, and team information\n\n### **Common Response Patterns Identified:**\n\n1. **Success Responses**: Most tools return data directly or wrapped with success indicators\n2. **Error Responses**: Standardized error objects with codes, messages, and details\n3. **Special Formats**: Base64 for images, structured JSON for complex data, plain text for content\n4. **Pagination**: List operations include page info and cursors where applicable\n\n### **Reasoning Behind Inferences:**\n\n- **File Operations**: Based on standard Unix tool outputs and file system operations\n- **Database Tools**: Following SQL result patterns and REST API conventions  \n- **Browser Automation**: Based on Puppeteer API and screenshot handling standards\n- **API Tools**: Following respective service API documentation patterns (Supabase, Linear)\n- **MCP Tools**: Following Model Context Protocol standards for resource handling\n\nThe analysis provides complete input/output specifications that you can use to enhance your tool signatures document with precise response schemas for each tool."
-              }
-            ]
-          }
-        ],
-        "toolUseResult": {
-          "content": [
-            {
-              "type": "text",
-              "text": "## Analysis Complete\n\nI've created a comprehensive analysis of Claude Code tool output schemas at `/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md`. This document provides:\n\n### **Key Findings:**\n\n**Built-in Tools (13 tools analyzed):**\n- **Task**: Returns execution status and results\n- **Bash**: Returns stdout/stderr, exit codes, and timing\n- **Glob/Grep**: Return file arrays with search results\n- **LS**: Returns directory entries with metadata\n- **Read**: Returns file content (text with line numbers, images as base64)\n- **Edit/MultiEdit/Write**: Return success status and operation details\n- **Notebook tools**: Return Jupyter cell structures and metadata\n- **Web tools**: Return processed content and search results\n- **Todo tools**: Return structured todo lists\n\n**MCP Tools (50+ tools analyzed):**\n- **Excalidraw**: Returns drawing element data and canvas resources\n- **Sequential Thinking**: Returns structured thought processes\n- **Context7**: Returns library documentation and search results\n- **Puppeteer**: Returns browser automation results and screenshots (base64)\n- **Snap-happy**: Returns screenshot data and window information\n- **Supabase**: Returns database results, project data, costs, and API responses\n- **Linear**: Returns issue tracking data, comments, projects, and team information\n\n### **Common Response Patterns Identified:**\n\n1. **Success Responses**: Most tools return data directly or wrapped with success indicators\n2. **Error Responses**: Standardized error objects with codes, messages, and details\n3. **Special Formats**: Base64 for images, structured JSON for complex data, plain text for content\n4. **Pagination**: List operations include page info and cursors where applicable\n\n### **Reasoning Behind Inferences:**\n\n- **File Operations**: Based on standard Unix tool outputs and file system operations\n- **Database Tools**: Following SQL result patterns and REST API conventions  \n- **Browser Automation**: Based on Puppeteer API and screenshot handling standards\n- **API Tools**: Following respective service API documentation patterns (Supabase, Linear)\n- **MCP Tools**: Following Model Context Protocol standards for resource handling\n\nThe analysis provides complete input/output specifications that you can use to enhance your tool signatures document with precise response schemas for each tool."
-            }
-          ],
-          "totalDurationMs": 208008,
-          "totalTokens": 58589,
-          "totalToolUseCount": 10,
-          "usage": {
-            "input_tokens": 0,
-            "cache_creation_input_tokens": 5497,
-            "cache_read_input_tokens": 52569,
-            "output_tokens": 523,
-            "service_tier": "standard"
-          },
-          "wasInterrupted": false
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_01NxN5cZJgPvsrYTtjtYLX4u",
-        "uuid": "43fffbdc-ffa5-4b96-a5cf-220d57ae2d68",
-        "parentUuid": "cc17021f-a0bd-4efd-9167-fe742033843d",
-        "timestamp": "2025-06-30T13:02:18.515Z",
-        "duration": 208008,
-        "status": {
-          "normalized": "completed",
-          "original": "success"
-        },
-        "input": {
-          "description": "Analyze tool output schemas",
-          "prompt": "I need you to analyze all the Claude Code tools and determine what each tool outputs. Please examine the tool signatures document I created at `/Users/abuusama/Desktop/temp/test-data/claude-tool-signatures.md` and infer/research what the output schema would be for each tool.\n\nFor each tool, I need you to determine:\n1. The structure of the response object\n2. What fields are included in successful responses\n3. What error responses look like\n4. Any special return formats (like base64 images, JSON objects, plain text, etc.)\n\nPlease create a comprehensive analysis that covers:\n- Built-in tools (Task, Bash, Read, Write, Edit, etc.)\n- MCP tools (all the mcp__ prefixed tools)\n\nFocus on being thorough and accurate. If you can't determine the exact schema, make reasonable inferences based on the tool's purpose and provide your reasoning.\n\nReturn your analysis in a structured format that I can use to enhance the tool signatures document with complete input/output specifications."
-        },
-        "results": {
-          "content": [
-            {
-              "type": "text",
-              "text": "## Analysis Complete\n\nI've created a comprehensive analysis of Claude Code tool output schemas at `/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md`. This document provides:\n\n### **Key Findings:**\n\n**Built-in Tools (13 tools analyzed):**\n- **Task**: Returns execution status and results\n- **Bash**: Returns stdout/stderr, exit codes, and timing\n- **Glob/Grep**: Return file arrays with search results\n- **LS**: Returns directory entries with metadata\n- **Read**: Returns file content (text with line numbers, images as base64)\n- **Edit/MultiEdit/Write**: Return success status and operation details\n- **Notebook tools**: Return Jupyter cell structures and metadata\n- **Web tools**: Return processed content and search results\n- **Todo tools**: Return structured todo lists\n\n**MCP Tools (50+ tools analyzed):**\n- **Excalidraw**: Returns drawing element data and canvas resources\n- **Sequential Thinking**: Returns structured thought processes\n- **Context7**: Returns library documentation and search results\n- **Puppeteer**: Returns browser automation results and screenshots (base64)\n- **Snap-happy**: Returns screenshot data and window information\n- **Supabase**: Returns database results, project data, costs, and API responses\n- **Linear**: Returns issue tracking data, comments, projects, and team information\n\n### **Common Response Patterns Identified:**\n\n1. **Success Responses**: Most tools return data directly or wrapped with success indicators\n2. **Error Responses**: Standardized error objects with codes, messages, and details\n3. **Special Formats**: Base64 for images, structured JSON for complex data, plain text for content\n4. **Pagination**: List operations include page info and cursors where applicable\n\n### **Reasoning Behind Inferences:**\n\n- **File Operations**: Based on standard Unix tool outputs and file system operations\n- **Database Tools**: Following SQL result patterns and REST API conventions  \n- **Browser Automation**: Based on Puppeteer API and screenshot handling standards\n- **API Tools**: Following respective service API documentation patterns (Supabase, Linear)\n- **MCP Tools**: Following Model Context Protocol standards for resource handling\n\nThe analysis provides complete input/output specifications that you can use to enhance your tool signatures document with precise response schemas for each tool."
-            }
-          ],
-          "totalDurationMs": 208008,
-          "totalTokens": 58589,
-          "totalToolUseCount": 10,
-          "usage": {
-            "input_tokens": 0,
-            "cache_creation_input_tokens": 5497,
-            "cache_read_input_tokens": 52569,
-            "output_tokens": 523,
-            "service_tier": "standard"
-          },
-          "wasInterrupted": false
-        },
-        "ui": {
-          "taskSummary": "Analyze tool output schemas",
-          "agentStatus": "completed",
-          "executionTime": "3m 28s",
-          "tokensUsed": "58,589 tokens",
-          "toolsUsed": 10,
-          "showMetrics": true
-        }
-      }
-    }
-  ]
+	"toolName": "Task",
+	"category": "core",
+	"priority": "critical",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"uuid": "43fffbdc-ffa5-4b96-a5cf-220d57ae2d68",
+				"parentUuid": "cc17021f-a0bd-4efd-9167-fe742033843d",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"type": "assistant",
+				"content": [
+					{
+						"type": "tool_use",
+						"id": "toolu_01NxN5cZJgPvsrYTtjtYLX4u",
+						"name": "Task",
+						"input": {
+							"description": "Analyze tool output schemas",
+							"prompt": "I need you to analyze all the Claude Code tools and determine what each tool outputs. Please examine the tool signatures document I created at `/Users/abuusama/Desktop/temp/test-data/claude-tool-signatures.md` and infer/research what the output schema would be for each tool.\n\nFor each tool, I need you to determine:\n1. The structure of the response object\n2. What fields are included in successful responses\n3. What error responses look like\n4. Any special return formats (like base64 images, JSON objects, plain text, etc.)\n\nPlease create a comprehensive analysis that covers:\n- Built-in tools (Task, Bash, Read, Write, Edit, etc.)\n- MCP tools (all the mcp__ prefixed tools)\n\nFocus on being thorough and accurate. If you can't determine the exact schema, make reasonable inferences based on the tool's purpose and provide your reasoning.\n\nReturn your analysis in a structured format that I can use to enhance the tool signatures document with complete input/output specifications."
+						}
+					}
+				]
+			},
+			"toolResult": {
+				"uuid": "5d929d54-962c-4a08-b2d9-237ab6976687",
+				"parentUuid": "43fffbdc-ffa5-4b96-a5cf-220d57ae2d68",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"type": "user",
+				"content": [
+					{
+						"tool_use_id": "toolu_01NxN5cZJgPvsrYTtjtYLX4u",
+						"type": "tool_result",
+						"content": [
+							{
+								"type": "text",
+								"text": "## Analysis Complete\n\nI've created a comprehensive analysis of Claude Code tool output schemas at `/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md`. This document provides:\n\n### **Key Findings:**\n\n**Built-in Tools (13 tools analyzed):**\n- **Task**: Returns execution status and results\n- **Bash**: Returns stdout/stderr, exit codes, and timing\n- **Glob/Grep**: Return file arrays with search results\n- **LS**: Returns directory entries with metadata\n- **Read**: Returns file content (text with line numbers, images as base64)\n- **Edit/MultiEdit/Write**: Return success status and operation details\n- **Notebook tools**: Return Jupyter cell structures and metadata\n- **Web tools**: Return processed content and search results\n- **Todo tools**: Return structured todo lists\n\n**MCP Tools (50+ tools analyzed):**\n- **Excalidraw**: Returns drawing element data and canvas resources\n- **Sequential Thinking**: Returns structured thought processes\n- **Context7**: Returns library documentation and search results\n- **Puppeteer**: Returns browser automation results and screenshots (base64)\n- **Snap-happy**: Returns screenshot data and window information\n- **Supabase**: Returns database results, project data, costs, and API responses\n- **Linear**: Returns issue tracking data, comments, projects, and team information\n\n### **Common Response Patterns Identified:**\n\n1. **Success Responses**: Most tools return data directly or wrapped with success indicators\n2. **Error Responses**: Standardized error objects with codes, messages, and details\n3. **Special Formats**: Base64 for images, structured JSON for complex data, plain text for content\n4. **Pagination**: List operations include page info and cursors where applicable\n\n### **Reasoning Behind Inferences:**\n\n- **File Operations**: Based on standard Unix tool outputs and file system operations\n- **Database Tools**: Following SQL result patterns and REST API conventions  \n- **Browser Automation**: Based on Puppeteer API and screenshot handling standards\n- **API Tools**: Following respective service API documentation patterns (Supabase, Linear)\n- **MCP Tools**: Following Model Context Protocol standards for resource handling\n\nThe analysis provides complete input/output specifications that you can use to enhance your tool signatures document with precise response schemas for each tool."
+							}
+						]
+					}
+				],
+				"toolUseResult": {
+					"content": [
+						{
+							"type": "text",
+							"text": "## Analysis Complete\n\nI've created a comprehensive analysis of Claude Code tool output schemas at `/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md`. This document provides:\n\n### **Key Findings:**\n\n**Built-in Tools (13 tools analyzed):**\n- **Task**: Returns execution status and results\n- **Bash**: Returns stdout/stderr, exit codes, and timing\n- **Glob/Grep**: Return file arrays with search results\n- **LS**: Returns directory entries with metadata\n- **Read**: Returns file content (text with line numbers, images as base64)\n- **Edit/MultiEdit/Write**: Return success status and operation details\n- **Notebook tools**: Return Jupyter cell structures and metadata\n- **Web tools**: Return processed content and search results\n- **Todo tools**: Return structured todo lists\n\n**MCP Tools (50+ tools analyzed):**\n- **Excalidraw**: Returns drawing element data and canvas resources\n- **Sequential Thinking**: Returns structured thought processes\n- **Context7**: Returns library documentation and search results\n- **Puppeteer**: Returns browser automation results and screenshots (base64)\n- **Snap-happy**: Returns screenshot data and window information\n- **Supabase**: Returns database results, project data, costs, and API responses\n- **Linear**: Returns issue tracking data, comments, projects, and team information\n\n### **Common Response Patterns Identified:**\n\n1. **Success Responses**: Most tools return data directly or wrapped with success indicators\n2. **Error Responses**: Standardized error objects with codes, messages, and details\n3. **Special Formats**: Base64 for images, structured JSON for complex data, plain text for content\n4. **Pagination**: List operations include page info and cursors where applicable\n\n### **Reasoning Behind Inferences:**\n\n- **File Operations**: Based on standard Unix tool outputs and file system operations\n- **Database Tools**: Following SQL result patterns and REST API conventions  \n- **Browser Automation**: Based on Puppeteer API and screenshot handling standards\n- **API Tools**: Following respective service API documentation patterns (Supabase, Linear)\n- **MCP Tools**: Following Model Context Protocol standards for resource handling\n\nThe analysis provides complete input/output specifications that you can use to enhance your tool signatures document with precise response schemas for each tool."
+						}
+					],
+					"totalDurationMs": 208008,
+					"totalTokens": 58589,
+					"totalToolUseCount": 10,
+					"usage": {
+						"input_tokens": 0,
+						"cache_creation_input_tokens": 5497,
+						"cache_read_input_tokens": 52569,
+						"output_tokens": 523,
+						"service_tier": "standard"
+					},
+					"wasInterrupted": false
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01NxN5cZJgPvsrYTtjtYLX4u",
+				"uuid": "43fffbdc-ffa5-4b96-a5cf-220d57ae2d68",
+				"parentUuid": "cc17021f-a0bd-4efd-9167-fe742033843d",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"duration": 208008,
+				"status": {
+					"normalized": "completed",
+					"original": "success"
+				},
+				"input": {
+					"description": "Analyze tool output schemas",
+					"prompt": "I need you to analyze all the Claude Code tools and determine what each tool outputs. Please examine the tool signatures document I created at `/Users/abuusama/Desktop/temp/test-data/claude-tool-signatures.md` and infer/research what the output schema would be for each tool.\n\nFor each tool, I need you to determine:\n1. The structure of the response object\n2. What fields are included in successful responses\n3. What error responses look like\n4. Any special return formats (like base64 images, JSON objects, plain text, etc.)\n\nPlease create a comprehensive analysis that covers:\n- Built-in tools (Task, Bash, Read, Write, Edit, etc.)\n- MCP tools (all the mcp__ prefixed tools)\n\nFocus on being thorough and accurate. If you can't determine the exact schema, make reasonable inferences based on the tool's purpose and provide your reasoning.\n\nReturn your analysis in a structured format that I can use to enhance the tool signatures document with complete input/output specifications."
+				},
+				"results": {
+					"content": [
+						{
+							"type": "text",
+							"text": "## Analysis Complete\n\nI've created a comprehensive analysis of Claude Code tool output schemas at `/Users/abuusama/Desktop/temp/test-data/claude-tool-output-schemas.md`. This document provides:\n\n### **Key Findings:**\n\n**Built-in Tools (13 tools analyzed):**\n- **Task**: Returns execution status and results\n- **Bash**: Returns stdout/stderr, exit codes, and timing\n- **Glob/Grep**: Return file arrays with search results\n- **LS**: Returns directory entries with metadata\n- **Read**: Returns file content (text with line numbers, images as base64)\n- **Edit/MultiEdit/Write**: Return success status and operation details\n- **Notebook tools**: Return Jupyter cell structures and metadata\n- **Web tools**: Return processed content and search results\n- **Todo tools**: Return structured todo lists\n\n**MCP Tools (50+ tools analyzed):**\n- **Excalidraw**: Returns drawing element data and canvas resources\n- **Sequential Thinking**: Returns structured thought processes\n- **Context7**: Returns library documentation and search results\n- **Puppeteer**: Returns browser automation results and screenshots (base64)\n- **Snap-happy**: Returns screenshot data and window information\n- **Supabase**: Returns database results, project data, costs, and API responses\n- **Linear**: Returns issue tracking data, comments, projects, and team information\n\n### **Common Response Patterns Identified:**\n\n1. **Success Responses**: Most tools return data directly or wrapped with success indicators\n2. **Error Responses**: Standardized error objects with codes, messages, and details\n3. **Special Formats**: Base64 for images, structured JSON for complex data, plain text for content\n4. **Pagination**: List operations include page info and cursors where applicable\n\n### **Reasoning Behind Inferences:**\n\n- **File Operations**: Based on standard Unix tool outputs and file system operations\n- **Database Tools**: Following SQL result patterns and REST API conventions  \n- **Browser Automation**: Based on Puppeteer API and screenshot handling standards\n- **API Tools**: Following respective service API documentation patterns (Supabase, Linear)\n- **MCP Tools**: Following Model Context Protocol standards for resource handling\n\nThe analysis provides complete input/output specifications that you can use to enhance your tool signatures document with precise response schemas for each tool."
+						}
+					],
+					"totalDurationMs": 208008,
+					"totalTokens": 58589,
+					"totalToolUseCount": 10,
+					"usage": {
+						"input_tokens": 0,
+						"cache_creation_input_tokens": 5497,
+						"cache_read_input_tokens": 52569,
+						"output_tokens": 523,
+						"service_tier": "standard"
+					},
+					"wasInterrupted": false
+				},
+				"ui": {
+					"taskSummary": "Analyze tool output schemas",
+					"agentStatus": "completed",
+					"executionTime": "3m 28s",
+					"tokensUsed": "58,589 tokens",
+					"toolsUsed": 10,
+					"showMetrics": true
+				}
+			}
+		}
+	]
 }

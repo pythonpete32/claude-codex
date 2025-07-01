@@ -1,88 +1,88 @@
 {
-  "toolName": "exit_plan_mode",
-  "category": "core",
-  "priority": "high",
-  "fixtureCount": 1,
-  "fixtures": [
-    {
-      "toolCall": {
-        "parentUuid": "36e5ddb5-4178-4f1b-b3b4-0e3d2d748c85",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
-        "version": "1.0.35",
-        "message": {
-          "id": "msg_01AMSrk56zpNUPjdG3Y33Kmn",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-sonnet-4-20250514",
-          "content": [
-            {
-              "type": "tool_use",
-              "id": "toolu_01BWMoEQA52RgMvJJenBpNc6",
-              "name": "exit_plan_mode",
-              "input": {
-                "plan": "## Implementation Plan: User Authentication System\n\n### Phase 1: Backend Setup\n- Create user model with email/password fields\n- Implement JWT token generation and validation\n- Set up password hashing with bcrypt\n- Create authentication middleware\n\n### Phase 2: API Endpoints\n- POST /auth/register - User registration\n- POST /auth/login - User login\n- POST /auth/logout - Token invalidation\n- GET /auth/profile - Protected user profile\n\n### Phase 3: Frontend Integration\n- Create login/register forms\n- Implement token storage (localStorage/cookies)\n- Add authentication context/state management\n- Protect routes requiring authentication\n\n### Phase 4: Testing & Security\n- Unit tests for auth functions\n- Integration tests for API endpoints\n- Security review (rate limiting, input validation)\n- Error handling and user feedback\n\n**Estimated Time**: 2-3 days\n**Dependencies**: Database setup, frontend framework\n**Risk Factors**: Security implementation, token management"
-              }
-            }
-          ],
-          "stop_reason": null,
-          "stop_sequence": null,
-          "usage": {
-            "input_tokens": 2,
-            "cache_creation_input_tokens": 242,
-            "cache_read_input_tokens": 35448,
-            "output_tokens": 1,
-            "service_tier": "standard"
-          }
-        },
-        "requestId": "req_011CQeXxEdXsUVv1Ar2q26Cg",
-        "type": "assistant",
-        "uuid": "9e374ec8-9cde-45fd-8810-d3de13d25d42",
-        "timestamp": "2025-06-30T14:06:33.304Z"
-      },
-      "toolResult": {
-        "parentUuid": "9e374ec8-9cde-45fd-8810-d3de13d25d42",
-        "isSidechain": false,
-        "userType": "external",
-        "cwd": "/Users/abuusama/Desktop/temp/test-data",
-        "sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
-        "version": "1.0.35",
-        "type": "user",
-        "message": {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "content": "User has approved your plan. You can now start coding. Start with updating your todo list if applicable",
-              "tool_use_id": "toolu_01BWMoEQA52RgMvJJenBpNc6"
-            }
-          ]
-        },
-        "uuid": "0a944c1e-45d5-4873-8b90-3e304ec5244c",
-        "timestamp": "2025-06-30T14:06:33.474Z",
-        "toolUseResult": {
-          "plan": "## Implementation Plan: User Authentication System\n\n### Phase 1: Backend Setup\n- Create user model with email/password fields\n- Implement JWT token generation and validation\n- Set up password hashing with bcrypt\n- Create authentication middleware\n\n### Phase 2: API Endpoints\n- POST /auth/register - User registration\n- POST /auth/login - User login\n- POST /auth/logout - Token invalidation\n- GET /auth/profile - Protected user profile\n\n### Phase 3: Frontend Integration\n- Create login/register forms\n- Implement token storage (localStorage/cookies)\n- Add authentication context/state management\n- Protect routes requiring authentication\n\n### Phase 4: Testing & Security\n- Unit tests for auth functions\n- Integration tests for API endpoints\n- Security review (rate limiting, input validation)\n- Error handling and user feedback\n\n**Estimated Time**: 2-3 days\n**Dependencies**: Database setup, frontend framework\n**Risk Factors**: Security implementation, token management",
-          "isAgent": false
-        }
-      },
-      "expectedComponentData": {
-        "id": "toolu_01BWMoEQA52RgMvJJenBpNc6",
-        "uuid": "9e374ec8-9cde-45fd-8810-d3de13d25d42",
-        "parentUuid": "36e5ddb5-4178-4f1b-b3b4-0e3d2d748c85",
-        "timestamp": "2025-06-30T14:06:33.304Z",
-        "duration": 170,
-        "status": {
-          "normalized": "completed",
-          "original": "success"
-        },
-        "plan": "## Implementation Plan: User Authentication System\n\n### Phase 1: Backend Setup\n- Create user model with email/password fields\n- Implement JWT token generation and validation\n- Set up password hashing with bcrypt\n- Create authentication middleware\n\n### Phase 2: API Endpoints\n- POST /auth/register - User registration\n- POST /auth/login - User login\n- POST /auth/logout - Token invalidation\n- GET /auth/profile - Protected user profile\n\n### Phase 3: Frontend Integration\n- Create login/register forms\n- Implement token storage (localStorage/cookies)\n- Add authentication context/state management\n- Protect routes requiring authentication\n\n### Phase 4: Testing & Security\n- Unit tests for auth functions\n- Integration tests for API endpoints\n- Security review (rate limiting, input validation)\n- Error handling and user feedback\n\n**Estimated Time**: 2-3 days\n**Dependencies**: Database setup, frontend framework\n**Risk Factors**: Security implementation, token management",
-        "success": true,
-        "message": "User has approved your plan. You can now start coding. Start with updating your todo list if applicable",
-        "showApprovalButtons": false,
-        "planPreview": "## Implementation Plan: User Authentication System\\n\\n### Phase 1: Backend Setup\\n- Create user model with email/password fields\\n- Implement JWT token generation and validation\\n- Set up password hashing with bcrypt\\n- Create authentication middleware\\n\\n### Phase 2: API Endpoints\\n- POST /auth/register - User registration\\n- POST /auth/login - User login\\n- POST /auth/logout - Token invalidation\\n- GET /auth/profile - Protected user profile\\n\\n### Phase 3: Frontend Integration\\n- Create login/register forms\\n- Implement token storage (localStorage/cookies)\\n- Add authentication context/state management\\n- Protect routes requiring authentication\\n\\n### Phase 4: Testing & Security\\n- Unit tests for auth functions\\n- Integration tests for API endpoints\\n- Security review (rate limiting, input validation)\\n- Error handling and user feedback\\n\\n**Estimated Time**: 2-3 days\\n**Dependencies**: Database setup, frontend framework\\n**Risk Factors**: Security implementation, token management"
-      }
-    }
-  ]
+	"toolName": "exit_plan_mode",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "36e5ddb5-4178-4f1b-b3b4-0e3d2d748c85",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
+				"version": "1.0.35",
+				"message": {
+					"id": "msg_01AMSrk56zpNUPjdG3Y33Kmn",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01BWMoEQA52RgMvJJenBpNc6",
+							"name": "exit_plan_mode",
+							"input": {
+								"plan": "## Implementation Plan: User Authentication System\n\n### Phase 1: Backend Setup\n- Create user model with email/password fields\n- Implement JWT token generation and validation\n- Set up password hashing with bcrypt\n- Create authentication middleware\n\n### Phase 2: API Endpoints\n- POST /auth/register - User registration\n- POST /auth/login - User login\n- POST /auth/logout - Token invalidation\n- GET /auth/profile - Protected user profile\n\n### Phase 3: Frontend Integration\n- Create login/register forms\n- Implement token storage (localStorage/cookies)\n- Add authentication context/state management\n- Protect routes requiring authentication\n\n### Phase 4: Testing & Security\n- Unit tests for auth functions\n- Integration tests for API endpoints\n- Security review (rate limiting, input validation)\n- Error handling and user feedback\n\n**Estimated Time**: 2-3 days\n**Dependencies**: Database setup, frontend framework\n**Risk Factors**: Security implementation, token management"
+							}
+						}
+					],
+					"stop_reason": null,
+					"stop_sequence": null,
+					"usage": {
+						"input_tokens": 2,
+						"cache_creation_input_tokens": 242,
+						"cache_read_input_tokens": 35448,
+						"output_tokens": 1,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeXxEdXsUVv1Ar2q26Cg",
+				"type": "assistant",
+				"uuid": "9e374ec8-9cde-45fd-8810-d3de13d25d42",
+				"timestamp": "2025-06-30T14:06:33.304Z"
+			},
+			"toolResult": {
+				"parentUuid": "9e374ec8-9cde-45fd-8810-d3de13d25d42",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
+				"version": "1.0.35",
+				"type": "user",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"type": "tool_result",
+							"content": "User has approved your plan. You can now start coding. Start with updating your todo list if applicable",
+							"tool_use_id": "toolu_01BWMoEQA52RgMvJJenBpNc6"
+						}
+					]
+				},
+				"uuid": "0a944c1e-45d5-4873-8b90-3e304ec5244c",
+				"timestamp": "2025-06-30T14:06:33.474Z",
+				"toolUseResult": {
+					"plan": "## Implementation Plan: User Authentication System\n\n### Phase 1: Backend Setup\n- Create user model with email/password fields\n- Implement JWT token generation and validation\n- Set up password hashing with bcrypt\n- Create authentication middleware\n\n### Phase 2: API Endpoints\n- POST /auth/register - User registration\n- POST /auth/login - User login\n- POST /auth/logout - Token invalidation\n- GET /auth/profile - Protected user profile\n\n### Phase 3: Frontend Integration\n- Create login/register forms\n- Implement token storage (localStorage/cookies)\n- Add authentication context/state management\n- Protect routes requiring authentication\n\n### Phase 4: Testing & Security\n- Unit tests for auth functions\n- Integration tests for API endpoints\n- Security review (rate limiting, input validation)\n- Error handling and user feedback\n\n**Estimated Time**: 2-3 days\n**Dependencies**: Database setup, frontend framework\n**Risk Factors**: Security implementation, token management",
+					"isAgent": false
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01BWMoEQA52RgMvJJenBpNc6",
+				"uuid": "9e374ec8-9cde-45fd-8810-d3de13d25d42",
+				"parentUuid": "36e5ddb5-4178-4f1b-b3b4-0e3d2d748c85",
+				"timestamp": "2025-06-30T14:06:33.304Z",
+				"duration": 170,
+				"status": {
+					"normalized": "completed",
+					"original": "success"
+				},
+				"plan": "## Implementation Plan: User Authentication System\n\n### Phase 1: Backend Setup\n- Create user model with email/password fields\n- Implement JWT token generation and validation\n- Set up password hashing with bcrypt\n- Create authentication middleware\n\n### Phase 2: API Endpoints\n- POST /auth/register - User registration\n- POST /auth/login - User login\n- POST /auth/logout - Token invalidation\n- GET /auth/profile - Protected user profile\n\n### Phase 3: Frontend Integration\n- Create login/register forms\n- Implement token storage (localStorage/cookies)\n- Add authentication context/state management\n- Protect routes requiring authentication\n\n### Phase 4: Testing & Security\n- Unit tests for auth functions\n- Integration tests for API endpoints\n- Security review (rate limiting, input validation)\n- Error handling and user feedback\n\n**Estimated Time**: 2-3 days\n**Dependencies**: Database setup, frontend framework\n**Risk Factors**: Security implementation, token management",
+				"success": true,
+				"message": "User has approved your plan. You can now start coding. Start with updating your todo list if applicable",
+				"showApprovalButtons": false,
+				"planPreview": "## Implementation Plan: User Authentication System\\n\\n### Phase 1: Backend Setup\\n- Create user model with email/password fields\\n- Implement JWT token generation and validation\\n- Set up password hashing with bcrypt\\n- Create authentication middleware\\n\\n### Phase 2: API Endpoints\\n- POST /auth/register - User registration\\n- POST /auth/login - User login\\n- POST /auth/logout - Token invalidation\\n- GET /auth/profile - Protected user profile\\n\\n### Phase 3: Frontend Integration\\n- Create login/register forms\\n- Implement token storage (localStorage/cookies)\\n- Add authentication context/state management\\n- Protect routes requiring authentication\\n\\n### Phase 4: Testing & Security\\n- Unit tests for auth functions\\n- Integration tests for API endpoints\\n- Security review (rate limiting, input validation)\\n- Error handling and user feedback\\n\\n**Estimated Time**: 2-3 days\\n**Dependencies**: Database setup, frontend framework\\n**Risk Factors**: Security implementation, token management"
+			}
+		}
+	]
 }

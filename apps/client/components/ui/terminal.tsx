@@ -217,7 +217,7 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 				)}
 			</AnimatePresence>
 
-			{/* Collapsed state */}
+			{/* Collapsed summary - show when folded */}
 			<AnimatePresence>
 				{isFolded && (
 					<motion.div
@@ -225,11 +225,10 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 						animate={{ height: "auto", opacity: 1 }}
 						exit={{ height: 0, opacity: 0 }}
 						transition={{ duration: 0.2, ease: "easeInOut" }}
-						className="overflow-hidden"
+						className="overflow-hidden border-b border-gray-700"
 					>
-						<div className="px-4 py-2 text-gray-500 text-sm font-mono">
-							<span className="text-green-400">user@atomic-codex:~$</span> {command}
-							{description && <span className="ml-2 text-gray-600">{/* {description} */}</span>}
+						<div className="px-4 py-3 text-gray-500 text-sm">
+							<span className="italic">Content collapsed - click status badge to expand</span>
 						</div>
 					</motion.div>
 				)}

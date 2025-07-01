@@ -1,236 +1,126 @@
-import type React from "react"
-import { FileText, FilePlus, FileEdit, Clock } from "lucide-react"
-import { TerminalWindow } from "@/components/ui/terminal"
+"use client"
+
+import React from "react"
+import type { WriteToolProps } from "@claude-codex/types"
+import { Clock, FileText, FilePlus } from "lucide-react"
 import { TerminalText } from "@/shared/terminal-styles"
-import type { WriteToolProps as WriteToolParserProps } from "@claude-codex/types"
+import { createToolComponent } from "../base/base-tool"
 
-// Component extends parser props with UI-specific options
-export interface WriteToolProps extends WriteToolParserProps {
-	description?: string
+interface WriteToolUIProps extends WriteToolProps {
+  description?: string
+  onFileClick?: (filePath: string) => void
 }
 
-// Helper functions for formatting
-function formatFileSize(bytes?: number): string {
-	if (!bytes) return ""
-	if (bytes < 1024) return `${bytes} B`
-	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function getFileExtension(filePath: string): string {
-	return filePath.split(".").pop()?.toLowerCase() || ""
-}
-
-export const WriteTool: React.FC<WriteToolProps> = ({
-	// From BaseToolProps
-	id,
-	uuid,
-	parentUuid,
-	timestamp,
-	duration,
-	status,
-	className,
-	metadata,
-
-	// From FileToolProps
-	filePath,
-	content = "",
-	fileSize,
-	totalLines,
-	fileType,
-	encoding,
-	errorMessage,
-	showLineNumbers = true,
-	wordWrap,
-	maxHeight = "500px",
-	onFileClick,
-
-	// From WriteToolProps
-	created,
-	overwritten,
-
-	// UI-specific
-	description,
-}) => {
-	const fileName = filePath.split("/").pop() || filePath
-	const fileExtension = fileType || getFileExtension(filePath)
-	const command = created
-		? `echo "${content.substring(0, 50)}${content.length > 50 ? "..." : ""}" > "${filePath}"`
-		: `cat > "${filePath}"`
-	const commandName = created ? "echo" : "cat"
-
-	// Use normalized status from parser
-	const normalizedStatus = status.normalized
-
-	// Error case
-	if (normalizedStatus === "failed" || errorMessage) {
-		const output = (
-			<div className="text-center py-4">
-				<TerminalText variant="stderr" className="mb-2">
-					{errorMessage || `Failed to write to ${fileName}`}
-				</TerminalText>
-			</div>
-		)
-
-		return (
-			<TerminalWindow
-				command={command}
-				commandName={commandName}
-				description={description}
-				output={output}
-				status={normalizedStatus}
-				timestamp={timestamp}
-				foldable={false}
-				className={className}
-			/>
-		)
-	}
-
-	// Pending case
-	if (normalizedStatus === "pending" || normalizedStatus === "running") {
-		const output = (
-			<div className="text-center py-4">
-				<TerminalText variant="stdout" className="text-gray-400 italic">
-					Writing to file...
-				</TerminalText>
-			</div>
-		)
-
-		return (
-			<TerminalWindow
-				command={command}
-				commandName={commandName}
-				description={description}
-				output={output}
-				status={normalizedStatus}
-				timestamp={timestamp}
-				foldable={false}
-				className={className}
-			/>
-		)
-	}
-
-	// Format content with line numbers if requested
-	const formatContent = (text: string): React.ReactNode => {
-		if (!text) {
-			return (
-				<TerminalText variant="comment" className="italic">
-					Empty file written
-				</TerminalText>
-			)
-		}
-
-		const lines = text.split("\n")
-
-		if (showLineNumbers) {
-			return (
-				<div className="font-mono text-sm">
-					{lines.map((line, index) => {
-						const lineNumber = index + 1
-
-						return (
-							<div key={index} className="flex">
-								<span
-									className="text-gray-500 mr-4 select-none min-w-[3rem] text-right cursor-pointer hover:text-gray-400"
-									onClick={() => onFileClick?.(filePath)}
-								>
-									{lineNumber}
-								</span>
-								<span className={`text-gray-300 ${wordWrap ? "whitespace-pre-wrap break-all" : "whitespace-pre"}`}>
-									{line || " "}
-								</span>
-							</div>
-						)
-					})}
-				</div>
-			)
-		}
-
-		return (
-			<TerminalText
-				variant="stdout"
-				className={`font-mono text-sm ${wordWrap ? "whitespace-pre-wrap break-all" : "whitespace-pre"}`}
-			>
-				{text}
-			</TerminalText>
-		)
-	}
-
-	// Build metadata info
-	const metadataInfo: string[] = []
-	if (created) metadataInfo.push("CREATED")
-	if (overwritten) metadataInfo.push("OVERWRITTEN")
-	if (totalLines) metadataInfo.push(`${totalLines} lines`)
-	if (fileSize) metadataInfo.push(formatFileSize(fileSize))
-	if (fileExtension) metadataInfo.push(fileExtension.toUpperCase())
-	if (encoding && encoding !== "utf-8") metadataInfo.push(encoding)
-
-	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(", ")})` : ""
-
-	// Success message with icon
-	const successIcon = created ? (
-		<FilePlus className="h-4 w-4 text-green-400" />
-	) : (
-		<FileEdit className="h-4 w-4 text-blue-400" />
-	)
-
-	const output = (
-		<div>
-			{/* Success message */}
-			<div className="flex items-center gap-2 mb-4">
-				{successIcon}
-				<TerminalText variant="stdout" className="text-green-400">
-					{created ? "File created successfully" : "File overwritten successfully"}
-				</TerminalText>
-			</div>
-
-			{/* File content */}
-			<div className="border border-gray-700 rounded-md p-2 bg-gray-900/50">
-				<div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-700">
-					<FileText className="h-4 w-4 text-gray-400" />
-					<span className="text-sm text-gray-400">{fileName}</span>
-				</div>
-				<div className="max-h-96 overflow-y-auto" style={{ maxHeight }}>
-					{formatContent(content)}
-				</div>
-			</div>
-		</div>
-	)
-
-	// Determine if content should be foldable
-	const shouldFold = content.split("\n").length > 50 || content.length > 5000
-	const defaultFolded = content.split("\n").length > 100
-
-	// Create footer with metadata
-	const footer = (
-		<div className="flex items-center justify-between text-xs text-gray-500">
-			<span>
-				{fileName}
-				{metadataString}
-			</span>
-			{timestamp && (
-				<span className="flex items-center">
-					<Clock className="h-3 w-3 mr-1" />
-					{new Date(timestamp).toLocaleString()}
-				</span>
-			)}
-		</div>
-	)
-
-	return (
-		<TerminalWindow
-			command={command}
-			commandName={commandName}
-			description={description}
-			output={output}
-			footer={footer}
-			status={normalizedStatus}
-			timestamp={timestamp}
-			foldable={shouldFold}
-			defaultFolded={defaultFolded}
-			maxHeight={maxHeight}
-			showCopyButton={true}
-			className={className}
-		/>
-	)
-}
+export const WriteTool = createToolComponent<WriteToolUIProps>((props) => {
+  const {
+    filePath,
+    content,
+    fileSize,
+    created,
+    overwritten,
+    errorMessage,
+    showLineNumbers = true,
+    wordWrap,
+    maxHeight = "400px",
+    onFileClick,
+  } = props
+  
+  const commandName = "write"
+  const fileName = filePath.split("/").pop() || filePath
+  const fileExtension = filePath.match(/\.(\w+)$/)?.[1] || ""
+  const icon = created ? FilePlus : FileText
+  const Icon = icon
+  
+  // Helper to format file size
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
+  
+  // Render content
+  const renderContent = () => {
+    if (!content) {
+      return (
+        <div className="text-center py-4">
+          <TerminalText variant="stdout" className="text-gray-400 italic">
+            Empty file written
+          </TerminalText>
+        </div>
+      )
+    }
+    
+    const lines = content.split("\n")
+    
+    return (
+      <div>
+        <div className="mb-3 flex items-center gap-2 text-green-400">
+          <Icon className="h-4 w-4" />
+          <span className="text-sm">
+            {created ? "Created new file" : overwritten ? "Overwrote existing file" : "Wrote to file"}
+          </span>
+        </div>
+        
+        <div
+          className={`font-mono text-sm overflow-x-auto ${
+            wordWrap ? "whitespace-pre-wrap break-all" : "whitespace-pre"
+          }`}
+        >
+          {showLineNumbers ? (
+            lines.map((lineContent, index) => (
+              <div key={index + 1} className="group">
+                <span className="inline-block w-12 text-right select-none text-gray-500 mr-4">
+                  {index + 1}
+                </span>
+                <span className="text-gray-600 select-none">│</span>
+                <span className="ml-2">{lineContent || " "}</span>
+              </div>
+            ))
+          ) : (
+            <TerminalText variant="stdout" className="text-gray-300">
+              {content}
+            </TerminalText>
+          )}
+        </div>
+      </div>
+    )
+  }
+  
+  return {
+    renderCommand: () => `${commandName} ${filePath}`,
+    renderCommandName: () => commandName,
+    renderOutput: renderContent,
+    renderFooter: () => (
+      <div className="flex items-center justify-between gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-2">
+          <span
+            className="text-blue-400 hover:underline cursor-pointer"
+            onClick={() => onFileClick?.(filePath)}
+          >
+            {fileName}
+          </span>
+          {fileExtension && (
+            <span className="text-gray-500">({fileExtension})</span>
+          )}
+          {created && <span className="text-green-400">• new</span>}
+          {overwritten && <span className="text-yellow-400">• overwritten</span>}
+        </div>
+        <div className="flex items-center gap-2">
+          {fileSize !== undefined && (
+            <span>{formatFileSize(fileSize)}</span>
+          )}
+          <Clock className="h-3 w-3" />
+          <span>{new Date(props.timestamp).toLocaleTimeString()}</span>
+        </div>
+      </div>
+    ),
+    renderPendingMessage: () => "Preparing to write file...",
+    renderRunningMessage: () => "Writing file contents...",
+    renderFailedMessage: () => errorMessage || "Failed to write file",
+    shouldFold: () => content.split("\n").length > 30,
+    defaultFolded: () => content.split("\n").length > 100,
+    maxHeight,
+    showCopyButton: true,
+    errorMessage,
+  }
+})
