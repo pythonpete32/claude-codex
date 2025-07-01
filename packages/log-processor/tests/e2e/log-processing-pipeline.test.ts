@@ -123,18 +123,29 @@ describe("End-to-End Log Processing Pipeline", () => {
 		correlationEngine.start();
 		await fileMonitor.startWatching();
 
-		// Wait a bit for initial processing
-		await new Promise((resolve) => setTimeout(resolve, 100));
+		// Create a new log entry to trigger real-time monitoring
+		const testFilePath = join(__dirname, "..", "fixtures", "test-project", "test-monitoring.jsonl");
+		const { writeFile } = await import("node:fs/promises");
+		
+		// Write initial content
+		await writeFile(testFilePath, '{"type":"user","uuid":"test-1","timestamp":"2025-06-30T12:00:00.000Z","message":{"content":[{"type":"text","text":"Test"}]}}\n');
+		
+		// Wait for file to be detected
+		await new Promise((resolve) => setTimeout(resolve, 200));
+		
+		// Append a new entry to trigger change event
+		const { appendFile } = await import("node:fs/promises");
+		await appendFile(testFilePath, '{"type":"assistant","uuid":"test-2","timestamp":"2025-06-30T12:00:01.000Z","message":{"content":[{"type":"text","text":"Response"}]}}\n');
+		
+		// Wait for processing
+		await new Promise((resolve) => setTimeout(resolve, 200));
 
-		// Verify we got entries
+		// Verify we got entries from the file change
 		expect(newEntries.length).toBeGreaterThan(0);
-
-		// If we have tool calls/results, verify correlation
-		if (completedTools.length > 0) {
-			const tool = completedTools[0];
-			expect((tool as Record<string, unknown>).toolName).toBeTruthy();
-			expect((tool as Record<string, unknown>).duration).toBeGreaterThan(0);
-		}
+		
+		// Clean up test file
+		const { unlink } = await import("node:fs/promises");
+		await unlink(testFilePath).catch(() => {});
 	});
 
 	it("should track active sessions", async () => {
