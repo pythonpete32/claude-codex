@@ -11,6 +11,7 @@ export interface LogEntry {
 export interface MessageContent {
   type: 'text' | 'tool_use' | 'tool_result' | 'thinking';
   text?: string;
+  content?: string;      // tool_result content (used in real Claude Code output)
   id?: string;           // tool_use_id
   name?: string;         // tool name
   input?: Record<string, any>;  // tool input

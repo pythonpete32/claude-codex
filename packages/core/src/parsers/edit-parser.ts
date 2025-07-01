@@ -5,8 +5,8 @@ import type {
   ParseConfig,
 } from '@claude-codex/types';
 import { mapFromError } from '@claude-codex/types';
-import { BaseToolParser } from './base-parser';
 import * as Diff from 'diff';
+import { BaseToolParser } from './base-parser';
 
 /**
  * Edit tool parser - outputs flat props for file editing
@@ -30,7 +30,6 @@ export class EditToolParser extends BaseToolParser<EditToolProps> {
     const filePath = toolUse.input?.file_path as string;
     const oldContent = toolUse.input?.old_string as string;
     const newContent = toolUse.input?.new_string as string;
-    // const replaceAll = (toolUse.input?.replace_all as boolean) || false; // TODO: Implement replace_all support
 
     // 3. Determine status
     let status = mapFromError(false, !toolResult);
@@ -157,7 +156,6 @@ export class EditToolParser extends BaseToolParser<EditToolProps> {
       'correlation',
       'diff-generation',
       'file-type-inference',
-      'replace-all',
     ];
   }
 }

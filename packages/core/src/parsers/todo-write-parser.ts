@@ -38,8 +38,8 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
     let addedCount = 0;
     let updatedCount = 0;
     let removedCount = 0;
-    let message: string | undefined = undefined;
-    let errorMessage: string | undefined = undefined;
+    let message: string | undefined;
+    let errorMessage: string | undefined;
     let interrupted = false;
     let status = mapFromError(false, !toolResult);
 
@@ -125,7 +125,7 @@ export class TodoWriteToolParser extends BaseToolParser<TodoWriteToolProps> {
         const toolResultContent = rawResult.content.find(
           c => c.type === 'tool_result'
         );
-        if (toolResultContent && toolResultContent.output) {
+        if (toolResultContent?.output) {
           output = toolResultContent.output;
         }
       }

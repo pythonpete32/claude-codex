@@ -123,13 +123,12 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
       }
     }
 
-    // Handle string output format (check both output and content fields)
-    const stringOutput = typeof result.output === 'string' 
-      ? result.output 
-      : typeof result.content === 'string' 
-        ? result.content 
-        : null;
-    
+    // Handle string output format (check content, text, and output fields)
+    const stringOutput =
+      typeof result.output === 'string'
+        ? result.output
+        : result.content || result.text || null;
+
     if (stringOutput) {
       return this.parseStringOutput(stringOutput);
     }
@@ -224,12 +223,12 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
   } {
     const lines = output.trim().split('\n');
     const files: FileInfo[] = [];
-    let totalSize = 0;
+    const totalSize = 0;
 
     for (const line of lines) {
       // Skip empty lines and the root directory line
       if (!line.trim() || line.startsWith('- /')) continue;
-      
+
       // Skip NOTE lines
       if (line.includes('NOTE:')) break;
 
@@ -239,11 +238,11 @@ export class LsToolParser extends BaseToolParser<LsToolProps> {
         // Check indentation level - skip deeply nested files (recursive=false)
         const indentLevel = (line.match(/^\s*/)?.[0].length || 0) / 2;
         if (indentLevel > 1) continue; // Skip files nested deeper than first level
-        
+
         const filename = match[1].trim();
         const isDirectory = filename.endsWith('/');
         const name = isDirectory ? filename.slice(0, -1) : filename;
-        
+
         const file: FileInfo = {
           name,
           path: name,

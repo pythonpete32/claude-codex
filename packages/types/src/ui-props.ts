@@ -61,6 +61,7 @@ export interface FileToolProps extends BaseToolProps {
   totalLines?: number;                // Line count
   fileType?: string;                  // For syntax highlighting
   encoding?: string;                  // File encoding
+  errorMessage?: string;              // Error details for failed operations
   
   // Display options
   showLineNumbers?: boolean;

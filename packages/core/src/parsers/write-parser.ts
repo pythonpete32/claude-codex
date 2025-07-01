@@ -25,21 +25,36 @@ export class WriteToolParser extends BaseToolParser<WriteToolProps> {
 
     // 2. Extract tool_use data
     const toolUse = this.extractToolUse(toolCall);
-    const filePath = toolUse.input?.file_path as string;
-    const content = toolUse.input?.content as string;
+    const filePath = (toolUse.input?.file_path as string) || '';
+    const content = (toolUse.input?.content as string) || '';
 
     // 3. Parse result
     let created = false;
-    const overwritten = false;
+    let overwritten = false;
+    let errorMessage: string | undefined;
     let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
       const result = this.extractToolResult(toolResult, toolUse.id!);
 
       if (!result.is_error) {
-        // Determine if file was created or overwritten
-        // This would require additional context from the tool result
-        created = true; // Default to created for now
+        // Parse the result message to determine if created or overwritten
+        const resultContent =
+          result.content || result.text || (typeof result.output === 'string' ? result.output : '');
+        if (resultContent.includes('created successfully')) {
+          created = true;
+          overwritten = false;
+        } else if (resultContent.includes('updated successfully')) {
+          created = false;
+          overwritten = true;
+        } else {
+          // Default to created for backward compatibility
+          created = true;
+        }
+      } else {
+        // Extract error message from content, text, or output field
+        errorMessage = result.content || result.text || 
+          (typeof result.output === 'string' ? result.output : undefined);
       }
 
       status = mapFromError(result.is_error);
@@ -59,6 +74,7 @@ export class WriteToolParser extends BaseToolParser<WriteToolProps> {
       // Write-specific props
       created,
       overwritten,
+      errorMessage,
 
       // UI helpers
       showLineNumbers: true,
@@ -68,6 +84,7 @@ export class WriteToolParser extends BaseToolParser<WriteToolProps> {
   }
 
   private inferFileType(filePath: string): string {
+    if (!filePath) return 'text';
     const ext = filePath.split('.').pop()?.toLowerCase();
 
     const typeMap: Record<string, string> = {

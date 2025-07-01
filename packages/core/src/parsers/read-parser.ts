@@ -26,7 +26,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
 
     // 2. Extract tool_use data
     const toolUse = this.extractToolUse(toolCall);
-    const filePath = toolUse.input?.file_path as string;
+    const filePath = (toolUse.input?.file_path as string) || '';
     const limit = toolUse.input?.limit as number | undefined;
     // const offset = toolUse.input?.offset as number | undefined; // TODO: Implement offset support
 
@@ -35,6 +35,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
     let truncated = false;
     let totalLines: number | undefined;
     let fileSize: number | undefined;
+    let errorMessage: string | undefined;
     let status = mapFromError(false, !toolResult);
 
     if (toolResult) {
@@ -49,6 +50,10 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
         if (limit && totalLines && totalLines > limit) {
           truncated = true;
         }
+      } else {
+        // Extract error message from content, text, or output field
+        errorMessage = result.content || result.text || 
+          (typeof result.output === 'string' ? result.output : undefined);
       }
 
       status = mapFromError(result.is_error);
@@ -70,6 +75,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
       // Read-specific props
       truncated,
       language: this.inferFileType(filePath),
+      errorMessage,
 
       // UI helpers
       showLineNumbers: true,
@@ -82,6 +88,16 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
   private extractFileContent(
     result: MessageContent & { type: 'tool_result' }
   ): string {
+    // Check for content field first (used in fixture data), then text field
+    const contentSource = result.content || result.text;
+    if (typeof contentSource === 'string') {
+      // Remove line numbers if present (format: "     1→content")
+      return contentSource
+        .split('\n')
+        .map((line: string) => line.replace(/^\s*\d+→/, ''))
+        .join('\n');
+    }
+
     if (typeof result.output === 'string') {
       return result.output;
     }
@@ -107,6 +123,7 @@ export class ReadToolParser extends BaseToolParser<ReadToolProps> {
   }
 
   private inferFileType(filePath: string): string {
+    if (!filePath) return 'text';
     const ext = filePath.split('.').pop()?.toLowerCase();
 
     const typeMap: Record<string, string> = {

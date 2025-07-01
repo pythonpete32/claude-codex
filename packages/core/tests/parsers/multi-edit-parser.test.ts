@@ -1,4 +1,8 @@
-import type { LogEntry, MessageContent, EditOperation } from '@claude-codex/types';
+import type {
+  EditOperation,
+  LogEntry,
+  MessageContent,
+} from '@claude-codex/types';
 import { beforeEach, describe, expect, test } from 'vitest';
 import { MultiEditToolParser } from '../../src/parsers/multi-edit-parser';
 import {
@@ -161,16 +165,18 @@ describe('MultiEditToolParser - Fixture-Based Testing', () => {
       expect(result.results?.editsApplied).toBe(2);
       expect(result.results?.totalEdits).toBe(2);
       expect(result.results?.allSuccessful).toBe(true);
-      
+
       // Check the message format
       expect(result.results?.message).toContain('Applied 2 edits');
-      expect(result.results?.message).toContain('/Users/abuusama/Desktop/temp/test-data/subdir/nested.py');
-      
+      expect(result.results?.message).toContain(
+        '/Users/abuusama/Desktop/temp/test-data/subdir/nested.py'
+      );
+
       // Verify edit details
       expect(result.results?.editDetails).toHaveLength(2);
       expect(result.results?.editDetails[0].success).toBe(true);
       expect(result.results?.editDetails[1].success).toBe(true);
-      
+
       // Verify UI helpers
       expect(result.ui.totalEdits).toBe(2);
       expect(result.ui.successfulEdits).toBe(2);
@@ -287,7 +293,9 @@ describe('MultiEditToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, errorResult);
       expect(result.status.normalized).toBe('failed');
-      expect(result.results?.errorMessage).toBe('File not found: /Users/test/project/nonexistent.ts');
+      expect(result.results?.errorMessage).toBe(
+        'File not found: /Users/test/project/nonexistent.ts'
+      );
       expect(result.results?.editsApplied).toBe(0);
       expect(result.results?.allSuccessful).toBe(false);
       expect(result.results?.editDetails).toEqual([]);
@@ -448,5 +456,4 @@ describe('MultiEditToolParser - Fixture-Based Testing', () => {
       expect(averageTime).toBeLessThan(10);
     });
   });
-
 });

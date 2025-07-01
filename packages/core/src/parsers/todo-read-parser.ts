@@ -157,13 +157,12 @@ export class TodoReadToolParser extends BaseToolParser<TodoReadToolProps> {
       }
     }
 
-    // Handle string output (check both output and content fields)
-    const stringOutput = typeof result.output === 'string' 
-      ? result.output 
-      : typeof result.content === 'string' 
-        ? result.content 
-        : null;
-    
+    // Handle string output (check content, text, and output fields)
+    const stringOutput =
+      typeof result.output === 'string'
+        ? result.output
+        : result.content || result.text || null;
+
     if (stringOutput) {
       const items = this.parseStringTodos(stringOutput);
       const stats = this.calculateStats(items);

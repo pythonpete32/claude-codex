@@ -1,8 +1,8 @@
+import type { LogEntry } from '@claude-codex/types';
 import { describe, expect, test } from 'vitest';
-import type { LogEntry, EditOperation } from '@claude-codex/types';
-import { MultiEditToolParser } from '../../src/parsers/multi-edit-parser';
 import { LsToolParser } from '../../src/parsers/ls-parser';
 import { McpToolParser } from '../../src/parsers/mcp-parser';
+import { MultiEditToolParser } from '../../src/parsers/multi-edit-parser';
 
 // Debug what parsers actually output vs what tests expect
 const sampleMultiEditToolCall: LogEntry = {

@@ -153,24 +153,28 @@ describe('TodoReadToolParser - Fixture-Based Testing', () => {
       expect(result.status.normalized).toBe('completed');
       expect(result.todos).toBeDefined();
       expect(result.todos.length).toBe(6);
-      
+
       // Check some specific todos
       const firstTodo = result.todos.find(t => t.id === '1');
       expect(firstTodo).toBeDefined();
-      expect(firstTodo?.content).toBe('Create comprehensive checklist of all tools and functions');
+      expect(firstTodo?.content).toBe(
+        'Create comprehensive checklist of all tools and functions'
+      );
       expect(firstTodo?.status).toBe('completed');
       expect(firstTodo?.priority).toBe('high');
-      
+
       const inProgressTodo = result.todos.find(t => t.status === 'in_progress');
       expect(inProgressTodo).toBeDefined();
-      expect(inProgressTodo?.content).toBe('Systematically call all safe built-in tools to generate logs');
-      
+      expect(inProgressTodo?.content).toBe(
+        'Systematically call all safe built-in tools to generate logs'
+      );
+
       // Verify counts
       expect(result.statusCounts).toBeDefined();
       expect(result.statusCounts?.completed).toBe(4);
       expect(result.statusCounts?.in_progress).toBe(1);
       expect(result.statusCounts?.pending).toBe(1);
-      
+
       // Verify UI helpers
       expect(result.ui.totalTodos).toBe(6);
       expect(result.ui.completedTodos).toBe(4);

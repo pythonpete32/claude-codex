@@ -60,7 +60,6 @@
           ]
         },
         "uuid": "a4bfa022-e053-4d94-8890-71956a1a9885",
-        "timestamp": "2025-06-30T13:02:18.515Z",
         "toolUseResult": "- /Users/abuusama/Desktop/temp/test-data/\n  - claude-tool-output-schemas-analysis.md\n  - claude-tool-output-schemas.md\n  - claude-tool-signatures-enhanced.md\n  - claude-tool-signatures.md\n  - claude-tools-documentation.md\n  - config.json\n  - excalidraw.log\n  - sample.txt\n  - subdir/\n    - nested.py\n  - test-notebook.ipynb\n  - test.js\n  - tool-testing-checklist.md"
       },
       "expectedComponentData": {

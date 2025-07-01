@@ -30,17 +30,19 @@ interface LsFixture {
     message: {
       content: MessageContent[];
     };
-    toolUseResult?: string | {
-      entries?: Array<{
-        name: string;
-        type: string;
-        size?: number;
-        permissions?: string;
-        modified?: string;
-      }>;
-      totalSize?: number;
-      entryCount?: number;
-    };
+    toolUseResult?:
+      | string
+      | {
+          entries?: Array<{
+            name: string;
+            type: string;
+            size?: number;
+            permissions?: string;
+            modified?: string;
+          }>;
+          totalSize?: number;
+          entryCount?: number;
+        };
   };
   expectedComponentData: {
     id: string;
@@ -157,21 +159,21 @@ describe('LsToolParser - Fixture-Based Testing', () => {
       expect(result.input.path).toBe('/Users/abuusama/Desktop/temp/test-data');
       expect(result.input.showHidden).toBe(true); // Parser defaults to true
       expect(result.input.recursive).toBe(false);
-      
+
       // Verify results
       expect(result.results).toBeDefined();
       expect(result.results.length).toBe(12);
       expect(result.entryCount).toBe(12);
-      
+
       // Check some specific files
       const sampleFile = result.results.find(r => r.name === 'sample.txt');
       expect(sampleFile).toBeDefined();
       expect(sampleFile?.type).toBe('file');
-      
+
       const subdir = result.results.find(r => r.name === 'subdir');
       expect(subdir).toBeDefined();
       expect(subdir?.type).toBe('directory');
-      
+
       // Verify UI helpers
       expect(result.ui.totalFiles).toBe(11);
       expect(result.ui.totalDirectories).toBe(1);

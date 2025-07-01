@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest';
 import type { LogEntry, TodoItem } from '@claude-codex/types';
+import { describe, expect, test } from 'vitest';
 import { TodoWriteToolParser } from '../../src/parsers/todo-write-parser';
 
 // Sample test data based on todowrite-tool-fixtures.json structure

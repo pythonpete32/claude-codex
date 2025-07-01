@@ -154,13 +154,12 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
       }
     }
 
-    // Handle string output (simple success message) - check both output and content fields
-    const stringOutput = typeof result.output === 'string' 
-      ? result.output 
-      : typeof result.content === 'string' 
-        ? result.content 
-        : null;
-    
+    // Handle string output (simple success message) - check content, text, and output fields
+    const stringOutput =
+      typeof result.output === 'string'
+        ? result.output
+        : result.content || result.text || null;
+
     if (stringOutput) {
       // Try to extract numbers from success message
       const appliedMatch = stringOutput.match(/applied\s+(\d+)\s*edits?/i);
@@ -170,7 +169,12 @@ export class MultiEditToolParser extends BaseToolParser<MultiEditToolProps> {
 
       // Build edit details from toolUseResult if available
       let editDetails: EditDetail[] = [];
-      if (rawResult && typeof rawResult === 'object' && 'edits' in rawResult && Array.isArray(rawResult.edits)) {
+      if (
+        rawResult &&
+        typeof rawResult === 'object' &&
+        'edits' in rawResult &&
+        Array.isArray(rawResult.edits)
+      ) {
         // Parse edit details from fixture format
         editDetails = rawResult.edits.map((edit, index) => ({
           operation: {

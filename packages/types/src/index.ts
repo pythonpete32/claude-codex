@@ -3,3 +3,4 @@ export * from './entities';
 export * from './ui-props';
 export * from './status-mapper';
 export * from './parser-interfaces';
+export * from './fixture-types';

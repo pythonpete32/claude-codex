@@ -1,4 +1,4 @@
-import type { LogEntry, MessageContent } from '@claude-codex/types';
+import type { BashFixture, FixtureData, LogEntry } from '@claude-codex/types';
 import { beforeEach, describe, expect, test } from 'vitest';
 import { BashToolParser } from '../../src/parsers/bash-parser';
 import {
@@ -10,56 +10,9 @@ import {
 // Setup fixture-based testing with custom matchers
 setupFixtureBasedTesting();
 
-interface BashFixture {
-  toolCall: {
-    uuid: string;
-    timestamp: string;
-    parentUuid: string;
-    type: string;
-    isSidechain: boolean;
-    message: {
-      content: MessageContent[];
-    };
-  };
-  toolResult: {
-    uuid: string;
-    timestamp: string;
-    parentUuid: string;
-    type: string;
-    isSidechain: boolean;
-    message: {
-      content: MessageContent[];
-    };
-    toolUseResult?: {
-      type: string;
-      command: string;
-      exitCode: number;
-      output?: string;
-      error?: string;
-    };
-  };
-  expectedComponentData: {
-    id: string;
-    uuid: string;
-    parentUuid: string;
-    timestamp: string;
-    status: {
-      normalized: string;
-      original: string;
-    };
-    command: string;
-    output?: string;
-    exitCode?: number;
-  };
-}
-
-interface BashFixtureData {
-  fixtures: BashFixture[];
-}
-
 describe('BashToolParser - Fixture-Based Testing', () => {
   let parser: BashToolParser;
-  let fixtureData: BashFixtureData;
+  let fixtureData: FixtureData<BashFixture>;
 
   beforeEach(() => {
     parser = new BashToolParser();

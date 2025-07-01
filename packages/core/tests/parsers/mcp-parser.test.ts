@@ -133,7 +133,7 @@ describe('McpToolParser - Fixture-Based Testing', () => {
         expect(result.id).toBeDefined();
         expect(result.status.normalized).toBe('completed');
         expect(result.ui.serverName).toBe('mcp_excalidraw');
-        
+
         // Extract method from tool name
         const toolContent = fixture.toolCall.message.content[0] as any;
         const methodMatch = toolContent.name.match(/__([^_]+)$/);
@@ -154,13 +154,15 @@ describe('McpToolParser - Fixture-Based Testing', () => {
       expect(result.status.normalized).toBe('completed');
       expect(result.ui.serverName).toBe('sequential-thinking');
       expect(result.ui.methodName).toBe('sequentialthinking');
-      
+
       // Check input
       expect(result.input).toBeDefined();
-      expect(result.input.parameters.thought).toContain('JSON-L (JSON Lines) log format');
+      expect(result.input.parameters.thought).toContain(
+        'JSON-L (JSON Lines) log format'
+      );
       expect(result.input.parameters.nextThoughtNeeded).toBe(true);
       expect(result.input.parameters.thoughtNumber).toBe(1);
-      
+
       // Check output - MCP parser extracts from content field
       // The fixture has output in a special format that the parser doesn't handle yet
       // TODO: Update MCP parser to handle toolUseResult format
@@ -177,7 +179,7 @@ describe('McpToolParser - Fixture-Based Testing', () => {
       // Check base properties
       expect(result.status.normalized).toBe('completed');
       expect(result.ui.serverName).toBe('mcp_excalidraw');
-      
+
       // Check input and output
       expect(result.input).toBeDefined();
       // The fixture has output in a special format that the parser doesn't handle yet
@@ -374,7 +376,9 @@ describe('McpToolParser - Fixture-Based Testing', () => {
 
       const result = parser.parse(toolCall, errorResult);
       expect(result.status.normalized).toBe('failed');
-      expect(result.results?.errorMessage).toBe('Failed to connect to MCP server');
+      expect(result.results?.errorMessage).toBe(
+        'Failed to connect to MCP server'
+      );
     });
 
     test('should handle interrupted operations', () => {
@@ -587,7 +591,10 @@ describe('McpToolParser - Fixture-Based Testing', () => {
 
   describe('performance validation', () => {
     test('should parse all fixtures within acceptable time', () => {
-      const allFixtures = [...sequentialThinkingFixture.fixtures, ...excalidrawFixture.fixtures];
+      const allFixtures = [
+        ...sequentialThinkingFixture.fixtures,
+        ...excalidrawFixture.fixtures,
+      ];
       const startTime = performance.now();
 
       for (const fixture of allFixtures) {

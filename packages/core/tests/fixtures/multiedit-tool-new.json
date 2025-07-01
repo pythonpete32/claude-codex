@@ -70,7 +70,6 @@
           ]
         },
         "uuid": "b80884fb-e9ea-430d-93d0-e742f60747de",
-        "timestamp": "2025-06-30T13:57:12.774Z",
         "toolUseResult": {
           "filePath": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py",
           "edits": [
