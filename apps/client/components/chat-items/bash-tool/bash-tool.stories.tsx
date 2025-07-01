@@ -1,6 +1,6 @@
-import { AllFixtures } from "@dao/chat-items-bash-tool";
-import type { Meta, StoryObj } from "@storybook/react";
-import { BashTool } from "./bash-tool";
+import { AllFixtures } from "@dao/chat-items-bash-tool"
+import type { Meta, StoryObj } from "@storybook/react"
+import { BashTool } from "./bash-tool"
 
 const meta = {
 	title: "Chat Items/Bash Tool",
@@ -21,13 +21,13 @@ const meta = {
 			control: { type: "boolean" },
 		},
 	},
-} satisfies Meta<typeof BashTool>;
+} satisfies Meta<typeof BashTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Use real fixture data
-const realFixture = AllFixtures.successfulCommand;
+const realFixture = AllFixtures.successfulCommand
 
 export const Default: Story = {
 	args: {
@@ -41,7 +41,7 @@ export const Default: Story = {
 		timestamp: realFixture.toolCall.timestamp,
 		animated: false,
 	},
-};
+}
 
 export const Animated: Story = {
 	args: {
@@ -54,7 +54,7 @@ export const Animated: Story = {
 		timestamp: "2024-06-28 23:45:12",
 		animated: true,
 	},
-};
+}
 
 export const Running: Story = {
 	args: {
@@ -63,7 +63,7 @@ export const Running: Story = {
 		status: "running",
 		animated: true,
 	},
-};
+}
 
 export const LongOutput: Story = {
 	args: {
@@ -75,7 +75,7 @@ export const LongOutput: Story = {
 		duration: 156,
 		timestamp: "2024-06-28 23:45:12",
 	},
-};
+}
 
 export const Error: Story = {
 	args: {
@@ -87,7 +87,7 @@ export const Error: Story = {
 		duration: 1200,
 		timestamp: "2024-06-28 23:45:12",
 	},
-};
+}
 
 export const Pending: Story = {
 	args: {
@@ -96,4 +96,4 @@ export const Pending: Story = {
 		status: "pending",
 		timestamp: "2024-06-28 23:45:12",
 	},
-};
+}

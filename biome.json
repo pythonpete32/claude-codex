@@ -1,11 +1,9 @@
 {
+  "root": false,
   "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
+    "ignoreUnknown": false,
     "includes": [
       "**",
       "!**/node_modules",
@@ -15,8 +13,7 @@
       "!**/*.min.js",
       "!**/LEGACY/**",
       "!**/bash-tool.json"
-    ],
-    "ignoreUnknown": false
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -30,48 +27,41 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "recommended": false,
+      "complexity": {
+        "noBannedTypes": "error",
+        "noUselessTypeConstraint": "error"
+      },
       "correctness": {
         "useExhaustiveDependencies": "warn",
         "useHookAtTopLevel": "error"
       },
       "style": {
+        "noInferrableTypes": "error",
         "noNonNullAssertion": "off",
-        "useTemplate": "error",
         "noParameterAssign": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noUselessElse": "error",
         "useAsConstAssertion": "error",
         "useDefaultParameterLast": "error",
         "useEnumInitializers": "error",
+        "useNumberNamespace": "error",
         "useSelfClosingElements": "error",
         "useSingleVarDeclarator": "error",
-        "noUnusedTemplateLiteral": "error",
-        "useNumberNamespace": "error",
-        "noInferrableTypes": "error",
-        "noUselessElse": "error"
+        "useTemplate": "error"
       },
-      "complexity": {
-        "noBannedTypes": "error",
-        "noUselessTypeConstraint": "error"
-      },
-      "suspicious": {
-        "noExplicitAny": "warn",
-        "noDoubleEquals": "error"
-      }
+      "suspicious": { "noDoubleEquals": "error", "noExplicitAny": "warn" }
     }
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "single",
       "jsxQuoteStyle": "double",
-      "semicolons": "always",
+      "quoteProperties": "asNeeded",
       "trailingCommas": "es5",
+      "semicolons": "always",
       "arrowParentheses": "asNeeded",
-      "quoteProperties": "asNeeded"
+      "quoteStyle": "single"
     }
   },
-  "json": {
-    "formatter": {
-      "trailingCommas": "none"
-    }
-  }
+  "json": { "formatter": { "trailingCommas": "none" } }
 }

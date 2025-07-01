@@ -1,27 +1,27 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { LsTool } from "@/components/tools/ls";
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { LsTool } from "@/components/tools/ls"
 
 export default function LsToolPage() {
-	const timestamp = new Date().toISOString();
-	const recentDate = new Date().toISOString();
-	const oldDate = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(); // 6 months ago
+	const timestamp = new Date().toISOString()
+	const recentDate = new Date().toISOString()
+	const oldDate = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString() // 6 months ago
 
 	return (
 		<div className="min-h-screen bg-gray-950 p-8">
 			<div className="max-w-6xl mx-auto">
-				<Link 
-					href="/tools" 
+				<Link
+					href="/tools"
 					className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
 				>
 					<ArrowLeft className="h-4 w-4" />
 					Back to Tools
 				</Link>
-				
+
 				<h1 className="text-3xl font-bold text-white mb-8">LS Tool Examples</h1>
-				
+
 				<div className="space-y-8">
 					{/* Example 1: Project root directory */}
 					<section>
@@ -33,26 +33,64 @@ export default function LsToolPage() {
 							status={{ normalized: "completed" }}
 							input={{
 								path: "/Users/project/claude-codex",
-								showHidden: false
+								showHidden: false,
 							}}
 							results={{
 								entries: [
 									{ name: "src", type: "directory", size: 4096, permissions: "drwxr-xr-x", lastModified: recentDate },
-									{ name: "public", type: "directory", size: 4096, permissions: "drwxr-xr-x", lastModified: recentDate },
-									{ name: "node_modules", type: "symlink", size: 32, permissions: "lrwxr-xr-x", lastModified: recentDate },
-									{ name: "package.json", type: "file", size: 1234, permissions: "-rw-r--r--", lastModified: recentDate },
-									{ name: "tsconfig.json", type: "file", size: 567, permissions: "-rw-r--r--", lastModified: recentDate },
+									{
+										name: "public",
+										type: "directory",
+										size: 4096,
+										permissions: "drwxr-xr-x",
+										lastModified: recentDate,
+									},
+									{
+										name: "node_modules",
+										type: "symlink",
+										size: 32,
+										permissions: "lrwxr-xr-x",
+										lastModified: recentDate,
+									},
+									{
+										name: "package.json",
+										type: "file",
+										size: 1234,
+										permissions: "-rw-r--r--",
+										lastModified: recentDate,
+									},
+									{
+										name: "tsconfig.json",
+										type: "file",
+										size: 567,
+										permissions: "-rw-r--r--",
+										lastModified: recentDate,
+									},
 									{ name: "README.md", type: "file", size: 8912, permissions: "-rw-r--r--", lastModified: oldDate },
 									{ name: "LICENSE", type: "file", size: 1067, permissions: "-rw-r--r--", lastModified: oldDate },
-									{ name: ".gitignore", type: "file", size: 245, permissions: "-rw-r--r--", lastModified: recentDate, isHidden: true },
-									{ name: ".env.example", type: "file", size: 189, permissions: "-rw-r--r--", lastModified: oldDate, isHidden: true }
+									{
+										name: ".gitignore",
+										type: "file",
+										size: 245,
+										permissions: "-rw-r--r--",
+										lastModified: recentDate,
+										isHidden: true,
+									},
+									{
+										name: ".env.example",
+										type: "file",
+										size: 189,
+										permissions: "-rw-r--r--",
+										lastModified: oldDate,
+										isHidden: true,
+									},
 								],
-								entryCount: 9
+								entryCount: 9,
 							}}
 							ui={{
 								totalFiles: 6,
 								totalDirectories: 2,
-								totalSize: 16380
+								totalSize: 16380,
 							}}
 							duration={56}
 						/>
@@ -68,26 +106,58 @@ export default function LsToolPage() {
 							status={{ normalized: "completed" }}
 							input={{
 								path: "/Users/project/src",
-								showHidden: true
+								showHidden: true,
 							}}
 							results={{
 								entries: [
-									{ name: "components", type: "directory", size: 4096, permissions: "drwxr-xr-x", lastModified: recentDate },
+									{
+										name: "components",
+										type: "directory",
+										size: 4096,
+										permissions: "drwxr-xr-x",
+										lastModified: recentDate,
+									},
 									{ name: "utils", type: "directory", size: 4096, permissions: "drwxr-xr-x", lastModified: recentDate },
 									{ name: "hooks", type: "directory", size: 4096, permissions: "drwxr-xr-x", lastModified: recentDate },
-									{ name: "services", type: "directory", size: 4096, permissions: "drwxr-xr-x", lastModified: recentDate },
+									{
+										name: "services",
+										type: "directory",
+										size: 4096,
+										permissions: "drwxr-xr-x",
+										lastModified: recentDate,
+									},
 									{ name: "app.tsx", type: "file", size: 2345, permissions: "-rw-r--r--", lastModified: recentDate },
 									{ name: "index.ts", type: "file", size: 234, permissions: "-rw-r--r--", lastModified: recentDate },
-									{ name: "globals.css", type: "file", size: 1876, permissions: "-rw-r--r--", lastModified: recentDate },
-									{ name: ".DS_Store", type: "file", size: 6148, permissions: "-rw-r--r--", lastModified: recentDate, isHidden: true },
-									{ name: ".eslintrc", type: "file", size: 567, permissions: "-rw-r--r--", lastModified: oldDate, isHidden: true }
+									{
+										name: "globals.css",
+										type: "file",
+										size: 1876,
+										permissions: "-rw-r--r--",
+										lastModified: recentDate,
+									},
+									{
+										name: ".DS_Store",
+										type: "file",
+										size: 6148,
+										permissions: "-rw-r--r--",
+										lastModified: recentDate,
+										isHidden: true,
+									},
+									{
+										name: ".eslintrc",
+										type: "file",
+										size: 567,
+										permissions: "-rw-r--r--",
+										lastModified: oldDate,
+										isHidden: true,
+									},
 								],
-								entryCount: 9
+								entryCount: 9,
 							}}
 							ui={{
 								totalFiles: 5,
 								totalDirectories: 4,
-								totalSize: 27558
+								totalSize: 27558,
 							}}
 							duration={34}
 						/>
@@ -103,16 +173,16 @@ export default function LsToolPage() {
 							status={{ normalized: "completed" }}
 							input={{
 								path: "/Users/project/temp",
-								showHidden: false
+								showHidden: false,
 							}}
 							results={{
 								entries: [],
-								entryCount: 0
+								entryCount: 0,
 							}}
 							ui={{
 								totalFiles: 0,
 								totalDirectories: 0,
-								totalSize: 0
+								totalSize: 0,
 							}}
 							duration={12}
 						/>
@@ -128,14 +198,14 @@ export default function LsToolPage() {
 							status={{ normalized: "failed", original: "error" }}
 							input={{
 								path: "/Users/project/nonexistent",
-								showHidden: false
+								showHidden: false,
 							}}
 							results={{
-								errorMessage: "ls: cannot access '/Users/project/nonexistent': No such file or directory"
+								errorMessage: "ls: cannot access '/Users/project/nonexistent': No such file or directory",
 							}}
 							ui={{
 								totalFiles: 0,
-								totalDirectories: 0
+								totalDirectories: 0,
 							}}
 						/>
 					</section>
@@ -150,22 +220,22 @@ export default function LsToolPage() {
 							status={{ normalized: "completed" }}
 							input={{
 								path: "/Users/project/node_modules/@types",
-								showHidden: false
+								showHidden: false,
 							}}
 							results={{
 								entries: Array.from({ length: 60 }, (_, i) => ({
-									name: `@types-${['react', 'node', 'jest', 'webpack', 'babel'][i % 5]}-${i}`,
+									name: `@types-${["react", "node", "jest", "webpack", "babel"][i % 5]}-${i}`,
 									type: "directory" as const,
 									size: 4096,
 									permissions: "drwxr-xr-x",
-									lastModified: recentDate
+									lastModified: recentDate,
 								})),
-								entryCount: 60
+								entryCount: 60,
 							}}
 							ui={{
 								totalFiles: 0,
 								totalDirectories: 60,
-								totalSize: 245760
+								totalSize: 245760,
 							}}
 							duration={145}
 						/>
@@ -182,11 +252,11 @@ export default function LsToolPage() {
 							input={{
 								path: "/Users/project",
 								showHidden: true,
-								recursive: true
+								recursive: true,
 							}}
 							ui={{
 								totalFiles: 0,
-								totalDirectories: 0
+								totalDirectories: 0,
 							}}
 							description="Recursively listing all files..."
 						/>
@@ -194,5 +264,5 @@ export default function LsToolPage() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

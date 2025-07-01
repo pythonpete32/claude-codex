@@ -1,44 +1,44 @@
-import { ArrowRight, Github, Plus, Sparkles } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { Button } from "../../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { Checkbox } from "../../ui/checkbox";
-import { Input } from "../../ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import { Textarea } from "../../ui/textarea";
+import { ArrowRight, Github, Plus, Sparkles } from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { Button } from "../../ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card"
+import { Checkbox } from "../../ui/checkbox"
+import { Input } from "../../ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select"
+import { Textarea } from "../../ui/textarea"
 
 export interface QuickStartProps {
-	onStartSession?: (config: SessionConfig) => void;
+	onStartSession?: (config: SessionConfig) => void
 }
 
 export interface SessionConfig {
-	projectType: "github" | "new";
-	githubRepo?: string;
-	githubBranch?: string;
-	projectName?: string;
-	model: string;
-	mcpTools: string[];
-	prd?: string;
-	description: string;
+	projectType: "github" | "new"
+	githubRepo?: string
+	githubBranch?: string
+	projectName?: string
+	model: string
+	mcpTools: string[]
+	prd?: string
+	description: string
 }
 
 export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
-	const [projectType, setProjectType] = useState<"github" | "new">("github");
-	const [githubRepo, setGithubRepo] = useState("");
-	const [githubBranch, setGithubBranch] = useState("main");
-	const [projectName, setProjectName] = useState("");
-	const [selectedModel, setSelectedModel] = useState("sonnet-4");
-	const [selectedMcpTools, setSelectedMcpTools] = useState<string[]>([]);
-	const [selectedPrd, setSelectedPrd] = useState("none");
-	const [description, setDescription] = useState("");
+	const [projectType, setProjectType] = useState<"github" | "new">("github")
+	const [githubRepo, setGithubRepo] = useState("")
+	const [githubBranch, setGithubBranch] = useState("main")
+	const [projectName, setProjectName] = useState("")
+	const [selectedModel, setSelectedModel] = useState("sonnet-4")
+	const [selectedMcpTools, setSelectedMcpTools] = useState<string[]>([])
+	const [selectedPrd, setSelectedPrd] = useState("none")
+	const [description, setDescription] = useState("")
 
 	const models = [
 		{ value: "sonnet-4", label: "Sonnet 4", description: "Most capable model" },
 		{ value: "sonnet-3.5", label: "Sonnet 3.5", description: "Balanced performance" },
 		{ value: "haiku-3.5", label: "Haiku 3.5", description: "Fast and efficient" },
-	];
+	]
 
 	const mcpTools = [
 		{ value: "context7", label: "Context7" },
@@ -46,7 +46,7 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 		{ value: "puppeteer", label: "Puppeteer" },
 		{ value: "snap-happy", label: "Snap Happy" },
 		{ value: "ide", label: "IDE" },
-	];
+	]
 
 	const prdOptions = [
 		{ value: "none", label: "None" },
@@ -54,7 +54,7 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 		{ value: "ecommerce", label: "E-commerce Platform" },
 		{ value: "dashboard", label: "Analytics Dashboard" },
 		{ value: "api", label: "REST API Service" },
-	];
+	]
 
 	const handleStartSession = () => {
 		const config: SessionConfig = {
@@ -66,9 +66,9 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 			mcpTools: selectedMcpTools,
 			prd: selectedPrd !== "none" ? selectedPrd : undefined,
 			description,
-		};
-		onStartSession?.(config);
-	};
+		}
+		onStartSession?.(config)
+	}
 
 	return (
 		<div className="w-full">
@@ -83,10 +83,7 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 					{/* Single Configuration Row */}
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 						{/* Project Type */}
-						<Select
-							value={projectType}
-							onValueChange={(value: "github" | "new") => setProjectType(value)}
-						>
+						<Select value={projectType} onValueChange={(value: "github" | "new") => setProjectType(value)}>
 							<SelectTrigger className="h-9">
 								<SelectValue />
 							</SelectTrigger>
@@ -111,9 +108,7 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 							placeholder={projectType === "github" ? "owner/repo-name" : "Project Title"}
 							value={projectType === "github" ? githubRepo : projectName}
 							onChange={(e) =>
-								projectType === "github"
-									? setGithubRepo(e.target.value)
-									: setProjectName(e.target.value)
+								projectType === "github" ? setGithubRepo(e.target.value) : setProjectName(e.target.value)
 							}
 							className="col-span-1 sm:col-span-1 md:col-span-2 lg:col-span-2 h-9"
 						/>
@@ -135,14 +130,9 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 						{/* MCP Tools - Multi-select */}
 						<Popover>
 							<PopoverTrigger asChild>
-								<Button
-									variant="outline"
-									className="justify-between w-full h-9 min-w-0 overflow-hidden"
-								>
+								<Button variant="outline" className="justify-between w-full h-9 min-w-0 overflow-hidden">
 									<span className="truncate text-left flex-1">
-										{selectedMcpTools.length === 0
-											? "MCP Tools"
-											: `${selectedMcpTools.length} selected`}
+										{selectedMcpTools.length === 0 ? "MCP Tools" : `${selectedMcpTools.length} selected`}
 									</span>
 									<ArrowRight className="w-4 h-4 ml-1 rotate-90 flex-shrink-0" />
 								</Button>
@@ -157,9 +147,9 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 												checked={selectedMcpTools.includes(tool.value)}
 												onCheckedChange={(checked) => {
 													if (checked) {
-														setSelectedMcpTools([...selectedMcpTools, tool.value]);
+														setSelectedMcpTools([...selectedMcpTools, tool.value])
 													} else {
-														setSelectedMcpTools(selectedMcpTools.filter((t) => t !== tool.value));
+														setSelectedMcpTools(selectedMcpTools.filter((t) => t !== tool.value))
 													}
 												}}
 											/>
@@ -223,5 +213,5 @@ export const QuickStart: React.FC<QuickStartProps> = ({ onStartSession }) => {
 				</CardContent>
 			</Card>
 		</div>
-	);
-};
+	)
+}

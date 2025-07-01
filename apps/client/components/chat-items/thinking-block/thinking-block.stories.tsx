@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ThinkingBlock } from "./thinking-block";
+import type { Meta, StoryObj } from "@storybook/react"
+import { ThinkingBlock } from "./thinking-block"
 
 const meta = {
 	title: "Chat Items/Thinking Block",
@@ -18,20 +18,20 @@ const meta = {
 			options: ["terminal", "card", "minimal"],
 		},
 	},
-} satisfies Meta<typeof ThinkingBlock>;
+} satisfies Meta<typeof ThinkingBlock>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Sample thinking data based on the fixtures
 const sampleThought =
-	"Let me deeply think about the smallest, most fundamental piece we need to build for a Claude log processor. Looking at the analysis, they recommend RxJS + pure functions. The absolute smallest thing would be a single pure function that takes a JSONL string and returns a parsed, typed message object. This is the foundation - we can't process logs without parsing them first.";
+	"Let me deeply think about the smallest, most fundamental piece we need to build for a Claude log processor. Looking at the analysis, they recommend RxJS + pure functions. The absolute smallest thing would be a single pure function that takes a JSONL string and returns a parsed, typed message object. This is the foundation - we can't process logs without parsing them first."
 
 const longThought =
-	"For TDD, we need to think: what's the first test we would write? The simplest test would be: 'Given a valid JSONL line representing a user message, parse it and return a typed UserMessage object.' This means our smallest unit is a parseLogLine() function that takes a string and returns a typed message. But wait - that's not small enough. Even smaller would be: 'Given a JSON object, identify its type.' So the absolute smallest testable unit would be a function called `identifyMessageType(obj: any): MessageType`. This function takes a parsed JSON object and returns an enum or string literal type identifying what kind of message it is.";
+	"For TDD, we need to think: what's the first test we would write? The simplest test would be: 'Given a valid JSONL line representing a user message, parse it and return a typed UserMessage object.' This means our smallest unit is a parseLogLine() function that takes a string and returns a typed message. But wait - that's not small enough. Even smaller would be: 'Given a JSON object, identify its type.' So the absolute smallest testable unit would be a function called `identifyMessageType(obj: any): MessageType`. This function takes a parsed JSON object and returns an enum or string literal type identifying what kind of message it is."
 
 const shortThought =
-	"Actually, even before parsing, we need to understand what we're parsing. Let me look at an actual Claude log file to see the structure.";
+	"Actually, even before parsing, we need to understand what we're parsing. Let me look at an actual Claude log file to see the structure."
 
 export const TerminalVariant: Story = {
 	args: {
@@ -58,7 +58,7 @@ export const TerminalVariant: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "terminal",
 	},
-};
+}
 
 export const CardVariant: Story = {
 	args: {
@@ -70,7 +70,7 @@ export const CardVariant: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "card",
 	},
-};
+}
 
 export const MinimalVariant: Story = {
 	args: {
@@ -82,7 +82,7 @@ export const MinimalVariant: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "minimal",
 	},
-};
+}
 
 export const LongThought: Story = {
 	args: {
@@ -94,12 +94,11 @@ export const LongThought: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "terminal",
 	},
-};
+}
 
 export const FirstThought: Story = {
 	args: {
-		thought:
-			"Starting to analyze the problem space and breaking it down into smaller, manageable components.",
+		thought: "Starting to analyze the problem space and breaking it down into smaller, manageable components.",
 		thoughtNumber: 1,
 		totalThoughts: 10,
 		nextThoughtNeeded: true,
@@ -107,7 +106,7 @@ export const FirstThought: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "terminal",
 	},
-};
+}
 
 export const FinalThought: Story = {
 	args: {
@@ -120,7 +119,7 @@ export const FinalThought: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "terminal",
 	},
-};
+}
 
 export const PendingThought: Story = {
 	args: {
@@ -132,7 +131,7 @@ export const PendingThought: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "terminal",
 	},
-};
+}
 
 export const ErrorThought: Story = {
 	args: {
@@ -144,7 +143,7 @@ export const ErrorThought: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		variant: "terminal",
 	},
-};
+}
 
 export const ComparisonShowcase: Story = {
 	args: {
@@ -196,4 +195,4 @@ export const ComparisonShowcase: Story = {
 			</div>
 		</div>
 	),
-};
+}

@@ -1,13 +1,13 @@
-import type React from "react";
-import { Search, Clock, FileText } from "lucide-react";
-import { TerminalWindow } from "@/components/ui/terminal";
-import { TerminalText } from "@/shared/terminal-styles";
-import type { GrepToolProps as GrepToolParserProps } from "@claude-codex/types";
+import type React from "react"
+import { Search, Clock, FileText } from "lucide-react"
+import { TerminalWindow } from "@/components/ui/terminal"
+import { TerminalText } from "@/shared/terminal-styles"
+import type { GrepToolProps as GrepToolParserProps } from "@claude-codex/types"
 
 // Component extends parser props with UI-specific options
 export interface GrepToolProps extends GrepToolParserProps {
-	description?: string;
-	onMatchClick?: (filePath: string, lineNumber?: number) => void;
+	description?: string
+	onMatchClick?: (filePath: string, lineNumber?: number) => void
 }
 
 export const GrepTool: React.FC<GrepToolProps> = ({
@@ -20,24 +20,24 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 	status,
 	className,
 	metadata,
-	
+
 	// From SearchToolProps
 	// (none - SearchToolProps has no additional props)
-	
+
 	// From GrepToolProps
 	input,
 	results,
 	ui,
-	
+
 	// UI-specific
 	description,
 	onMatchClick,
 }) => {
-	const command = `grep -r "${input.pattern}"${input.searchPath ? ` "${input.searchPath}"` : ''}${input.filePatterns ? ` --include="${input.filePatterns.join(',')}"` : ''}`;
-	const commandName = "grep";
-	
+	const command = `grep -r "${input.pattern}"${input.searchPath ? ` "${input.searchPath}"` : ""}${input.filePatterns ? ` --include="${input.filePatterns.join(",")}"` : ""}`
+	const commandName = "grep"
+
 	// Use normalized status from parser
-	const normalizedStatus = status.normalized;
+	const normalizedStatus = status.normalized
 
 	// Error case
 	if (normalizedStatus === "failed") {
@@ -47,7 +47,7 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 					grep: search failed
 				</TerminalText>
 			</div>
-		);
+		)
 
 		return (
 			<TerminalWindow
@@ -60,7 +60,7 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 				foldable={false}
 				className={className}
 			/>
-		);
+		)
 	}
 
 	// Pending case
@@ -68,10 +68,10 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 		const output = (
 			<div className="text-center py-4">
 				<TerminalText variant="stdout" className="text-gray-400 italic">
-					Searching for pattern "{input.pattern}"{input.searchPath && ` in ${input.searchPath}`}...
+					Searching for pattern &quot;{input.pattern}&quot;{input.searchPath && ` in ${input.searchPath}`}...
 				</TerminalText>
 			</div>
-		);
+		)
 
 		return (
 			<TerminalWindow
@@ -84,7 +84,7 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 				foldable={false}
 				className={className}
 			/>
-		);
+		)
 	}
 
 	// Format search results
@@ -94,7 +94,7 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 				<TerminalText variant="stdout" className="text-gray-500 italic">
 					grep: no matches found
 				</TerminalText>
-			);
+			)
 		}
 
 		return (
@@ -102,25 +102,23 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 				{results.map((result, index) => (
 					<div key={index} className="border border-gray-700 rounded-md p-3 bg-gray-900/50">
 						{/* File header */}
-						<div 
+						<div
 							className="flex items-center gap-2 mb-2 cursor-pointer hover:text-purple-300"
 							onClick={() => onMatchClick?.(result.filePath)}
 						>
 							<FileText className="h-4 w-4 text-purple-400" />
-							<span className="font-mono text-sm text-purple-400">
-								{result.filePath}
-							</span>
+							<span className="font-mono text-sm text-purple-400">{result.filePath}</span>
 							<span className="text-xs text-gray-500">
-								({result.totalMatches} match{result.totalMatches !== 1 ? 'es' : ''})
+								({result.totalMatches} match{result.totalMatches !== 1 ? "es" : ""})
 							</span>
 						</div>
-						
+
 						{/* Matches */}
 						<div className="space-y-1">
 							{result.matches.map((match, matchIndex) => {
-								const beforeMatch = match.content.substring(0, match.matchStart);
-								const matchText = match.content.substring(match.matchStart, match.matchEnd);
-								const afterMatch = match.content.substring(match.matchEnd);
+								const beforeMatch = match.content.substring(0, match.matchStart)
+								const matchText = match.content.substring(match.matchStart, match.matchEnd)
+								const afterMatch = match.content.substring(match.matchEnd)
 
 								return (
 									<div
@@ -132,19 +130,17 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 											{match.line}:
 										</span>
 										<span className="text-gray-300">{beforeMatch}</span>
-										<span className="bg-yellow-600 text-black px-1 rounded">
-											{matchText}
-										</span>
+										<span className="bg-yellow-600 text-black px-1 rounded">{matchText}</span>
 										<span className="text-gray-300">{afterMatch}</span>
 									</div>
-								);
+								)
 							})}
 						</div>
 					</div>
 				))}
 			</div>
-		);
-	};
+		)
+	}
 
 	const output = (
 		<div>
@@ -154,40 +150,34 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 				<TerminalText variant="stdout" className="text-green-400">
 					{ui.totalMatches > 0
 						? `Found ${ui.totalMatches} matches in ${ui.filesWithMatches} files`
-						: 'Search completed - no matches found'}
+						: "Search completed - no matches found"}
 				</TerminalText>
-				{ui.searchTime > 0 && (
-					<span className="text-xs text-gray-500">
-						({ui.searchTime}ms)
-					</span>
-				)}
+				{ui.searchTime > 0 && <span className="text-xs text-gray-500">({ui.searchTime}ms)</span>}
 			</div>
-			
+
 			{/* Search results */}
-			<div className="max-h-96 overflow-y-auto">
-				{formatSearchResults()}
-			</div>
+			<div className="max-h-96 overflow-y-auto">{formatSearchResults()}</div>
 		</div>
-	);
+	)
 
 	// Determine if content should be foldable
-	const shouldFold = ui.totalMatches > 10;
-	const defaultFolded = ui.totalMatches > 20;
+	const shouldFold = ui.totalMatches > 10
+	const defaultFolded = ui.totalMatches > 20
 
 	// Build metadata info
-	const metadataInfo: string[] = [];
-	if (input.caseSensitive) metadataInfo.push('case-sensitive');
-	if (input.useRegex) metadataInfo.push('regex');
+	const metadataInfo: string[] = []
+	if (input.caseSensitive) metadataInfo.push("case-sensitive")
+	if (input.useRegex) metadataInfo.push("regex")
 	if (input.filePatterns && input.filePatterns.length > 0) {
-		metadataInfo.push(`include: ${input.filePatterns.join(', ')}`);
+		metadataInfo.push(`include: ${input.filePatterns.join(", ")}`)
 	}
-	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(', ')})` : '';
+	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(", ")})` : ""
 
 	// Create footer with metadata
 	const footer = (
 		<div className="flex items-center justify-between text-xs text-gray-500">
 			<span>
-				Pattern: "{input.pattern}"{metadataString}
+				Pattern: &quot;{input.pattern}&quot;{metadataString}
 			</span>
 			{timestamp && (
 				<span className="flex items-center">
@@ -196,7 +186,7 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 				</span>
 			)}
 		</div>
-	);
+	)
 
 	return (
 		<TerminalWindow
@@ -213,5 +203,5 @@ export const GrepTool: React.FC<GrepToolProps> = ({
 			showCopyButton={true}
 			className={className}
 		/>
-	);
-};
+	)
+}

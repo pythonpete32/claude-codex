@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { GrepTool } from "./grep-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { GrepTool } from "./grep-tool"
 
 const meta = {
 	title: "Chat Items/Grep Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "error"],
 		},
 	},
-} satisfies Meta<typeof GrepTool>;
+} satisfies Meta<typeof GrepTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
 	args: {
@@ -59,7 +59,7 @@ export const Default: Story = {
 		status: "completed",
 		timestamp: "2024-06-29 01:45:12",
 	},
-};
+}
 
 export const NoMatches: Story = {
 	args: {
@@ -70,7 +70,7 @@ export const NoMatches: Story = {
 		status: "completed",
 		timestamp: "2024-06-29 01:45:12",
 	},
-};
+}
 
 export const ManyMatches: Story = {
 	args: {
@@ -124,4 +124,4 @@ export const ManyMatches: Story = {
 		status: "completed",
 		timestamp: "2024-06-29 01:45:12",
 	},
-};
+}

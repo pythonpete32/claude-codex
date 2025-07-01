@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { EditTool } from "@/components/tools/edit";
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { EditTool } from "@/components/tools/edit"
 
 export default function EditToolPage() {
-	const timestamp = new Date().toISOString();
+	const timestamp = new Date().toISOString()
 
 	return (
 		<div className="min-h-screen bg-gray-950 p-8">
 			<div className="max-w-6xl mx-auto">
-				<Link 
-					href="/tools" 
+				<Link
+					href="/tools"
 					className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
 				>
 					<ArrowLeft className="h-4 w-4" />
 					Back to Tools
 				</Link>
-				
+
 				<h1 className="text-3xl font-bold text-white mb-8">Edit Tool Examples</h1>
-				
+
 				<div className="space-y-8">
 					{/* Example 1: Simple edit */}
 					<section>
@@ -35,7 +35,7 @@ export default function EditToolPage() {
 							content=""
 							diff={[
 								{ type: "removed", content: "export function Header() {", lineNumber: 5 },
-								{ type: "added", content: "export const Header: React.FC = () => {", lineNumber: 5 }
+								{ type: "added", content: "export const Header: React.FC = () => {", lineNumber: 5 },
 							]}
 							duration={23}
 							description="Converting function to arrow function with TypeScript"
@@ -82,7 +82,7 @@ const config: Config = {
 								{ type: "added", content: "  apiUrl: process.env.API_URL || 'http://localhost:3000',", lineNumber: 8 },
 								{ type: "added", content: "  timeout: 5000,", lineNumber: 9 },
 								{ type: "added", content: "  retries: 3", lineNumber: 10 },
-								{ type: "added", content: "};", lineNumber: 11 }
+								{ type: "added", content: "};", lineNumber: 11 },
 							]}
 							duration={45}
 							description="Adding TypeScript interface and environment variable support"
@@ -146,7 +146,7 @@ const config: Config = {
 								{ type: "added", content: ".btn:hover {", lineNumber: 9 },
 								{ type: "added", content: "  background: #2563eb;", lineNumber: 10 },
 								{ type: "added", content: "  transform: translateY(-1px);", lineNumber: 11 },
-								{ type: "added", content: "}", lineNumber: 12 }
+								{ type: "added", content: "}", lineNumber: 12 },
 							]}
 							duration={34}
 							description="Enhancing button styles with hover effects"
@@ -171,5 +171,5 @@ const config: Config = {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

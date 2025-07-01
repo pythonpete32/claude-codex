@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { MultiEditTool } from "./multi-edit-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { MultiEditTool } from "./multi-edit-tool"
 
 const meta = {
 	title: "Chat Items/Multi Edit Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "error"],
 		},
 	},
-} satisfies Meta<typeof MultiEditTool>;
+} satisfies Meta<typeof MultiEditTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
 	args: {
@@ -77,7 +77,7 @@ export const Card: React.FC<CardProps> = ({
 		status: "completed",
 		timestamp: "2024-06-29 01:45:12",
 	},
-};
+}
 
 export const SingleFile: Story = {
 	args: {
@@ -99,7 +99,7 @@ export const SingleFile: Story = {
 		status: "completed",
 		timestamp: "2024-06-29 01:45:12",
 	},
-};
+}
 
 export const ManyFiles: Story = {
 	args: {
@@ -124,4 +124,4 @@ export const ManyFiles: Story = {
 		status: "completed",
 		timestamp: "2024-06-29 01:45:12",
 	},
-};
+}

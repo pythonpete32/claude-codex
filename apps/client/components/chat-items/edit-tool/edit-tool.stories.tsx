@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { EditTool } from "./edit-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { EditTool } from "./edit-tool"
 
 const meta = {
 	title: "Chat Items/Edit Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "failed", "in_progress", "interrupted"],
 		},
 	},
-} satisfies Meta<typeof EditTool>;
+} satisfies Meta<typeof EditTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 const oldCode = `import React from 'react';
 import { Button } from './button';
@@ -33,7 +33,7 @@ export const App = () => {
       </Button>
     </div>
   );
-};`;
+};`
 
 const newCode = `import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export const App = () => {
       </Button>
     </div>
   );
-};`;
+};`
 
 export const Default: Story = {
 	args: {
@@ -77,7 +77,7 @@ export const Default: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const SimpleEdit: Story = {
 	args: {
@@ -102,7 +102,7 @@ export const SimpleEdit: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const WithReplaceAll: Story = {
 	args: {
@@ -128,7 +128,7 @@ export const WithReplaceAll: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const ErrorState: Story = {
 	args: {
@@ -152,7 +152,7 @@ export const ErrorState: Story = {
 			isError: true,
 		},
 	},
-};
+}
 
 export const PendingState: Story = {
 	args: {
@@ -176,4 +176,4 @@ export const PendingState: Story = {
 			isError: false,
 		},
 	},
-};
+}

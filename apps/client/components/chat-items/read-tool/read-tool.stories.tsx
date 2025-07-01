@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ReadTool } from "./read-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { ReadTool } from "./read-tool"
 
 const meta = {
 	title: "Chat Items/Read Tool",
@@ -17,10 +17,10 @@ const meta = {
 			control: { type: "boolean" },
 		},
 	},
-} satisfies Meta<typeof ReadTool>;
+} satisfies Meta<typeof ReadTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 const sampleCode = `import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,7 @@ export const Counter = () => {
       </CardContent>
     </Card>
   );
-};`;
+};`
 
 export const Default: Story = {
 	args: {
@@ -55,7 +55,7 @@ export const Default: Story = {
 		fileSize: 1024,
 		totalLines: 20,
 	},
-};
+}
 
 export const LargeFile: Story = {
 	args: {
@@ -69,7 +69,7 @@ export const LargeFile: Story = {
 		startLine: 1,
 		endLine: 20,
 	},
-};
+}
 
 export const JSONFile: Story = {
 	args: {
@@ -94,7 +94,7 @@ export const JSONFile: Story = {
 		timestamp: "2024-06-28 23:45:12",
 		fileSize: 512,
 	},
-};
+}
 
 export const BinaryFile: Story = {
 	args: {
@@ -105,7 +105,7 @@ export const BinaryFile: Story = {
 		timestamp: "2024-06-28 23:45:12",
 		fileSize: 45678,
 	},
-};
+}
 
 export const NoLineNumbers: Story = {
 	args: {
@@ -132,4 +132,4 @@ bun add @dao/ui-components
 		timestamp: "2024-06-28 23:45:12",
 		fileSize: 1024,
 	},
-};
+}

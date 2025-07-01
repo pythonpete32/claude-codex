@@ -1,13 +1,13 @@
-import type React from "react";
-import { useMemo } from "react";
-import { Files, Clock, CheckCircle, XCircle } from "lucide-react";
-import { TerminalWindow } from "@/components/ui/terminal";
-import { TerminalText } from "@/shared/terminal-styles";
-import type { MultiEditToolProps as MultiEditToolParserProps } from "@claude-codex/types";
+import type React from "react"
+import { useMemo } from "react"
+import { Files, Clock, CheckCircle, XCircle } from "lucide-react"
+import { TerminalWindow } from "@/components/ui/terminal"
+import { TerminalText } from "@/shared/terminal-styles"
+import type { MultiEditToolProps as MultiEditToolParserProps } from "@claude-codex/types"
 
 // Component extends parser props with UI-specific options
 export interface MultiEditToolProps extends MultiEditToolParserProps {
-	description?: string;
+	description?: string
 }
 
 export const MultiEditTool: React.FC<MultiEditToolProps> = ({
@@ -20,23 +20,23 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 	status,
 	className,
 	metadata,
-	
+
 	// From MultiEditToolProps
 	input,
 	results,
 	ui,
 	onFileReview,
 	onRevert,
-	
+
 	// UI-specific
 	description,
 }) => {
-	const fileName = input.filePath.split("/").pop() || input.filePath;
-	const command = `multi-edit "${input.filePath}" (${input.edits.length} operations)`;
-	const commandName = "multi-edit";
-	
+	const fileName = input.filePath.split("/").pop() || input.filePath
+	const command = `multi-edit "${input.filePath}" (${input.edits.length} operations)`
+	const commandName = "multi-edit"
+
 	// Use normalized status from parser
-	const normalizedStatus = status.normalized;
+	const normalizedStatus = status.normalized
 
 	// Error case
 	if (normalizedStatus === "failed" || results?.errorMessage) {
@@ -51,7 +51,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 					</TerminalText>
 				)}
 			</div>
-		);
+		)
 
 		return (
 			<TerminalWindow
@@ -64,7 +64,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 				foldable={false}
 				className={className}
 			/>
-		);
+		)
 	}
 
 	// Pending case
@@ -75,7 +75,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 					{normalizedStatus === "pending" ? "Preparing edits..." : "Applying edits..."}
 				</TerminalText>
 			</div>
-		);
+		)
 
 		return (
 			<TerminalWindow
@@ -88,7 +88,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 				foldable={false}
 				className={className}
 			/>
-		);
+		)
 	}
 
 	// Format edit results
@@ -98,7 +98,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 				<TerminalText variant="comment" className="italic">
 					No edits applied
 				</TerminalText>
-			);
+			)
 		}
 
 		return (
@@ -125,10 +125,12 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 
 				{/* Individual edit results */}
 				{results.editDetails.map((detail, index) => {
-					const editIcon = detail.success ? 
-						<CheckCircle className="h-3 w-3 text-green-400" /> : 
-						<XCircle className="h-3 w-3 text-red-400" />;
-					
+					const editIcon = detail.success ? (
+						<CheckCircle className="h-3 w-3 text-green-400" />
+					) : (
+						<XCircle className="h-3 w-3 text-red-400" />
+					)
+
 					return (
 						<div key={index} className="border border-gray-700 rounded-md p-3 bg-gray-900/50">
 							<div className="flex items-center gap-2 mb-2">
@@ -138,7 +140,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 									{detail.replacements_made !== undefined && ` (${detail.replacements_made} replacements)`}
 								</span>
 							</div>
-							
+
 							{/* Show the edit operation */}
 							<div className="space-y-1">
 								<div className="font-mono text-sm">
@@ -147,13 +149,13 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 								<div className="font-mono text-sm">
 									<span className="text-green-400">+ {detail.operation.new_string}</span>
 								</div>
-								
+
 								{detail.operation.replace_all && (
 									<TerminalText variant="comment" className="text-xs">
 										Replace all occurrences
 									</TerminalText>
 								)}
-								
+
 								{detail.error && (
 									<TerminalText variant="stderr" className="text-xs mt-2">
 										Error: {detail.error}
@@ -161,11 +163,11 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 								)}
 							</div>
 						</div>
-					);
+					)
 				})}
 			</div>
-		);
-	};
+		)
+	}
 
 	const output = (
 		<div>
@@ -178,29 +180,28 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 					</TerminalText>
 				</div>
 			)}
-			
+
 			{/* Edit results */}
-			<div className="max-h-96 overflow-y-auto">
-				{formatEditResults()}
-			</div>
+			<div className="max-h-96 overflow-y-auto">{formatEditResults()}</div>
 		</div>
-	);
+	)
 
 	// Determine if content should be foldable
-	const shouldFold = input.edits.length > 3;
-	const defaultFolded = input.edits.length > 5;
+	const shouldFold = input.edits.length > 3
+	const defaultFolded = input.edits.length > 5
 
 	// Build metadata info
-	const metadataInfo: string[] = [];
-	if (ui.successfulEdits > 0) metadataInfo.push(`✓ ${ui.successfulEdits}`);
-	if (ui.failedEdits > 0) metadataInfo.push(`✗ ${ui.failedEdits}`);
-	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(', ')})` : '';
+	const metadataInfo: string[] = []
+	if (ui.successfulEdits > 0) metadataInfo.push(`✓ ${ui.successfulEdits}`)
+	if (ui.failedEdits > 0) metadataInfo.push(`✗ ${ui.failedEdits}`)
+	const metadataString = metadataInfo.length > 0 ? ` (${metadataInfo.join(", ")})` : ""
 
 	// Create footer with metadata
 	const footer = (
 		<div className="flex items-center justify-between text-xs text-gray-500">
 			<span>
-				{fileName}{metadataString}
+				{fileName}
+				{metadataString}
 			</span>
 			<div className="flex items-center gap-4">
 				{onFileReview && (
@@ -227,7 +228,7 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 				)}
 			</div>
 		</div>
-	);
+	)
 
 	return (
 		<TerminalWindow
@@ -244,5 +245,5 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 			showCopyButton={true}
 			className={className}
 		/>
-	);
-};
+	)
+}

@@ -1,35 +1,30 @@
-import { type MotionProps, motion } from "framer-motion";
-import { CheckCircle, Clock, Copy, Play, Square, Terminal, XCircle } from "lucide-react";
-import type React from "react";
-import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { CopyButton } from "@/shared/copy-utils";
-import { StatusBadge } from "@/shared/status-utils";
-import { TerminalText } from "@/shared/terminal-styles";
-import { TimeDisplay } from "@/shared/time-utils";
+import { type MotionProps, motion } from "framer-motion"
+import { CheckCircle, Clock, Copy, Play, Square, Terminal, XCircle } from "lucide-react"
+import type React from "react"
+import { useEffect, useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { CopyButton } from "@/shared/copy-utils"
+import { StatusBadge } from "@/shared/status-utils"
+import { TerminalText } from "@/shared/terminal-styles"
+import { TimeDisplay } from "@/shared/time-utils"
 
 interface TypingAnimationProps extends MotionProps {
-	children: string;
-	className?: string;
-	duration?: number;
-	delay?: number;
-	as?: React.ElementType;
+	children: string
+	className?: string
+	duration?: number
+	delay?: number
+	as?: React.ElementType
 }
 
 interface AnimatedSpanProps extends MotionProps {
-	children: React.ReactNode;
-	delay?: number;
-	className?: string;
+	children: React.ReactNode
+	delay?: number
+	className?: string
 }
 
-const AnimatedSpan: React.FC<AnimatedSpanProps> = ({
-	children,
-	delay = 0,
-	className,
-	...props
-}) => (
+const AnimatedSpan: React.FC<AnimatedSpanProps> = ({ children, delay = 0, className, ...props }) => (
 	<motion.div
 		initial={{ opacity: 0, y: -5 }}
 		animate={{ opacity: 1, y: 0 }}
@@ -39,7 +34,7 @@ const AnimatedSpan: React.FC<AnimatedSpanProps> = ({
 	>
 		{children}
 	</motion.div>
-);
+)
 
 const TypingAnimation: React.FC<TypingAnimationProps> = ({
 	children,
@@ -49,50 +44,50 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
 	as: Component = "span",
 	...props
 }) => {
-	const [displayedText, setDisplayedText] = useState("");
-	const [isComplete, setIsComplete] = useState(false);
+	const [displayedText, setDisplayedText] = useState("")
+	const [isComplete, setIsComplete] = useState(false)
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			if (!children) return;
+			if (!children) return
 
-			let currentIndex = 0;
+			let currentIndex = 0
 			const interval = setInterval(() => {
-				setDisplayedText(children.slice(0, currentIndex + 1));
-				currentIndex++;
+				setDisplayedText(children.slice(0, currentIndex + 1))
+				currentIndex++
 
 				if (currentIndex >= children.length) {
-					clearInterval(interval);
-					setIsComplete(true);
+					clearInterval(interval)
+					setIsComplete(true)
 				}
-			}, duration);
+			}, duration)
 
-			return () => clearInterval(interval);
-		}, delay);
+			return () => clearInterval(interval)
+		}, delay)
 
-		return () => clearTimeout(timer);
-	}, [children, duration, delay]);
+		return () => clearTimeout(timer)
+	}, [children, duration, delay])
 
 	return (
 		<Component className={cn("font-mono", className)} {...props}>
 			{displayedText}
 			{!isComplete && <span className="animate-pulse">|</span>}
 		</Component>
-	);
-};
+	)
+}
 
 export interface BashToolProps {
-	command: string;
-	description?: string;
-	output?: string;
-	status: "pending" | "completed" | "failed" | "running" | "error" | "in_progress" | "interrupted";
-	timestamp?: string;
-	duration?: number;
-	showCopyButton?: boolean;
-	animated?: boolean;
-	onCopy?: () => void;
-	onRun?: () => void;
-	className?: string;
+	command: string
+	description?: string
+	output?: string
+	status: "pending" | "completed" | "failed" | "running" | "error" | "in_progress" | "interrupted"
+	timestamp?: string
+	duration?: number
+	showCopyButton?: boolean
+	animated?: boolean
+	onCopy?: () => void
+	onRun?: () => void
+	className?: string
 }
 
 export const BashTool: React.FC<BashToolProps> = ({
@@ -112,53 +107,53 @@ export const BashTool: React.FC<BashToolProps> = ({
 	const getStatusIcon = () => {
 		switch (status) {
 			case "pending":
-				return <Clock className="h-3 w-3 text-yellow-400" />;
+				return <Clock className="h-3 w-3 text-yellow-400" />
 			case "running":
 			case "in_progress":
-				return <Play className="h-3 w-3 text-blue-400 animate-pulse" />;
+				return <Play className="h-3 w-3 text-blue-400 animate-pulse" />
 			case "completed":
-				return <CheckCircle className="h-3 w-3 text-green-400" />;
+				return <CheckCircle className="h-3 w-3 text-green-400" />
 			case "failed":
 			case "error":
-				return <XCircle className="h-3 w-3 text-red-400" />;
+				return <XCircle className="h-3 w-3 text-red-400" />
 			case "interrupted":
-				return <Square className="h-3 w-3 text-yellow-400" />;
+				return <Square className="h-3 w-3 text-yellow-400" />
 			default:
-				return <Terminal className="h-3 w-3 text-gray-400" />;
+				return <Terminal className="h-3 w-3 text-gray-400" />
 		}
-	};
+	}
 
 	const getStatusColor = () => {
 		switch (status) {
 			case "pending":
-				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30";
+				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30"
 			case "running":
 			case "in_progress":
-				return "bg-blue-900/20 text-blue-300 border-blue-500/30";
+				return "bg-blue-900/20 text-blue-300 border-blue-500/30"
 			case "completed":
-				return "bg-green-900/20 text-green-300 border-green-500/30";
+				return "bg-green-900/20 text-green-300 border-green-500/30"
 			case "failed":
 			case "error":
-				return "bg-red-900/20 text-red-300 border-red-500/30";
+				return "bg-red-900/20 text-red-300 border-red-500/30"
 			case "interrupted":
-				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30";
+				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30"
 			default:
-				return "bg-gray-900/20 text-gray-300 border-gray-500/30";
+				return "bg-gray-900/20 text-gray-300 border-gray-500/30"
 		}
-	};
+	}
 
 	const handleCopy = () => {
-		const textToCopy = output || command;
-		navigator.clipboard.writeText(textToCopy);
-		onCopy?.();
-	};
+		const textToCopy = output || command
+		navigator.clipboard.writeText(textToCopy)
+		onCopy?.()
+	}
 
 	// Get the output to display
 	const getDisplayOutput = () => {
-		return output || null;
-	};
+		return output || null
+	}
 
-	const displayOutput = getDisplayOutput();
+	const displayOutput = getDisplayOutput()
 
 	return (
 		<div
@@ -240,7 +235,7 @@ export const BashTool: React.FC<BashToolProps> = ({
 									onClick={onRun}
 									className="h-6 w-6 p-0 text-gray-400 hover:text-green-400 hover:bg-gray-700"
 								>
-									{(status === "in_progress" || status === "running") ? (
+									{status === "in_progress" || status === "running" ? (
 										<Square className="h-3 w-3" />
 									) : (
 										<Play className="h-3 w-3" />
@@ -261,11 +256,7 @@ export const BashTool: React.FC<BashToolProps> = ({
 							)}
 						>
 							{animated && (status === "in_progress" || status === "running" || status === "completed") ? (
-								<TypingAnimation
-									duration={20}
-									delay={1000}
-									className="text-gray-300"
-								>
+								<TypingAnimation duration={20} delay={1000} className="text-gray-300">
 									{displayOutput}
 								</TypingAnimation>
 							) : (
@@ -308,10 +299,7 @@ export const BashTool: React.FC<BashToolProps> = ({
 
 				{/* New prompt line after completion */}
 				{(status === "completed" || status === "failed") && (
-					<AnimatedSpan
-						delay={displayOutput ? 2000 : 1200}
-						className="flex items-center gap-2 mt-4 text-green-400"
-					>
+					<AnimatedSpan delay={displayOutput ? 2000 : 1200} className="flex items-center gap-2 mt-4 text-green-400">
 						<span>user@atomic-codex:~$</span>
 						<span className="animate-pulse">|</span>
 					</AnimatedSpan>
@@ -328,5 +316,5 @@ export const BashTool: React.FC<BashToolProps> = ({
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}

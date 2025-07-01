@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { MCPSequentialThinkingTool } from "./mcp-sequential-thinking-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { MCPSequentialThinkingTool } from "./mcp-sequential-thinking-tool"
 
 const meta = {
 	title: "Chat Items/MCP Sequential Thinking Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "error"],
 		},
 	},
-} satisfies Meta<typeof MCPSequentialThinkingTool>;
+} satisfies Meta<typeof MCPSequentialThinkingTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Real fixture data from mcp--sequential-thinking--sequentialthinking-fixtures.json
 
@@ -48,7 +48,7 @@ export const Step1of8: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const Step4of8: Story = {
 	args: {
@@ -77,7 +77,7 @@ export const Step4of8: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const FinalStep: Story = {
 	args: {
@@ -106,7 +106,7 @@ export const FinalStep: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const PendingStep: Story = {
 	args: {
@@ -123,7 +123,7 @@ export const PendingStep: Story = {
 		status: "pending",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const ErrorStep: Story = {
 	args: {
@@ -144,4 +144,4 @@ export const ErrorStep: Story = {
 		status: "error",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}

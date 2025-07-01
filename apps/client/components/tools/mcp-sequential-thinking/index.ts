@@ -1,1 +1,1 @@
-export { MCPSequentialThinkingTool, type MCPSequentialThinkingToolProps } from './mcp-sequential-thinking-tool';
+export { MCPSequentialThinkingTool, type MCPSequentialThinkingToolProps } from "./mcp-sequential-thinking-tool"

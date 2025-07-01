@@ -1,42 +1,36 @@
-import { ChevronDown, ChevronRight, HelpCircle, Terminal } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { CopyButton } from "@/shared/copy-utils";
-import { formatJSON, JsonDisplay } from "@/shared/json-utils";
+import { ChevronDown, ChevronRight, HelpCircle, Terminal } from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { CopyButton } from "@/shared/copy-utils"
+import { formatJSON, JsonDisplay } from "@/shared/json-utils"
 // Import shared utilities
-import { StatusBadge, type ToolStatus } from "@/shared/status-utils";
-import { TerminalText } from "@/shared/terminal-styles";
-import { TimeDisplay } from "@/shared/time-utils";
+import { StatusBadge, type ToolStatus } from "@/shared/status-utils"
+import { TerminalText } from "@/shared/terminal-styles"
+import { TimeDisplay } from "@/shared/time-utils"
 
 // Updated interface to match fixture contract exactly
 export interface FallbackToolProps {
 	toolUse: {
-		type?: "tool_use";
-		id: string;
-		name: string;
-		input?: Record<string, any>;
-	};
-	status: "pending" | "completed" | "failed" | "in_progress" | "error";
-	timestamp: string;
-	toolResult?: Record<string, any> | string;
-	className?: string;
+		type?: "tool_use"
+		id: string
+		name: string
+		input?: Record<string, any>
+	}
+	status: "pending" | "completed" | "failed" | "in_progress" | "error"
+	timestamp: string
+	toolResult?: Record<string, any> | string
+	className?: string
 }
 
-export const FallbackTool: React.FC<FallbackToolProps> = ({
-	toolUse,
-	toolResult,
-	status,
-	timestamp,
-	className,
-}) => {
-	const [isExpanded, setIsExpanded] = useState(true);
+export const FallbackTool: React.FC<FallbackToolProps> = ({ toolUse, toolResult, status, timestamp, className }) => {
+	const [isExpanded, setIsExpanded] = useState(true)
 
 	// Handle optional toolUse.type for backwards compatibility
 	if (toolUse.type && toolUse.type !== "tool_use") {
-		console.warn("FallbackTool: Expected toolUse.type to be 'tool_use', got:", toolUse.type);
+		console.warn("FallbackTool: Expected toolUse.type to be 'tool_use', got:", toolUse.type)
 	}
 
 	const getToolName = () => {
@@ -45,13 +39,13 @@ export const FallbackTool: React.FC<FallbackToolProps> = ({
 			.replace(/^mcp__/, "")
 			.replace(/__/g, " ")
 			.replace(/_/g, " ")
-			.toLowerCase();
-	};
+			.toLowerCase()
+	}
 
 	// Check if toolResult is error string
-	const isErrorString = typeof toolResult === "string";
-	const resultObject = isErrorString ? null : toolResult;
-	const errorMessage = isErrorString ? toolResult : null;
+	const isErrorString = typeof toolResult === "string"
+	const resultObject = isErrorString ? null : toolResult
+	const errorMessage = isErrorString ? toolResult : null
 
 	return (
 		<div className={cn("rounded-lg border border-border bg-background overflow-hidden", className)}>
@@ -63,10 +57,7 @@ export const FallbackTool: React.FC<FallbackToolProps> = ({
 					<TerminalText variant="command" className="text-sm font-mono">
 						{getToolName()}
 					</TerminalText>
-					<Badge
-						variant="outline"
-						className="text-xs font-mono text-orange-500 border-orange-500/50"
-					>
+					<Badge variant="outline" className="text-xs font-mono text-orange-500 border-orange-500/50">
 						unknown
 					</Badge>
 					<TimeDisplay timestamp={timestamp} format="absolute" />
@@ -74,17 +65,8 @@ export const FallbackTool: React.FC<FallbackToolProps> = ({
 
 				<div className="flex items-center gap-2">
 					<StatusBadge status={status as ToolStatus} showLabel={false} />
-					<Button
-						variant="ghost"
-						size="sm"
-						onClick={() => setIsExpanded(!isExpanded)}
-						className="h-6 px-2"
-					>
-						{isExpanded ? (
-							<ChevronDown className="w-4 h-4" />
-						) : (
-							<ChevronRight className="w-4 h-4" />
-						)}
+					<Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)} className="h-6 px-2">
+						{isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
 					</Button>
 				</div>
 			</div>
@@ -188,5 +170,5 @@ export const FallbackTool: React.FC<FallbackToolProps> = ({
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}

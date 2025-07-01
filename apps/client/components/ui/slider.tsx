@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import * as SliderPrimitive from "@radix-ui/react-slider";
-import * as React from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider"
+import * as React from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Slider({
 	className,
@@ -16,7 +16,7 @@ function Slider({
 	const _values = React.useMemo(
 		() => (Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max]),
 		[value, defaultValue, min, max],
-	);
+	)
 
 	return (
 		<SliderPrimitive.Root
@@ -39,9 +39,7 @@ function Slider({
 			>
 				<SliderPrimitive.Range
 					data-slot="slider-range"
-					className={cn(
-						"bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full",
-					)}
+					className={cn("bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full")}
 				/>
 			</SliderPrimitive.Track>
 			{Array.from({ length: _values.length }, (_, index) => (
@@ -52,7 +50,7 @@ function Slider({
 				/>
 			))}
 		</SliderPrimitive.Root>
-	);
+	)
 }
 
-export { Slider };
+export { Slider }

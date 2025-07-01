@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { WriteTool } from "@/components/tools/write";
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { WriteTool } from "@/components/tools/write"
 
 export default function WriteToolPage() {
-	const timestamp = new Date().toISOString();
+	const timestamp = new Date().toISOString()
 
 	return (
 		<div className="min-h-screen bg-gray-950 p-8">
 			<div className="max-w-6xl mx-auto">
-				<Link 
-					href="/tools" 
+				<Link
+					href="/tools"
 					className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
 				>
 					<ArrowLeft className="h-4 w-4" />
 					Back to Tools
 				</Link>
-				
+
 				<h1 className="text-3xl font-bold text-white mb-8">Write Tool Examples</h1>
-				
+
 				<div className="space-y-8">
 					{/* Example 1: Create new file */}
 					<section>
@@ -189,5 +189,5 @@ Execute a tool with given parameters.
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

@@ -26,31 +26,31 @@ import {
 	Workflow,
 	Wrench,
 	X,
-} from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { cn } from "../../../lib/utils";
-import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { Input } from "../../ui/input";
-import { ScrollArea } from "../../ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import { Separator } from "../../ui/separator";
-import { Switch } from "../../ui/switch";
-import { Textarea } from "../../ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip";
+} from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { cn } from "../../../lib/utils"
+import { Badge } from "../../ui/badge"
+import { Button } from "../../ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card"
+import { Input } from "../../ui/input"
+import { ScrollArea } from "../../ui/scroll-area"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select"
+import { Separator } from "../../ui/separator"
+import { Switch } from "../../ui/switch"
+import { Textarea } from "../../ui/textarea"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip"
 
 export interface AppShellProps {
-	children: React.ReactNode;
-	className?: string;
-	onSelectSession?: (sessionId: string) => void;
-	onNavigateQuickStart?: () => void;
-	currentPath?: string;
-	hideTools?: boolean;
-	hideSidebar?: boolean;
-	hideChat?: boolean;
-	hideSessionHeader?: boolean;
+	children: React.ReactNode
+	className?: string
+	onSelectSession?: (sessionId: string) => void
+	onNavigateQuickStart?: () => void
+	currentPath?: string
+	hideTools?: boolean
+	hideSidebar?: boolean
+	hideChat?: boolean
+	hideSessionHeader?: boolean
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
@@ -64,14 +64,14 @@ export const AppShell: React.FC<AppShellProps> = ({
 	hideChat = false,
 	hideSessionHeader = false,
 }) => {
-	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-	const [rightDrawerOpen, setRightDrawerOpen] = useState(true);
-	const [chatMessage, setChatMessage] = useState("");
-	const [selectedMcpTool, setSelectedMcpTool] = useState("");
-	const [selectedModel, setSelectedModel] = useState("sonnet-4");
-	const [selectedEditor, setSelectedEditor] = useState("");
-	const [selectedSession, setSelectedSession] = useState<string | null>("1");
-	const [sessionSearch, setSessionSearch] = useState("");
+	const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+	const [rightDrawerOpen, setRightDrawerOpen] = useState(true)
+	const [chatMessage, setChatMessage] = useState("")
+	const [selectedMcpTool, setSelectedMcpTool] = useState("")
+	const [selectedModel, setSelectedModel] = useState("sonnet-4")
+	const [selectedEditor, setSelectedEditor] = useState("")
+	const [selectedSession, setSelectedSession] = useState<string | null>("1")
+	const [sessionSearch, setSessionSearch] = useState("")
 	const [enabledMcpTools, setEnabledMcpTools] = useState([
 		{
 			id: "sequential-thinking",
@@ -80,7 +80,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 		},
 		{ id: "context7", name: "Context7", description: "Library documentation lookup" },
 		{ id: "file-system", name: "File System", description: "File operations" },
-	]);
+	])
 
 	const [projects, setProjects] = useState([
 		{
@@ -109,7 +109,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 			lastActive: "3 hours ago",
 			expanded: false,
 		},
-	]);
+	])
 
 	const mockSessions = [
 		{
@@ -143,25 +143,25 @@ export const AppShell: React.FC<AppShellProps> = ({
 			projectId: "2",
 			status: "completed" as const,
 		},
-	];
+	]
 
 	const sidebarItems = [
 		{ icon: MessageSquare, label: "Quick Start", badge: null, active: true },
 		{ icon: Bot, label: "Agents", badge: null, active: false },
 		{ icon: Workflow, label: "Workflows", badge: null, active: false },
 		{ icon: BarChart3, label: "Analytics", badge: null, active: false },
-	];
+	]
 
 	const activeSessions = [
 		{ id: "1", name: "React Component Dev", timestamp: "2 min ago", active: true },
 		{ id: "2", name: "API Integration", timestamp: "1 hour ago", active: false },
 		{ id: "3", name: "Bug Fixes", timestamp: "3 hours ago", active: false },
-	];
+	]
 
 	const settingsItems = [
 		{ icon: Settings, label: "Settings", badge: null },
 		{ icon: FileText, label: "Documentation", badge: null },
-	];
+	]
 
 	const availableMcpTools = [
 		{ id: "puppeteer", name: "Puppeteer", description: "Browser automation" },
@@ -169,19 +169,19 @@ export const AppShell: React.FC<AppShellProps> = ({
 		{ id: "database", name: "Database Tools", description: "SQL operations" },
 		{ id: "git", name: "Git Integration", description: "Version control" },
 		{ id: "docker", name: "Docker Tools", description: "Container management" },
-	];
+	]
 
 	const modelOptions = [
 		{ value: "opus-4", label: "Opus 4" },
 		{ value: "sonnet-4", label: "Sonnet 4" },
-	];
+	]
 
 	const editorOptions = [
 		{ value: "vscode", label: "VS Code" },
 		{ value: "cursor", label: "Cursor" },
 		{ value: "zed", label: "Zed" },
 		{ value: "vim", label: "Vim" },
-	];
+	]
 
 	const [builtInTools, setBuiltInTools] = useState([
 		{ id: "bash", name: "Bash Terminal", enabled: true, description: "Execute shell commands" },
@@ -193,74 +193,70 @@ export const AppShell: React.FC<AppShellProps> = ({
 			description: "Search, grep, text manipulation",
 		},
 		{ id: "analysis", name: "Code Analysis", enabled: false, description: "Static code analysis" },
-	]);
+	])
 
 	const handleSendMessage = () => {
 		if (chatMessage.trim()) {
 			// Handle sending message
-			console.log("Sending message:", chatMessage);
-			setChatMessage("");
+			console.log("Sending message:", chatMessage)
+			setChatMessage("")
 		}
-	};
+	}
 
 	const handleKeyPress = (e: React.KeyboardEvent) => {
 		if (e.key === "Enter" && !e.shiftKey) {
-			e.preventDefault();
-			handleSendMessage();
+			e.preventDefault()
+			handleSendMessage()
 		}
-	};
+	}
 
 	const handleAddMcpTool = () => {
 		if (selectedMcpTool) {
-			const toolToAdd = availableMcpTools.find((tool) => tool.id === selectedMcpTool);
+			const toolToAdd = availableMcpTools.find((tool) => tool.id === selectedMcpTool)
 			if (toolToAdd && !enabledMcpTools.find((tool) => tool.id === toolToAdd.id)) {
-				setEnabledMcpTools([...enabledMcpTools, toolToAdd]);
-				setSelectedMcpTool("");
+				setEnabledMcpTools([...enabledMcpTools, toolToAdd])
+				setSelectedMcpTool("")
 			}
 		}
-	};
+	}
 
 	const handleRemoveMcpTool = (toolId: string) => {
-		setEnabledMcpTools(enabledMcpTools.filter((tool) => tool.id !== toolId));
-	};
+		setEnabledMcpTools(enabledMcpTools.filter((tool) => tool.id !== toolId))
+	}
 
 	const handleToggleBuiltInTool = (toolId: string) => {
-		setBuiltInTools(
-			builtInTools.map((tool) => (tool.id === toolId ? { ...tool, enabled: !tool.enabled } : tool)),
-		);
-	};
+		setBuiltInTools(builtInTools.map((tool) => (tool.id === toolId ? { ...tool, enabled: !tool.enabled } : tool)))
+	}
 
 	const handleEditorChange = (editorValue: string) => {
-		setSelectedEditor(editorValue);
+		setSelectedEditor(editorValue)
 		if (editorValue) {
 			// Handle opening in selected editor
-			console.log("Opening in:", editorValue);
+			console.log("Opening in:", editorValue)
 			// Reset selection after action
-			setTimeout(() => setSelectedEditor(""), 100);
+			setTimeout(() => setSelectedEditor(""), 100)
 		}
-	};
+	}
 
 	const handleContinueInTerminal = () => {
-		const command = "claude-code --resume";
-		navigator.clipboard.writeText(command);
+		const command = "claude-code --resume"
+		navigator.clipboard.writeText(command)
 		// Could show a toast notification here
-		console.log("Copied to clipboard:", command);
-	};
+		console.log("Copied to clipboard:", command)
+	}
 
 	const toggleProject = (projectId: string) => {
-		setProjects((prev) =>
-			prev.map((p) => (p.id === projectId ? { ...p, expanded: !p.expanded } : p)),
-		);
-	};
+		setProjects((prev) => prev.map((p) => (p.id === projectId ? { ...p, expanded: !p.expanded } : p)))
+	}
 
 	const handleSessionSelect = (sessionId: string) => {
-		setSelectedSession(sessionId);
-		onSelectSession?.(sessionId);
-	};
+		setSelectedSession(sessionId)
+		onSelectSession?.(sessionId)
+	}
 
 	const filteredSessions = mockSessions.filter((session) =>
 		session.name.toLowerCase().includes(sessionSearch.toLowerCase()),
-	);
+	)
 
 	return (
 		<div className={cn("h-screen flex bg-background", className)}>
@@ -289,11 +285,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 								onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
 								className="h-8 w-8 p-0"
 							>
-								{sidebarCollapsed ? (
-									<ChevronRight className="w-4 h-4" />
-								) : (
-									<ChevronLeft className="w-4 h-4" />
-								)}
+								{sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
 							</Button>
 						</div>
 					</div>
@@ -369,9 +361,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 														) : (
 															<Folder className="w-3 h-3 mr-2 text-blue-500" />
 														)}
-														<span className="truncate flex-1 text-left text-xs">
-															{project.name}
-														</span>
+														<span className="truncate flex-1 text-left text-xs">{project.name}</span>
 														<Badge variant="outline" className="text-xs h-4 px-1">
 															{project.sessionCount}
 														</Badge>
@@ -387,9 +377,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 																		variant="ghost"
 																		size="sm"
 																		className={`w-full justify-start h-6 text-xs px-2 ${
-																			selectedSession === session.id
-																				? "bg-blue-100 dark:bg-blue-900/30"
-																				: ""
+																			selectedSession === session.id ? "bg-blue-100 dark:bg-blue-900/30" : ""
 																		}`}
 																		onClick={() => handleSessionSelect(session.id)}
 																	>
@@ -402,12 +390,8 @@ export const AppShell: React.FC<AppShellProps> = ({
 																						: "bg-gray-500"
 																			}`}
 																		/>
-																		<span className="truncate flex-1 text-left">
-																			{session.name}
-																		</span>
-																		{session.starred && (
-																			<Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-																		)}
+																		<span className="truncate flex-1 text-left">{session.name}</span>
+																		{session.starred && <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />}
 																	</Button>
 																))}
 														</div>
@@ -447,10 +431,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 
 					{/* User Section */}
 					<div className="p-4 border-t border-border">
-						<Button
-							variant="ghost"
-							className={cn("w-full justify-start", sidebarCollapsed ? "px-2" : "px-3")}
-						>
+						<Button variant="ghost" className={cn("w-full justify-start", sidebarCollapsed ? "px-2" : "px-3")}>
 							<User className="w-4 h-4" />
 							{!sidebarCollapsed && <span className="ml-2">User Settings</span>}
 						</Button>
@@ -520,12 +501,12 @@ export const AppShell: React.FC<AppShellProps> = ({
 						<div className="fixed bottom-0 left-0 right-0 bg-background">
 							{/* Full width separator */}
 							<Separator className="w-full" />
-							
-							<div 
+
+							<div
 								className={cn(
 									"transition-all duration-300",
 									hideSidebar ? "ml-0" : sidebarCollapsed ? "ml-24" : "ml-72",
-									rightDrawerOpen && !hideTools ? "mr-80" : "mr-0"
+									rightDrawerOpen && !hideTools ? "mr-80" : "mr-0",
 								)}
 							>
 								<div className="px-6 pt-3 pb-4">
@@ -603,12 +584,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 									<Wrench className="w-4 h-4" />
 									Tools
 								</h2>
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={() => setRightDrawerOpen(false)}
-									className="h-8 w-8 p-0"
-								>
+								<Button variant="ghost" size="sm" onClick={() => setRightDrawerOpen(false)} className="h-8 w-8 p-0">
 									<X className="w-4 h-4" />
 								</Button>
 							</div>
@@ -632,10 +608,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 													<div className="text-sm font-medium">{tool.name}</div>
 													<div className="text-xs text-muted-foreground">{tool.description}</div>
 												</div>
-												<Switch
-													checked={tool.enabled}
-													onCheckedChange={() => handleToggleBuiltInTool(tool.id)}
-												/>
+												<Switch checked={tool.enabled} onCheckedChange={() => handleToggleBuiltInTool(tool.id)} />
 											</div>
 											{index < builtInTools.length - 1 && <Separator className="mt-3" />}
 										</div>
@@ -661,9 +634,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 												</SelectTrigger>
 												<SelectContent>
 													{availableMcpTools
-														.filter(
-															(tool) => !enabledMcpTools.find((enabled) => enabled.id === tool.id),
-														)
+														.filter((tool) => !enabledMcpTools.find((enabled) => enabled.id === tool.id))
 														.map((tool) => (
 															<SelectItem key={tool.id} value={tool.id}>
 																<div className="truncate max-w-[160px]" title={tool.name}>
@@ -695,10 +666,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 															<div className="text-sm font-medium truncate" title={tool.name}>
 																{tool.name}
 															</div>
-															<div
-																className="text-xs text-muted-foreground truncate"
-																title={tool.description}
-															>
+															<div className="text-xs text-muted-foreground truncate" title={tool.description}>
 																{tool.description}
 															</div>
 														</div>
@@ -723,5 +691,5 @@ export const AppShell: React.FC<AppShellProps> = ({
 				)}
 			</div>
 		</div>
-	);
-};
+	)
+}

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { NativeThinkingBlock } from "./native-thinking-block";
+import type { Meta, StoryObj } from "@storybook/react"
+import { NativeThinkingBlock } from "./native-thinking-block"
 
 const meta = {
 	title: "Chat Items/Native Thinking Block",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["message", "tool_call"],
 		},
 	},
-} satisfies Meta<typeof NativeThinkingBlock>;
+} satisfies Meta<typeof NativeThinkingBlock>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 const sampleThinking = `I need to help the user create a thinking block component. Let me consider:
 
@@ -26,7 +26,7 @@ const sampleThinking = `I need to help the user create a thinking block componen
 3. The component should be collapsible for better UX
 4. It needs to distinguish between thinking about messages vs tool calls
 
-I'll create a component that clearly shows the relationship between thinking and output.`;
+I'll create a component that clearly shows the relationship between thinking and output.`
 
 const longThinking = `The user is asking about implementing a thinking block system. I need to understand that there are two different types:
 
@@ -41,28 +41,26 @@ The visual design should make this relationship clear with connecting lines and 
 - Collapsible/expandable behavior for long thoughts
 - Clear visual distinction between message vs tool call thinking
 - Timestamps for debugging
-- Proper spacing and typography for readability`;
+- Proper spacing and typography for readability`
 
 const shortThinking =
-	"I should use the \`ls\` command to list the directory contents first, then examine the files to understand the structure.";
+	"I should use the \`ls\` command to list the directory contents first, then examine the files to understand the structure."
 
 // Embedded message content (simplified for embedding)
 const AssistantMessage = () => (
 	<div className="text-foreground">
 		<p className="text-sm leading-relaxed">
-			I'll help you create a thinking block component that shows the model's internal reasoning
-			process. This component will be visually grouped with either the resulting message or tool
-			call.
+			I&apos;ll help you create a thinking block component that shows the model&apos;s internal reasoning process. This
+			component will be visually grouped with either the resulting message or tool call.
 		</p>
 	</div>
-);
+)
 
 // Embedded bash tool content (simplified for embedding)
 const BashToolCall = () => (
 	<div className="text-gray-300">
 		<div className="mb-2">
-			<span className="text-green-400">$</span>{" "}
-			<span className="text-blue-300">ls -la /components/</span>
+			<span className="text-green-400">$</span> <span className="text-blue-300">ls -la /components/</span>
 		</div>
 		<pre className="text-xs text-gray-400 leading-relaxed">
 			{`total 24
@@ -73,7 +71,7 @@ drwxr-xr-x  3 user user  96 Jun 29 12:30 ..
 -rw-r--r--  1 user user  768 Jun 29 12:32 index.ts`}
 		</pre>
 	</div>
-);
+)
 
 // Embedded MCP tool content (simplified for embedding)
 const MCPThinkingToolCall = () => (
@@ -84,8 +82,7 @@ const MCPThinkingToolCall = () => (
 			<span className="text-yellow-400 text-xs">step 1/3</span>
 		</div>
 		<div className="text-sm mb-2">
-			I need to carefully plan the component architecture to ensure it's maintainable and
-			extensible.
+			I need to carefully plan the component architecture to ensure it&apos;s maintainable and extensible.
 		</div>
 		<pre className="text-xs text-gray-400">
 			{`{
@@ -97,7 +94,7 @@ const MCPThinkingToolCall = () => (
 }`}
 		</pre>
 	</div>
-);
+)
 
 export const ThinkingAboutMessage: Story = {
 	args: {
@@ -107,7 +104,7 @@ export const ThinkingAboutMessage: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const ThinkingAboutBashTool: Story = {
 	args: {
@@ -117,18 +114,17 @@ export const ThinkingAboutBashTool: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const ThinkingAboutMCPTool: Story = {
 	args: {
-		thinking:
-			"I need to use sequential thinking to break down this complex problem into manageable steps.",
+		thinking: "I need to use sequential thinking to break down this complex problem into manageable steps.",
 		associatedWith: "tool_call",
 		associatedContent: <MCPThinkingToolCall />,
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const LongThinkingCollapsed: Story = {
 	args: {
@@ -138,7 +134,7 @@ export const LongThinkingCollapsed: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: false,
 	},
-};
+}
 
 export const ThinkingOnly: Story = {
 	args: {
@@ -147,7 +143,7 @@ export const ThinkingOnly: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const ChatFlow: Story = {
 	args: {
@@ -182,4 +178,4 @@ export const ChatFlow: Story = {
 			/>
 		</div>
 	),
-};
+}

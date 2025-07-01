@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { LsTool } from "./ls-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { LsTool } from "./ls-tool"
 
 const meta = {
 	title: "Chat Items/LS Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "failed", "in_progress", "interrupted"],
 		},
 	},
-} satisfies Meta<typeof LsTool>;
+} satisfies Meta<typeof LsTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 const sampleEntries = [
 	{
@@ -81,7 +81,7 @@ const sampleEntries = [
 		permissions: "-rw-r--r--",
 		lastModified: "2024-06-28T20:10:00Z",
 	},
-];
+]
 
 export const Default: Story = {
 	args: {
@@ -102,7 +102,7 @@ export const Default: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const WithIgnorePatterns: Story = {
 	args: {
@@ -124,7 +124,7 @@ export const WithIgnorePatterns: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const EmptyDirectory: Story = {
 	args: {
@@ -145,7 +145,7 @@ export const EmptyDirectory: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const PendingState: Story = {
 	args: {
@@ -166,7 +166,7 @@ export const PendingState: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const InProgressState: Story = {
 	args: {
@@ -187,7 +187,7 @@ export const InProgressState: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const FailedState: Story = {
 	args: {
@@ -209,7 +209,7 @@ export const FailedState: Story = {
 			errorMessage: "ENOENT: no such file or directory '/nonexistent/directory'",
 		},
 	},
-};
+}
 
 export const InterruptedState: Story = {
 	args: {
@@ -231,4 +231,4 @@ export const InterruptedState: Story = {
 			errorMessage: "Operation was interrupted by user",
 		},
 	},
-};
+}

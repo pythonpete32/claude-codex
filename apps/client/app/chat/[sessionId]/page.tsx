@@ -1,63 +1,63 @@
-"use client";
+"use client"
 
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { AppShellWrapper } from "@/components/app-shell-wrapper";
-import { AssistantMessage } from "@/components/chat-items/assistant-message";
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import { AppShellWrapper } from "@/components/app-shell-wrapper"
+import { AssistantMessage } from "@/components/chat-items/assistant-message"
 // Import UI components from local chat-items
-import { BashTool } from "@/components/chat-items/bash-tool";
-import { EditTool } from "@/components/chat-items/edit-tool";
-import { FallbackTool } from "@/components/chat-items/fallback-tool";
-import { GlobTool } from "@/components/chat-items/glob-tool";
-import { GrepTool } from "@/components/chat-items/grep-tool";
-import { LsTool } from "@/components/chat-items/ls-tool";
-import { MCPSequentialThinkingTool } from "@/components/chat-items/mcp-sequential-thinking-tool";
-import { MultiEditTool } from "@/components/chat-items/multi-edit-tool";
-import { NativeThinkingBlock } from "@/components/chat-items/native-thinking-block";
-import { ReadTool } from "@/components/chat-items/read-tool";
-import { ThinkingBlock } from "@/components/chat-items/thinking-block";
-import { UserMessage } from "@/components/chat-items/user-message";
+import { BashTool } from "@/components/chat-items/bash-tool"
+import { EditTool } from "@/components/chat-items/edit-tool"
+import { FallbackTool } from "@/components/chat-items/fallback-tool"
+import { GlobTool } from "@/components/chat-items/glob-tool"
+import { GrepTool } from "@/components/chat-items/grep-tool"
+import { LsTool } from "@/components/chat-items/ls-tool"
+import { MCPSequentialThinkingTool } from "@/components/chat-items/mcp-sequential-thinking-tool"
+import { MultiEditTool } from "@/components/chat-items/multi-edit-tool"
+import { NativeThinkingBlock } from "@/components/chat-items/native-thinking-block"
+import { ReadTool } from "@/components/chat-items/read-tool"
+import { ThinkingBlock } from "@/components/chat-items/thinking-block"
+import { UserMessage } from "@/components/chat-items/user-message"
 
 // Import fixtures from local files
-import bashFixtures from "@/fixtures/bash-tool-fixtures.json";
-import editFixtures from "@/fixtures/edit-tool-fixtures.json";
-import globFixtures from "@/fixtures/glob-tool-fixtures.json";
-import grepFixtures from "@/fixtures/grep-tool-fixtures.json";
-import lsFixtures from "@/fixtures/ls-tool-fixtures.json";
-import mcpContext7Fixtures from "@/fixtures/mcp-context7-fixtures.json";
-import mcpPuppeteerFixtures from "@/fixtures/mcp-puppeteer-fixtures.json";
-import mcpSequentialFixtures from "@/fixtures/mcp-sequential-thinking-fixtures.json";
-import multiEditFixtures from "@/fixtures/multiedit-tool-fixtures.json";
-import readFixtures from "@/fixtures/read-tool-fixtures.json";
-import todoReadFixtures from "@/fixtures/todoread-tool-fixtures.json";
-import todoWriteFixtures from "@/fixtures/todowrite-tool-fixtures.json";
-import writeFixtures from "@/fixtures/write-tool-fixtures.json";
+import bashFixtures from "@/fixtures/bash-tool-fixtures.json"
+import editFixtures from "@/fixtures/edit-tool-fixtures.json"
+import globFixtures from "@/fixtures/glob-tool-fixtures.json"
+import grepFixtures from "@/fixtures/grep-tool-fixtures.json"
+import lsFixtures from "@/fixtures/ls-tool-fixtures.json"
+import mcpContext7Fixtures from "@/fixtures/mcp-context7-fixtures.json"
+import mcpPuppeteerFixtures from "@/fixtures/mcp-puppeteer-fixtures.json"
+import mcpSequentialFixtures from "@/fixtures/mcp-sequential-thinking-fixtures.json"
+import multiEditFixtures from "@/fixtures/multiedit-tool-fixtures.json"
+import readFixtures from "@/fixtures/read-tool-fixtures.json"
+import todoReadFixtures from "@/fixtures/todoread-tool-fixtures.json"
+import todoWriteFixtures from "@/fixtures/todowrite-tool-fixtures.json"
+import writeFixtures from "@/fixtures/write-tool-fixtures.json"
 
 interface SessionConfig {
-	projectType: "github" | "new";
-	githubRepo?: string;
-	githubBranch?: string;
-	projectName?: string;
-	model: string;
-	mcpTools: string[];
-	prd?: string;
-	description: string;
+	projectType: "github" | "new"
+	githubRepo?: string
+	githubBranch?: string
+	projectName?: string
+	model: string
+	mcpTools: string[]
+	prd?: string
+	description: string
 }
 
 export default function ChatPage() {
-	const params = useParams();
-	const sessionId = params.sessionId as string;
-	const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null);
+	const params = useParams()
+	const sessionId = params.sessionId as string
+	const [sessionConfig, setSessionConfig] = useState<SessionConfig | null>(null)
 
 	useEffect(() => {
 		// Load session config from storage (in a real app, this would be from an API)
 		if (typeof window !== "undefined") {
-			const stored = sessionStorage.getItem(`session-${sessionId}`);
+			const stored = sessionStorage.getItem(`session-${sessionId}`)
 			if (stored) {
-				setSessionConfig(JSON.parse(stored));
+				setSessionConfig(JSON.parse(stored))
 			}
 		}
-	}, [sessionId]);
+	}, [sessionId])
 
 	return (
 		<AppShellWrapper variant="full">
@@ -107,14 +107,18 @@ export default function ChatPage() {
 							<h3 className="text-sm font-medium mb-2">Read Tool</h3>
 							<ReadTool
 								filePath={readFixtures.basic[0].toolUse.input.file_path}
-								content={typeof readFixtures.basic[0].toolResult.output === "object" 
-									? readFixtures.basic[0].toolResult.output.content
-									: readFixtures.basic[0].toolResult.output}
+								content={
+									typeof readFixtures.basic[0].toolResult.output === "object"
+										? readFixtures.basic[0].toolResult.output.content
+										: readFixtures.basic[0].toolResult.output
+								}
 								status="completed"
 								timestamp={new Date().toISOString()}
-								totalLines={typeof readFixtures.basic[0].toolResult.output === "object"
-									? readFixtures.basic[0].toolResult.output.totalLines
-									: undefined}
+								totalLines={
+									typeof readFixtures.basic[0].toolResult.output === "object"
+										? readFixtures.basic[0].toolResult.output.totalLines
+										: undefined
+								}
 								showLineNumbers={true}
 							/>
 						</div>
@@ -157,12 +161,14 @@ export default function ChatPage() {
 						<div>
 							<h3 className="text-sm font-medium mb-2">Multi-Edit Tool</h3>
 							<MultiEditTool
-								fileEdits={[{
-									filePath: multiEditFixtures.basic[0].toolUse.input.file_path,
-									oldContent: "// Original content",
-									newContent: "// Updated content with edits applied",
-									summary: `Applied ${multiEditFixtures.basic[0].toolUse.input.edits.length} edits`
-								}]}
+								fileEdits={[
+									{
+										filePath: multiEditFixtures.basic[0].toolUse.input.file_path,
+										oldContent: "// Original content",
+										newContent: "// Updated content with edits applied",
+										summary: `Applied ${multiEditFixtures.basic[0].toolUse.input.edits.length} edits`,
+									},
+								]}
 								status="completed"
 								timestamp={new Date().toISOString()}
 								editsApplied={multiEditFixtures.basic[0].toolUse.input.edits.length}
@@ -190,13 +196,10 @@ export default function ChatPage() {
 								timestamp={new Date().toISOString()}
 								toolResult={{
 									...lsFixtures.fixtures[0].expectedComponentData.props.toolResult,
-									entries:
-										lsFixtures.fixtures[0].expectedComponentData.props.toolResult.entries.map(
-											(entry: any) => ({
-												...entry,
-												type: entry.type as "file" | "directory",
-											}),
-										),
+									entries: lsFixtures.fixtures[0].expectedComponentData.props.toolResult.entries.map((entry: any) => ({
+										...entry,
+										type: entry.type as "file" | "directory",
+									})),
 								}}
 							/>
 						</div>
@@ -226,16 +229,20 @@ export default function ChatPage() {
 							<GrepTool
 								pattern={grepFixtures.fixtures[0].toolCall.tool.input.pattern}
 								searchPath={grepFixtures.fixtures[0].toolCall.tool.input.path}
-								fileMatches={[{
-									filePath: "./src/example.ts",
-									totalMatches: 2,
-									matches: [{
-										line: 1,
-										content: `example pattern match`,
-										matchStart: 8,
-										matchEnd: 15
-									}]
-								}]}
+								fileMatches={[
+									{
+										filePath: "./src/example.ts",
+										totalMatches: 2,
+										matches: [
+											{
+												line: 1,
+												content: `example pattern match`,
+												matchStart: 8,
+												matchEnd: 15,
+											},
+										],
+									},
+								]}
 								status="completed"
 								timestamp={grepFixtures.fixtures[0].toolCall.timestamp}
 							/>
@@ -254,9 +261,11 @@ export default function ChatPage() {
 							<BashTool
 								command={bashFixtures.fixtures[0].toolCall.tool.input.command}
 								description={bashFixtures.fixtures[0].toolCall.tool.input.description}
-								output={typeof bashFixtures.fixtures[0].toolResult?.toolUseResult === "object" 
-									? bashFixtures.fixtures[0].toolResult.toolUseResult?.stdout || ""
-									: ""}
+								output={
+									typeof bashFixtures.fixtures[0].toolResult?.toolUseResult === "object"
+										? bashFixtures.fixtures[0].toolResult.toolUseResult?.stdout || ""
+										: ""
+								}
 								status="completed"
 								timestamp={bashFixtures.fixtures[0].toolCall.timestamp}
 							/>
@@ -326,23 +335,13 @@ export default function ChatPage() {
 												| "medium"
 												| "high"
 												| "critical",
-											steps: mcpSequentialFixtures[0].data.toolUse.input.workflow.steps.map(
-												(step: any) => ({
-													...step,
-													status: step.status as
-														| "pending"
-														| "in_progress"
-														| "completed"
-														| "blocked"
-														| "failed",
-													priority: step.priority as "low" | "medium" | "high" | "critical",
-												}),
-											),
+											steps: mcpSequentialFixtures[0].data.toolUse.input.workflow.steps.map((step: any) => ({
+												...step,
+												status: step.status as "pending" | "in_progress" | "completed" | "blocked" | "failed",
+												priority: step.priority as "low" | "medium" | "high" | "critical",
+											})),
 										},
-										mode: mcpSequentialFixtures[0].data.toolUse.input.mode as
-											| "create"
-											| "update"
-											| "complete",
+										mode: mcpSequentialFixtures[0].data.toolUse.input.mode as "create" | "update" | "complete",
 										stepId: mcpSequentialFixtures[0].data.toolUse.input.stepId,
 									},
 								}}
@@ -355,23 +354,23 @@ export default function ChatPage() {
 													...mcpSequentialFixtures[0].data.toolUseResult.output,
 													workflow: {
 														...mcpSequentialFixtures[0].data.toolUseResult.output.workflow,
-														status: mcpSequentialFixtures[0].data.toolUseResult.output.workflow
-															.status as "active" | "completed" | "paused" | "failed",
-														priority: mcpSequentialFixtures[0].data.toolUseResult.output.workflow
-															.priority as "low" | "medium" | "high" | "critical",
-														steps:
-															mcpSequentialFixtures[0].data.toolUseResult.output.workflow.steps.map(
-																(step: any) => ({
-																	...step,
-																	status: step.status as
-																		| "pending"
-																		| "in_progress"
-																		| "completed"
-																		| "blocked"
-																		| "failed",
-																	priority: step.priority as "low" | "medium" | "high" | "critical",
-																}),
-															),
+														status: mcpSequentialFixtures[0].data.toolUseResult.output.workflow.status as
+															| "active"
+															| "completed"
+															| "paused"
+															| "failed",
+														priority: mcpSequentialFixtures[0].data.toolUseResult.output.workflow.priority as
+															| "low"
+															| "medium"
+															| "high"
+															| "critical",
+														steps: mcpSequentialFixtures[0].data.toolUseResult.output.workflow.steps.map(
+															(step: any) => ({
+																...step,
+																status: step.status as "pending" | "in_progress" | "completed" | "blocked" | "failed",
+																priority: step.priority as "low" | "medium" | "high" | "critical",
+															}),
+														),
 													},
 												},
 											}
@@ -450,14 +449,18 @@ export default function ChatPage() {
 					{readFixtures.basic?.[0] && (
 						<ReadTool
 							filePath="/Users/example/project/src/index.ts"
-							content={typeof readFixtures.basic[0].toolResult.output === "object" 
-								? readFixtures.basic[0].toolResult.output.content
-								: readFixtures.basic[0].toolResult.output}
+							content={
+								typeof readFixtures.basic[0].toolResult.output === "object"
+									? readFixtures.basic[0].toolResult.output.content
+									: readFixtures.basic[0].toolResult.output
+							}
 							status="completed"
 							timestamp={new Date().toISOString()}
-							totalLines={typeof readFixtures.basic[0].toolResult.output === "object"
-								? readFixtures.basic[0].toolResult.output.totalLines
-								: undefined}
+							totalLines={
+								typeof readFixtures.basic[0].toolResult.output === "object"
+									? readFixtures.basic[0].toolResult.output.totalLines
+									: undefined
+							}
 							showLineNumbers={true}
 						/>
 					)}
@@ -466,5 +469,5 @@ export default function ChatPage() {
 				</div>
 			</div>
 		</AppShellWrapper>
-	);
+	)
 }

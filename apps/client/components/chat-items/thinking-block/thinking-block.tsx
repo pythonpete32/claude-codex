@@ -1,31 +1,31 @@
-import { Brain, ChevronDown, ChevronUp, Lightbulb, Zap } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { TerminalWindow } from "@/components/ui/terminal";
+import { Brain, ChevronDown, ChevronUp, Lightbulb, Zap } from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { TerminalWindow } from "@/components/ui/terminal"
 
 export interface ThinkingBlockProps {
-	thought: string;
-	thoughtNumber: number;
-	totalThoughts: number;
-	nextThoughtNeeded: boolean;
+	thought: string
+	thoughtNumber: number
+	totalThoughts: number
+	nextThoughtNeeded: boolean
 	toolUse?: {
-		id: string;
-		name: string;
-	};
+		id: string
+		name: string
+	}
 	toolResult?: {
-		stdout?: Array<{ type: string; text: string }>;
-		stderr?: string;
-		interrupted?: boolean;
-		isError?: boolean;
-	};
-	status?: "pending" | "completed" | "error";
-	timestamp?: string;
-	className?: string;
-	variant?: "terminal" | "card" | "minimal";
+		stdout?: Array<{ type: string; text: string }>
+		stderr?: string
+		interrupted?: boolean
+		isError?: boolean
+	}
+	status?: "pending" | "completed" | "error"
+	timestamp?: string
+	className?: string
+	variant?: "terminal" | "card" | "minimal"
 }
 
 export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
@@ -40,37 +40,37 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 	className,
 	variant = "terminal",
 }) => {
-	const [isExpanded, setIsExpanded] = useState(true);
+	const [isExpanded, setIsExpanded] = useState(true)
 
-	const progress = (thoughtNumber / totalThoughts) * 100;
-	const isComplete = !nextThoughtNeeded;
+	const progress = (thoughtNumber / totalThoughts) * 100
+	const isComplete = !nextThoughtNeeded
 
 	const formatTimestamp = (ts?: string) => {
-		if (!ts) return "";
-		return new Date(ts).toLocaleTimeString();
-	};
+		if (!ts) return ""
+		return new Date(ts).toLocaleTimeString()
+	}
 
 	const getStatusIcon = () => {
 		switch (status) {
 			case "pending":
-				return <Zap className="w-4 h-4 animate-pulse text-yellow-500" />;
+				return <Zap className="w-4 h-4 animate-pulse text-yellow-500" />
 			case "error":
-				return <Zap className="w-4 h-4 text-red-500" />;
+				return <Zap className="w-4 h-4 text-red-500" />
 			default:
-				return <Brain className="w-4 h-4 text-blue-500" />;
+				return <Brain className="w-4 h-4 text-blue-500" />
 		}
-	};
+	}
 
 	const getStatusColor = () => {
 		switch (status) {
 			case "pending":
-				return "text-yellow-400";
+				return "text-yellow-400"
 			case "error":
-				return "text-red-400";
+				return "text-red-400"
 			default:
-				return "text-blue-400";
+				return "text-blue-400"
 		}
-	};
+	}
 
 	// Terminal Variant
 	if (variant === "terminal") {
@@ -98,9 +98,7 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 
 				{/* Status indicator */}
 				<div className="flex items-center gap-2 text-xs">
-					<Badge variant={isComplete ? "default" : "secondary"}>
-						{isComplete ? "Complete" : "Continuing..."}
-					</Badge>
+					<Badge variant={isComplete ? "default" : "secondary"}>{isComplete ? "Complete" : "Continuing..."}</Badge>
 					{nextThoughtNeeded && (
 						<div className="flex items-center gap-1 text-green-400">
 							<Lightbulb className="w-3 h-3" />
@@ -121,7 +119,7 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 					</div>
 				)}
 			</div>
-		);
+		)
 
 		return (
 			<div className={className}>
@@ -136,7 +134,7 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 					maxHeight="500px"
 				/>
 			</div>
-		);
+		)
 	}
 
 	// Card Variant
@@ -161,15 +159,13 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 					<CardContent className="pt-0">
 						<p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">{thought}</p>
 						<div className="flex items-center justify-between text-xs text-gray-500">
-							<Badge variant={isComplete ? "default" : "secondary"}>
-								{isComplete ? "Complete" : "Continuing..."}
-							</Badge>
+							<Badge variant={isComplete ? "default" : "secondary"}>{isComplete ? "Complete" : "Continuing..."}</Badge>
 							{timestamp && <span>{formatTimestamp(timestamp)}</span>}
 						</div>
 					</CardContent>
 				)}
 			</Card>
-		);
+		)
 	}
 
 	// Minimal Variant
@@ -187,14 +183,12 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 						</div>
 						<p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{thought}</p>
 						{nextThoughtNeeded && (
-							<div className="text-xs text-green-600 dark:text-green-400">
-								→ Next thought needed
-							</div>
+							<div className="text-xs text-green-600 dark:text-green-400">→ Next thought needed</div>
 						)}
 					</div>
 				</div>
 			</div>
-		);
+		)
 	}
 
 	// Default fallback to terminal
@@ -204,5 +198,5 @@ export const ThinkingBlock: React.FC<ThinkingBlockProps> = ({
 				<p>{thought}</p>
 			</div>
 		</div>
-	);
-};
+	)
+}

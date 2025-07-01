@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { AssistantMessage } from "./assistant-message";
+import type { Meta, StoryObj } from "@storybook/react"
+import { AssistantMessage } from "./assistant-message"
 
 const meta = {
 	title: "Chat Items/Assistant Message",
@@ -13,12 +13,12 @@ const meta = {
 			control: { type: "boolean" },
 		},
 	},
-} satisfies Meta<typeof AssistantMessage>;
+} satisfies Meta<typeof AssistantMessage>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-const shortMessage = "I'll help you create those message components right away!";
+const shortMessage = "I'll help you create those message components right away!"
 
 const longMessage = `I'll help you create assistant and user message bubble components that follow the same terminal aesthetic as the native thinking block.
 
@@ -30,7 +30,7 @@ Here's what I'll implement:
 4. **Light backgrounds**: Clean white/light backgrounds for readability
 5. **Syntax highlighting**: Support for inline code with backticks
 
-Both components will maintain the consistent terminal aesthetic while being optimized for message content display.`;
+Both components will maintain the consistent terminal aesthetic while being optimized for message content display.`
 
 const messageWithCode = `You can use the \`ls -la\` command to list all files and directories with detailed information. Here's an example:
 
@@ -38,7 +38,7 @@ const messageWithCode = `You can use the \`ls -la\` command to list all files an
 ls -la /path/to/directory
 \`\`\`
 
-This will show permissions, ownership, size, and modification dates for all items in the specified directory.`;
+This will show permissions, ownership, size, and modification dates for all items in the specified directory.`
 
 export const Short: Story = {
 	args: {
@@ -46,7 +46,7 @@ export const Short: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const Long: Story = {
 	args: {
@@ -54,7 +54,7 @@ export const Long: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const WithCode: Story = {
 	args: {
@@ -62,7 +62,7 @@ export const WithCode: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: true,
 	},
-};
+}
 
 export const Collapsed: Story = {
 	args: {
@@ -70,11 +70,11 @@ export const Collapsed: Story = {
 		timestamp: "2025-06-29T01:35:07.522Z",
 		defaultExpanded: false,
 	},
-};
+}
 
 export const NoTimestamp: Story = {
 	args: {
 		content: shortMessage,
 		defaultExpanded: true,
 	},
-};
+}

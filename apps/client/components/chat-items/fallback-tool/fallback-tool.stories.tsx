@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { FallbackTool } from "./fallback-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { FallbackTool } from "./fallback-tool"
 
 const meta = {
 	title: "Chat Items/Fallback Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "error"],
 		},
 	},
-} satisfies Meta<typeof FallbackTool>;
+} satisfies Meta<typeof FallbackTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const UnknownTool: Story = {
 	args: {
@@ -47,7 +47,7 @@ export const UnknownTool: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const MCPTool: Story = {
 	args: {
@@ -74,7 +74,7 @@ export const MCPTool: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const ToolWithError: Story = {
 	args: {
@@ -95,7 +95,7 @@ export const ToolWithError: Story = {
 		status: "error",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const PendingTool: Story = {
 	args: {
@@ -110,7 +110,7 @@ export const PendingTool: Story = {
 		status: "pending",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const ToolWithNoInput: Story = {
 	args: {
@@ -132,7 +132,7 @@ export const ToolWithNoInput: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const InterruptedTool: Story = {
 	args: {
@@ -158,7 +158,7 @@ export const InterruptedTool: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}
 
 export const ComplexInput: Story = {
 	args: {
@@ -208,4 +208,4 @@ export const ComplexInput: Story = {
 		status: "completed",
 		timestamp: "2025-06-29T01:35:07.522Z",
 	},
-};
+}

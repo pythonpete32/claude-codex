@@ -1,23 +1,15 @@
-import { motion, AnimatePresence } from "framer-motion";
-import {
-	CheckCircle,
-	ChevronDown,
-	ChevronRight,
-	Clock,
-	Copy,
-	Terminal,
-	XCircle,
-} from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion"
+import { CheckCircle, ChevronDown, ChevronRight, Clock, Copy, Terminal, XCircle } from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface AnimatedSpanProps {
-	children: React.ReactNode;
-	delay?: number;
-	className?: string;
+	children: React.ReactNode
+	delay?: number
+	className?: string
 }
 
 const AnimatedSpan: React.FC<AnimatedSpanProps> = ({ children, delay = 0, className }) => (
@@ -29,22 +21,22 @@ const AnimatedSpan: React.FC<AnimatedSpanProps> = ({ children, delay = 0, classN
 	>
 		{children}
 	</motion.div>
-);
+)
 
 export interface TerminalProps {
-	command: string;
-	commandName?: string; // The name to show in header (e.g., "cat", "ls", "grep")
-	description?: string;
-	output?: React.ReactNode;
-	footer?: React.ReactNode; // Optional footer content
-	status?: "pending" | "running" | "completed" | "error" | "failed" | "interrupted" | "unknown";
-	duration?: number;
-	timestamp?: string;
-	showCopyButton?: boolean;
-	foldable?: boolean;
-	defaultFolded?: boolean;
-	maxHeight?: string;
-	className?: string;
+	command: string
+	commandName?: string // The name to show in header (e.g., "cat", "ls", "grep")
+	description?: string
+	output?: React.ReactNode
+	footer?: React.ReactNode // Optional footer content
+	status?: "pending" | "running" | "completed" | "error" | "failed" | "interrupted" | "unknown"
+	duration?: number
+	timestamp?: string
+	showCopyButton?: boolean
+	foldable?: boolean
+	defaultFolded?: boolean
+	maxHeight?: string
+	className?: string
 }
 
 export const TerminalWindow: React.FC<TerminalProps> = ({
@@ -62,41 +54,41 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 	maxHeight = "400px",
 	className,
 }) => {
-	const [isFolded, setIsFolded] = useState(defaultFolded);
+	const [isFolded, setIsFolded] = useState(defaultFolded)
 
 	const getStatusIcon = () => {
 		switch (status) {
 			case "pending":
-				return <Clock className="h-3 w-3 text-yellow-400" />;
+				return <Clock className="h-3 w-3 text-yellow-400" />
 			case "running":
-				return <Terminal className="h-3 w-3 text-blue-400 animate-pulse" />;
+				return <Terminal className="h-3 w-3 text-blue-400 animate-pulse" />
 			case "completed":
-				return <CheckCircle className="h-3 w-3 text-green-400" />;
+				return <CheckCircle className="h-3 w-3 text-green-400" />
 			case "error":
-				return <XCircle className="h-3 w-3 text-red-400" />;
+				return <XCircle className="h-3 w-3 text-red-400" />
 			default:
-				return <Terminal className="h-3 w-3 text-gray-400" />;
+				return <Terminal className="h-3 w-3 text-gray-400" />
 		}
-	};
+	}
 
 	const getStatusColor = () => {
 		switch (status) {
 			case "pending":
-				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30";
+				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30"
 			case "running":
-				return "bg-blue-900/20 text-blue-300 border-blue-500/30";
+				return "bg-blue-900/20 text-blue-300 border-blue-500/30"
 			case "completed":
-				return "bg-green-900/20 text-green-300 border-green-500/30";
+				return "bg-green-900/20 text-green-300 border-green-500/30"
 			case "error":
-				return "bg-red-900/20 text-red-300 border-red-500/30";
+				return "bg-red-900/20 text-red-300 border-red-500/30"
 			default:
-				return "bg-gray-900/20 text-gray-300 border-gray-500/30";
+				return "bg-gray-900/20 text-gray-300 border-gray-500/30"
 		}
-	};
+	}
 
 	const handleCopy = () => {
-		navigator.clipboard.writeText(command);
-	};
+		navigator.clipboard.writeText(command)
+	}
 
 	return (
 		<div
@@ -125,18 +117,11 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 							variant="outline"
 							size="sm"
 							onClick={() => setIsFolded(!isFolded)}
-							className={cn(
-								"h-7 px-2 py-1 flex items-center gap-1",
-								getStatusColor()
-							)}
+							className={cn("h-7 px-2 py-1 flex items-center gap-1", getStatusColor())}
 						>
 							{getStatusIcon()}
 							<span className="capitalize text-xs">{status}</span>
-							<motion.div
-								animate={{ rotate: isFolded ? -90 : 0 }}
-								transition={{ duration: 0.2 }}
-								className="ml-1"
-							>
+							<motion.div animate={{ rotate: isFolded ? -90 : 0 }} transition={{ duration: 0.2 }} className="ml-1">
 								<ChevronDown className="h-3 w-3" />
 							</motion.div>
 						</Button>
@@ -244,7 +229,7 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 					>
 						<div className="px-4 py-2 text-gray-500 text-sm font-mono">
 							<span className="text-green-400">user@atomic-codex:~$</span> {command}
-							{description && <span className="ml-2 text-gray-600">// {description}</span>}
+							{description && <span className="ml-2 text-gray-600">{/* {description} */}</span>}
 						</div>
 					</motion.div>
 				)}
@@ -274,5 +259,5 @@ export const TerminalWindow: React.FC<TerminalProps> = ({
 				)}
 			</AnimatePresence>
 		</div>
-	);
-};
+	)
+}

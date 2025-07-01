@@ -143,12 +143,7 @@
 					"recommendations": {
 						"nextStepId": "step_002",
 						"nextStepTitle": "Analyze Database Query Performance",
-						"suggestedMcpTools": [
-							"database-profiler",
-							"query-analyzer",
-							"redis-monitor",
-							"cache-analyzer"
-						]
+						"suggestedMcpTools": ["database-profiler", "query-analyzer", "redis-monitor", "cache-analyzer"]
 					},
 					"message": "Updated workflow \"API Performance Issue Analysis\" - 1 steps modified"
 				},

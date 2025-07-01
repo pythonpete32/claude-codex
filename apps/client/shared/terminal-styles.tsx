@@ -1,20 +1,20 @@
-import type React from "react";
-import { cn } from "@/lib/utils";
+import type React from "react"
+import { cn } from "@/lib/utils"
 
 export interface TerminalTheme {
-	background: string;
-	foreground: string;
-	accent: string;
-	success: string;
-	error: string;
-	warning: string;
-	muted: string;
+	background: string
+	foreground: string
+	accent: string
+	success: string
+	error: string
+	warning: string
+	muted: string
 }
 
 export interface TerminalTextProps {
-	children: React.ReactNode;
-	variant?: "stdout" | "stderr" | "command" | "comment";
-	className?: string;
+	children: React.ReactNode
+	variant?: "stdout" | "stderr" | "command" | "comment"
+	className?: string
 }
 
 /**
@@ -30,26 +30,26 @@ export function getTerminalTheme(): TerminalTheme {
 		error: "text-red-400 dark:text-red-300",
 		warning: "text-yellow-400 dark:text-yellow-300",
 		muted: "text-gray-500 dark:text-gray-400",
-	};
+	}
 }
 
 /**
  * Get terminal color classes for different text variants
  */
 function getVariantClasses(variant: TerminalTextProps["variant"]): string {
-	const theme = getTerminalTheme();
+	const theme = getTerminalTheme()
 
 	switch (variant) {
 		case "stdout":
-			return theme.foreground;
+			return theme.foreground
 		case "stderr":
-			return theme.error;
+			return theme.error
 		case "command":
-			return theme.accent;
+			return theme.accent
 		case "comment":
-			return theme.muted;
+			return theme.muted
 		default:
-			return theme.foreground;
+			return theme.foreground
 	}
 }
 
@@ -57,71 +57,50 @@ function getVariantClasses(variant: TerminalTextProps["variant"]): string {
  * Styled text for terminal content
  * Applies consistent terminal typography and colors
  */
-export const TerminalText: React.FC<TerminalTextProps> = ({
-	children,
-	variant = "stdout",
-	className,
-}) => {
-	const variantClasses = getVariantClasses(variant);
+export const TerminalText: React.FC<TerminalTextProps> = ({ children, variant = "stdout", className }) => {
+	const variantClasses = getVariantClasses(variant)
 
-	return (
-		<span className={cn("font-mono text-sm leading-relaxed", variantClasses, className)}>
-			{children}
-		</span>
-	);
-};
+	return <span className={cn("font-mono text-sm leading-relaxed", variantClasses, className)}>{children}</span>
+}
 
 /**
  * Terminal window container with consistent styling
  */
 export const TerminalContainer: React.FC<{
-	children: React.ReactNode;
-	className?: string;
+	children: React.ReactNode
+	className?: string
 }> = ({ children, className }) => {
-	const theme = getTerminalTheme();
+	const theme = getTerminalTheme()
 
 	return (
-		<div
-			className={cn(
-				"rounded-md border border-gray-700 overflow-hidden",
-				theme.background,
-				className,
-			)}
-		>
+		<div className={cn("rounded-md border border-gray-700 overflow-hidden", theme.background, className)}>
 			{children}
 		</div>
-	);
-};
+	)
+}
 
 /**
  * Terminal header with consistent styling
  */
 export const TerminalHeader: React.FC<{
-	children: React.ReactNode;
-	className?: string;
+	children: React.ReactNode
+	className?: string
 }> = ({ children, className }) => {
 	return (
-		<div
-			className={cn(
-				"flex items-center justify-between p-3 border-b border-gray-700 bg-gray-800/50",
-				className,
-			)}
-		>
+		<div className={cn("flex items-center justify-between p-3 border-b border-gray-700 bg-gray-800/50", className)}>
 			{children}
 		</div>
-	);
-};
+	)
+}
 
 /**
  * Terminal content area with scrolling
  */
 export const TerminalContent: React.FC<{
-	children: React.ReactNode;
-	className?: string;
+	children: React.ReactNode
+	className?: string
 }> = ({ children, className }) => {
-	const theme = getTerminalTheme();
+	const theme = getTerminalTheme()
 
-	return (
-		<div className={cn("p-3 overflow-auto max-h-96", theme.background, className)}>{children}</div>
-	);
-};
+	return <div className={cn("p-3 overflow-auto max-h-96", theme.background, className)}>{children}</div>
+}

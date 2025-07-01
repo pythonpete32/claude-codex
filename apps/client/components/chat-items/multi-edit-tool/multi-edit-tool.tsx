@@ -1,25 +1,25 @@
-import type React from "react";
-import { useMemo } from "react";
-import { TerminalWindow } from "@/components/ui/terminal";
-import { createSimpleDiff } from "@/lib/diff";
-import { CopyButton } from "@/shared/copy-utils";
-import { StatusBadge } from "@/shared/status-utils";
-import { TerminalText } from "@/shared/terminal-styles";
-import { TimeDisplay } from "@/shared/time-utils";
+import type React from "react"
+import { useMemo } from "react"
+import { TerminalWindow } from "@/components/ui/terminal"
+import { createSimpleDiff } from "@/lib/diff"
+import { CopyButton } from "@/shared/copy-utils"
+import { StatusBadge } from "@/shared/status-utils"
+import { TerminalText } from "@/shared/terminal-styles"
+import { TimeDisplay } from "@/shared/time-utils"
 
 export interface MultiEditToolProps {
 	fileEdits: Array<{
-		filePath: string;
-		oldContent: string;
-		newContent: string;
-		summary?: string;
-	}>;
-	description?: string;
-	status?: "pending" | "completed" | "error" | "running";
-	timestamp?: string;
-	editsApplied?: number;
-	totalEdits?: number;
-	className?: string;
+		filePath: string
+		oldContent: string
+		newContent: string
+		summary?: string
+	}>
+	description?: string
+	status?: "pending" | "completed" | "error" | "running"
+	timestamp?: string
+	editsApplied?: number
+	totalEdits?: number
+	className?: string
 }
 
 export const MultiEditTool: React.FC<MultiEditToolProps> = ({
@@ -36,17 +36,17 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 		return fileEdits.map((fileEdit, index) => ({
 			fileIndex: index,
 			filePath: fileEdit.filePath,
-			fileName: fileEdit.filePath.split('/').pop() || fileEdit.filePath,
+			fileName: fileEdit.filePath.split("/").pop() || fileEdit.filePath,
 			diff: createSimpleDiff(fileEdit.oldContent, fileEdit.newContent),
 			summary: fileEdit.summary,
-		}));
-	}, [fileEdits]);
+		}))
+	}, [fileEdits])
 
 	// Build command
-	const command = `multi-edit ${fileEdits.length > 1 ? `${fileEdits.length} files` : fileEdits[0]?.filePath || ''}`;
+	const command = `multi-edit ${fileEdits.length > 1 ? `${fileEdits.length} files` : fileEdits[0]?.filePath || ""}`
 
 	// Build description
-	const finalDescription = description || `Editing ${fileEdits.length} file${fileEdits.length !== 1 ? 's' : ''}`;
+	const finalDescription = description || `Editing ${fileEdits.length} file${fileEdits.length !== 1 ? "s" : ""}`
 
 	// Render appropriate output based on status
 	const renderOutput = () => {
@@ -57,43 +57,43 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 					<TerminalText variant="stdout">
 						<div className="text-gray-400 italic">Preparing file edits...</div>
 					</TerminalText>
-				);
+				)
 			}
 			if (status === "running") {
 				return (
 					<TerminalText variant="stdout">
 						<div className="text-blue-400 italic">Applying edits...</div>
 					</TerminalText>
-				);
+				)
 			}
 			if (status === "error") {
 				return (
 					<TerminalText variant="stderr">
 						<div className="text-red-400 italic">Edit operation failed</div>
 					</TerminalText>
-				);
+				)
 			}
 			// For completed without fileEdits
 			return (
 				<TerminalText variant="stdout">
 					<div className="text-gray-400 italic">No edits to apply</div>
 				</TerminalText>
-			);
+			)
 		}
 
 		// Show file edit results
-		return renderFileEdits();
-	};
+		return renderFileEdits()
+	}
 
 	// Render file edit diffs
 	const renderFileEdits = () => {
-		const results: React.ReactNode[] = [];
+		const results: React.ReactNode[] = []
 
 		// Summary header
 		if (fileEdits.length > 1) {
-			const appliedCount = editsApplied ?? fileEdits.length;
-			const totalCount = totalEdits ?? fileEdits.length;
-			
+			const appliedCount = editsApplied ?? fileEdits.length
+			const totalCount = totalEdits ?? fileEdits.length
+
 			results.push(
 				<div key="summary" className="mb-4 p-3 bg-gray-800/50 rounded border border-gray-600">
 					<TerminalText variant="stdout" className="text-green-400 font-medium">
@@ -104,8 +104,8 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 							Applied {appliedCount} of {totalCount} edits across {fileEdits.length} files
 						</TerminalText>
 					</div>
-				</div>
-			);
+				</div>,
+			)
 		}
 
 		// Individual file edits
@@ -131,45 +131,43 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 
 					{/* Diff content */}
 					<div className="font-mono text-sm max-h-64 overflow-y-auto border border-gray-700 rounded bg-gray-900/50">
-						{Array.isArray(fileDiff.diff) ? fileDiff.diff.map((line: any, lineIndex: number) => (
-							<div
-								key={lineIndex}
-								className={`px-2 py-0.5 whitespace-pre-wrap break-all ${
-									line.type === 'added'
-										? 'bg-green-900/30 text-green-300'
-										: line.type === 'removed'
-										? 'bg-red-900/30 text-red-300'
-										: 'text-gray-400'
-								}`}
-							>
-								<span className="select-none mr-2">
-									{line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '}
-								</span>
-								{line.content}
-							</div>
-						)) : (
-							<div className="px-2 py-0.5 text-gray-400">
-								Unable to generate diff
-							</div>
+						{Array.isArray(fileDiff.diff) ? (
+							fileDiff.diff.map((line: any, lineIndex: number) => (
+								<div
+									key={lineIndex}
+									className={`px-2 py-0.5 whitespace-pre-wrap break-all ${
+										line.type === "added"
+											? "bg-green-900/30 text-green-300"
+											: line.type === "removed"
+												? "bg-red-900/30 text-red-300"
+												: "text-gray-400"
+									}`}
+								>
+									<span className="select-none mr-2">
+										{line.type === "added" ? "+" : line.type === "removed" ? "-" : " "}
+									</span>
+									{line.content}
+								</div>
+							))
+						) : (
+							<div className="px-2 py-0.5 text-gray-400">Unable to generate diff</div>
 						)}
 					</div>
-				</div>
-			);
-		});
+				</div>,
+			)
+		})
 
-		return <div className="space-y-0">{results}</div>;
-	};
+		return <div className="space-y-0">{results}</div>
+	}
 
-	const output = <div className="max-h-96 overflow-y-auto">{renderOutput()}</div>;
+	const output = <div className="max-h-96 overflow-y-auto">{renderOutput()}</div>
 
 	// Determine copy text - concatenate all file paths and changes
-	const copyText = fileEdits.map(edit => 
-		`${edit.filePath}:\n${edit.summary || 'File updated'}\n\n`
-	).join('');
+	const copyText = fileEdits.map((edit) => `${edit.filePath}:\n${edit.summary || "File updated"}\n\n`).join("")
 
 	// Determine if content should be foldable
-	const shouldFold = fileEdits.length > 3 || allDiffs.some(d => Array.isArray(d.diff) && d.diff.length > 20);
-	const defaultFolded = fileEdits.length > 5;
+	const shouldFold = fileEdits.length > 3 || allDiffs.some((d) => Array.isArray(d.diff) && d.diff.length > 20)
+	const defaultFolded = fileEdits.length > 5
 
 	return (
 		<div className={className}>
@@ -189,5 +187,5 @@ export const MultiEditTool: React.FC<MultiEditToolProps> = ({
 				maxHeight="600px"
 			/>
 		</div>
-	);
-};
+	)
+}

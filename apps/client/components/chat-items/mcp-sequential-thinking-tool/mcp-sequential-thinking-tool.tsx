@@ -11,70 +11,70 @@ import {
 	Terminal,
 	XCircle,
 	Zap,
-} from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { CopyButton } from "@/shared/copy-utils";
-import { StatusBadge } from "@/shared/status-utils";
-import { TerminalText } from "@/shared/terminal-styles";
-import { TimeDisplay } from "@/shared/time-utils";
+} from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { CopyButton } from "@/shared/copy-utils"
+import { StatusBadge } from "@/shared/status-utils"
+import { TerminalText } from "@/shared/terminal-styles"
+import { TimeDisplay } from "@/shared/time-utils"
 
 interface WorkflowStep {
-	id: string;
-	sequence: number;
-	title: string;
-	description: string;
-	status: "pending" | "in_progress" | "completed" | "blocked" | "failed";
-	priority: "low" | "medium" | "high" | "critical";
-	dependencies?: string[];
-	estimatedMinutes?: number;
-	actualMinutes?: number;
-	result?: string;
-	mcpResources?: string[];
+	id: string
+	sequence: number
+	title: string
+	description: string
+	status: "pending" | "in_progress" | "completed" | "blocked" | "failed"
+	priority: "low" | "medium" | "high" | "critical"
+	dependencies?: string[]
+	estimatedMinutes?: number
+	actualMinutes?: number
+	result?: string
+	mcpResources?: string[]
 }
 
 interface Workflow {
-	id: string;
-	name: string;
-	processType: string;
-	problemStatement: string;
-	targetOutcome: string;
-	status: "active" | "completed" | "paused" | "failed";
-	priority: "low" | "medium" | "high" | "critical";
-	steps: WorkflowStep[];
-	tags?: string[];
+	id: string
+	name: string
+	processType: string
+	problemStatement: string
+	targetOutcome: string
+	status: "active" | "completed" | "paused" | "failed"
+	priority: "low" | "medium" | "high" | "critical"
+	steps: WorkflowStep[]
+	tags?: string[]
 	metadata?: {
-		createdAt: string;
-		updatedAt: string;
-		estimatedTotalMinutes: number;
-		actualTotalMinutes: number;
-		completionPercentage: number;
-	};
+		createdAt: string
+		updatedAt: string
+		estimatedTotalMinutes: number
+		actualTotalMinutes: number
+		completionPercentage: number
+	}
 }
 
 export interface MCPSequentialThinkingToolProps {
 	toolUse: {
-		type: "tool_use";
-		id: string;
-		name: string;
+		type: "tool_use"
+		id: string
+		name: string
 		input: {
-			workflow: Workflow;
-			mode: "create" | "update" | "complete";
-			stepId?: string;
-		};
-	};
-	status: "pending" | "completed" | "failed" | "in_progress" | "interrupted";
-	timestamp: string;
+			workflow: Workflow
+			mode: "create" | "update" | "complete"
+			stepId?: string
+		}
+	}
+	status: "pending" | "completed" | "failed" | "in_progress" | "interrupted"
+	timestamp: string
 	toolResult?: {
 		output: {
-			workflow: Workflow;
-			message: string;
-		};
-	};
-	className?: string;
+			workflow: Workflow
+			message: string
+		}
+	}
+	className?: string
 }
 
 export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps> = ({
@@ -84,67 +84,67 @@ export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps>
 	toolResult,
 	className,
 }) => {
-	const [isFolded, setIsFolded] = useState(false);
-	const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
+	const [isFolded, setIsFolded] = useState(false)
+	const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({})
 
-	const { workflow, mode, stepId } = toolUse.input;
-	const resultWorkflow = toolResult?.output.workflow || workflow;
+	const { workflow, mode, stepId } = toolUse.input
+	const resultWorkflow = toolResult?.output.workflow || workflow
 
 	// Get priority color
 	const getPriorityColor = (priority: string) => {
 		switch (priority) {
 			case "critical":
-				return "bg-red-900/20 text-red-300 border-red-500/30";
+				return "bg-red-900/20 text-red-300 border-red-500/30"
 			case "high":
-				return "bg-orange-900/20 text-orange-300 border-orange-500/30";
+				return "bg-orange-900/20 text-orange-300 border-orange-500/30"
 			case "medium":
-				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30";
+				return "bg-yellow-900/20 text-yellow-300 border-yellow-500/30"
 			case "low":
-				return "bg-gray-900/20 text-gray-300 border-gray-500/30";
+				return "bg-gray-900/20 text-gray-300 border-gray-500/30"
 			default:
-				return "bg-gray-900/20 text-gray-300 border-gray-500/30";
+				return "bg-gray-900/20 text-gray-300 border-gray-500/30"
 		}
-	};
+	}
 
 	// Get step status icon
 	const getStepStatusIcon = (stepStatus: string) => {
 		switch (stepStatus) {
 			case "completed":
-				return <CheckCircle className="h-4 w-4 text-green-400" />;
+				return <CheckCircle className="h-4 w-4 text-green-400" />
 			case "in_progress":
-				return <Play className="h-4 w-4 text-blue-400 animate-pulse" />;
+				return <Play className="h-4 w-4 text-blue-400 animate-pulse" />
 			case "blocked":
-				return <AlertTriangle className="h-4 w-4 text-yellow-400" />;
+				return <AlertTriangle className="h-4 w-4 text-yellow-400" />
 			case "failed":
-				return <XCircle className="h-4 w-4 text-red-400" />;
+				return <XCircle className="h-4 w-4 text-red-400" />
 			case "pending":
-				return <Clock className="h-4 w-4 text-gray-400" />;
+				return <Clock className="h-4 w-4 text-gray-400" />
 			default:
-				return <Clock className="h-4 w-4 text-gray-400" />;
+				return <Clock className="h-4 w-4 text-gray-400" />
 		}
-	};
+	}
 
 	// Calculate progress
-	const completedSteps = resultWorkflow.steps.filter((step) => step.status === "completed").length;
-	const totalSteps = resultWorkflow.steps.length;
-	const progressPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+	const completedSteps = resultWorkflow.steps.filter((step) => step.status === "completed").length
+	const totalSteps = resultWorkflow.steps.length
+	const progressPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0
 
 	const formatTimestamp = (ts?: string) => {
-		if (!ts) return "";
-		return new Date(ts).toLocaleTimeString();
-	};
+		if (!ts) return ""
+		return new Date(ts).toLocaleTimeString()
+	}
 
 	const copyToClipboard = (text: string, key: string) => {
-		navigator.clipboard.writeText(text);
-		setCopiedStates((prev) => ({ ...prev, [key]: true }));
+		navigator.clipboard.writeText(text)
+		setCopiedStates((prev) => ({ ...prev, [key]: true }))
 		setTimeout(() => {
-			setCopiedStates((prev) => ({ ...prev, [key]: false }));
-		}, 2000);
-	};
+			setCopiedStates((prev) => ({ ...prev, [key]: false }))
+		}, 2000)
+	}
 
 	// Render workflow step
 	const renderStep = (step: WorkflowStep) => {
-		const isCurrentStep = stepId === step.id;
+		const isCurrentStep = stepId === step.id
 		return (
 			<div
 				key={step.id}
@@ -191,23 +191,23 @@ export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps>
 					</div>
 				</div>
 			</div>
-		);
-	};
+		)
+	}
 
 	const getStatusIcon = () => {
 		switch (status) {
 			case "pending":
-				return <Clock className="w-4 h-4 animate-spin text-yellow-500" />;
+				return <Clock className="w-4 h-4 animate-spin text-yellow-500" />
 			case "failed":
-				return <XCircle className="w-4 h-4 text-red-500" />;
+				return <XCircle className="w-4 h-4 text-red-500" />
 			case "in_progress":
-				return <Play className="w-4 h-4 text-blue-500 animate-pulse" />;
+				return <Play className="w-4 h-4 text-blue-500 animate-pulse" />
 			case "interrupted":
-				return <Pause className="w-4 h-4 text-yellow-500" />;
+				return <Pause className="w-4 h-4 text-yellow-500" />
 			default:
-				return <CheckCircle className="w-4 h-4 text-green-500" />;
+				return <CheckCircle className="w-4 h-4 text-green-500" />
 		}
-	};
+	}
 
 	return (
 		<div
@@ -250,9 +250,7 @@ export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps>
 							<Terminal className="w-4 h-4" />
 							Problem Statement
 						</h3>
-						<p className="text-gray-300 text-sm bg-gray-800 rounded p-3">
-							{resultWorkflow.problemStatement}
-						</p>
+						<p className="text-gray-300 text-sm bg-gray-800 rounded p-3">{resultWorkflow.problemStatement}</p>
 					</div>
 
 					{/* Target Outcome */}
@@ -261,9 +259,7 @@ export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps>
 							<Zap className="w-4 h-4 text-green-400" />
 							Target Outcome
 						</h3>
-						<p className="text-gray-300 text-sm bg-gray-800 rounded p-3">
-							{resultWorkflow.targetOutcome}
-						</p>
+						<p className="text-gray-300 text-sm bg-gray-800 rounded p-3">{resultWorkflow.targetOutcome}</p>
 					</div>
 
 					{/* Progress Bar */}
@@ -328,15 +324,11 @@ export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps>
 								</div>
 								<div>
 									<span className="text-gray-400">Est. Time:</span>
-									<span className="text-gray-300 ml-2">
-										{resultWorkflow.metadata.estimatedTotalMinutes}m
-									</span>
+									<span className="text-gray-300 ml-2">{resultWorkflow.metadata.estimatedTotalMinutes}m</span>
 								</div>
 								<div>
 									<span className="text-gray-400">Actual Time:</span>
-									<span className="text-gray-300 ml-2">
-										{resultWorkflow.metadata.actualTotalMinutes}m
-									</span>
+									<span className="text-gray-300 ml-2">{resultWorkflow.metadata.actualTotalMinutes}m</span>
 								</div>
 							</div>
 						</div>
@@ -349,5 +341,5 @@ export const MCPSequentialThinkingTool: React.FC<MCPSequentialThinkingToolProps>
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}

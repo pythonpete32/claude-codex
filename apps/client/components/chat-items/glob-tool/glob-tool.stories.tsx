@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { GlobTool } from "./glob-tool";
+import type { Meta, StoryObj } from "@storybook/react"
+import { GlobTool } from "./glob-tool"
 
 const meta = {
 	title: "Chat Items/Glob Tool",
@@ -14,10 +14,10 @@ const meta = {
 			options: ["pending", "completed", "failed", "in_progress", "interrupted"],
 		},
 	},
-} satisfies Meta<typeof GlobTool>;
+} satisfies Meta<typeof GlobTool>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
 	args: {
@@ -42,7 +42,7 @@ export const Default: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const WithDirectories: Story = {
 	args: {
@@ -71,7 +71,7 @@ export const WithDirectories: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const NoMatches: Story = {
 	args: {
@@ -91,7 +91,7 @@ export const NoMatches: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const ConfigFiles: Story = {
 	args: {
@@ -111,7 +111,7 @@ export const ConfigFiles: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const InProgressState: Story = {
 	args: {
@@ -132,7 +132,7 @@ export const InProgressState: Story = {
 			isError: false,
 		},
 	},
-};
+}
 
 export const FailedState: Story = {
 	args: {
@@ -154,7 +154,7 @@ export const FailedState: Story = {
 			errorMessage: "Error: Invalid glob pattern: [invalid glob",
 		},
 	},
-};
+}
 
 export const InterruptedState: Story = {
 	args: {
@@ -176,4 +176,4 @@ export const InterruptedState: Story = {
 			errorMessage: "Operation was interrupted by user",
 		},
 	},
-};
+}

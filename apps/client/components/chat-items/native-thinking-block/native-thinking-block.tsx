@@ -1,17 +1,17 @@
-import { Brain, ChevronDown, ChevronRight, Copy, Terminal } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Brain, ChevronDown, ChevronRight, Copy, Terminal } from "lucide-react"
+import type React from "react"
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export interface NativeThinkingBlockProps {
-	thinking: string;
-	associatedWith: "message" | "tool_call";
-	associatedContent?: React.ReactNode;
-	timestamp?: string;
-	className?: string;
-	defaultExpanded?: boolean;
+	thinking: string
+	associatedWith: "message" | "tool_call"
+	associatedContent?: React.ReactNode
+	timestamp?: string
+	className?: string
+	defaultExpanded?: boolean
 }
 
 export const NativeThinkingBlock: React.FC<NativeThinkingBlockProps> = ({
@@ -22,19 +22,19 @@ export const NativeThinkingBlock: React.FC<NativeThinkingBlockProps> = ({
 	className,
 	defaultExpanded = false,
 }) => {
-	const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-	const [copied, setCopied] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+	const [copied, setCopied] = useState(false)
 
 	const formatTimestamp = (ts?: string) => {
-		if (!ts) return "";
-		return new Date(ts).toLocaleTimeString();
-	};
+		if (!ts) return ""
+		return new Date(ts).toLocaleTimeString()
+	}
 
 	const copyToClipboard = (text: string) => {
-		navigator.clipboard.writeText(text);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
-	};
+		navigator.clipboard.writeText(text)
+		setCopied(true)
+		setTimeout(() => setCopied(false), 2000)
+	}
 
 	return (
 		<div className={cn("rounded-lg border border-border bg-background overflow-hidden", className)}>
@@ -47,34 +47,16 @@ export const NativeThinkingBlock: React.FC<NativeThinkingBlockProps> = ({
 					<Badge variant="outline" className="text-xs font-mono">
 						{associatedWith === "message" ? "message" : "tool_call"}
 					</Badge>
-					{timestamp && (
-						<span className="text-xs text-muted-foreground font-mono">
-							{formatTimestamp(timestamp)}
-						</span>
-					)}
+					{timestamp && <span className="text-xs text-muted-foreground font-mono">{formatTimestamp(timestamp)}</span>}
 				</div>
 
 				<div className="flex items-center gap-1">
-					<Button
-						variant="ghost"
-						size="sm"
-						onClick={() => copyToClipboard(thinking)}
-						className="h-6 px-2"
-					>
+					<Button variant="ghost" size="sm" onClick={() => copyToClipboard(thinking)} className="h-6 px-2">
 						<Copy className="w-3 h-3" />
 						{copied && <span className="ml-1 text-xs">Copied!</span>}
 					</Button>
-					<Button
-						variant="ghost"
-						size="sm"
-						onClick={() => setIsExpanded(!isExpanded)}
-						className="h-6 px-2"
-					>
-						{isExpanded ? (
-							<ChevronDown className="w-4 h-4" />
-						) : (
-							<ChevronRight className="w-4 h-4" />
-						)}
+					<Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)} className="h-6 px-2">
+						{isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
 					</Button>
 				</div>
 			</div>
@@ -115,5 +97,5 @@ export const NativeThinkingBlock: React.FC<NativeThinkingBlockProps> = ({
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}

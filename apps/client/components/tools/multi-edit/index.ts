@@ -1,1 +1,1 @@
-export { MultiEditTool, type MultiEditToolProps } from './multi-edit-tool';
+export { MultiEditTool, type MultiEditToolProps } from "./multi-edit-tool"
