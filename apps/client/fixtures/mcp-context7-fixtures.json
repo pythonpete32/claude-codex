@@ -1,0 +1,632 @@
+[
+	{
+		"name": "resolve_nextjs_library",
+		"category": "resolve",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "resolve_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "resolve-library-id",
+					"resolve": {
+						"libraryName": "Next.js",
+						"packageManager": "npm",
+						"language": "javascript",
+						"context": "React framework for web applications"
+					},
+					"timeout": 15000,
+					"debug": false,
+					"useCache": true,
+					"metadata": {
+						"requestId": "req_nextjs_001",
+						"sessionId": "session_001",
+						"timestamp": 1704067200000
+					}
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "resolve_1",
+				"output": {
+					"operation": "resolve-library-id",
+					"success": true,
+					"message": "Successfully resolved library ID for Next.js",
+					"library": {
+						"id": "/vercel/next.js",
+						"name": "Next.js",
+						"description": "The React Framework for Production - provides hybrid static & server rendering, TypeScript support, smart bundling, route pre-fetching, and more.",
+						"website": "https://nextjs.org",
+						"repository": "https://github.com/vercel/next.js",
+						"packageManager": "npm",
+						"packageName": "next",
+						"version": "14.0.4",
+						"trustScore": 9.8,
+						"codeSnippetCount": 247,
+						"sections": ["Getting Started", "API Reference", "Deployment", "Examples"],
+						"platforms": ["React", "Node.js", "Vercel"],
+						"languages": ["JavaScript", "TypeScript"],
+						"tags": ["react", "framework", "ssr", "static-site", "web"]
+					},
+					"timing": {
+						"startTime": 1704067200000,
+						"endTime": 1704067202150,
+						"duration": 2150,
+						"cacheHit": false
+					},
+					"metadata": {
+						"requestId": "req_nextjs_001",
+						"version": "1.0.0",
+						"source": "context7-api",
+						"tokenUsage": 45
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "get_react_documentation",
+		"category": "documentation",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "docs_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "get-library-docs",
+					"documentation": {
+						"libraryId": "/facebook/react",
+						"topic": "hooks",
+						"tokens": 5000,
+						"includeExamples": true,
+						"sections": ["API Reference", "Tutorial"],
+						"contentTypes": ["guide", "reference", "example"]
+					},
+					"timeout": 30000,
+					"debug": false,
+					"useCache": true
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "docs_1",
+				"output": {
+					"operation": "get-library-docs",
+					"success": true,
+					"message": "Retrieved React hooks documentation successfully",
+					"documentation": [
+						{
+							"title": "Introduction to Hooks",
+							"content": "Hooks are a new addition in React 16.8. They let you use state and other React features without writing a class. Hooks are functions that let you \"hook into\" React state and lifecycle features from function components.",
+							"type": "guide",
+							"url": "https://reactjs.org/docs/hooks-intro.html",
+							"section": "Tutorial",
+							"codeExamples": [
+								{
+									"language": "javascript",
+									"code": "import React, { useState } from 'react';\n\nfunction Example() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}",
+									"title": "Basic useState Example",
+									"description": "Simple counter using useState hook",
+									"dependencies": ["react"],
+									"context": "Function component state management"
+								}
+							],
+							"metadata": {
+								"lastModified": "2023-12-15",
+								"version": "18.2.0",
+								"difficulty": "beginner",
+								"estimatedReadTime": 5
+							}
+						}
+					],
+					"examples": [
+						{
+							"language": "typescript",
+							"code": "import React, { useState, useEffect } from 'react';\n\ninterface User {\n  id: number;\n  name: string;\n}\n\nfunction UserProfile({ userId }: { userId: number }) {\n  const [user, setUser] = useState<User | null>(null);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    fetchUser(userId).then(user => {\n      setUser(user);\n      setLoading(false);\n    });\n  }, [userId]);\n\n  if (loading) return <div>Loading...</div>;\n  if (!user) return <div>User not found</div>;\n\n  return <div>{user.name}</div>;\n}",
+							"title": "Advanced Hooks with TypeScript",
+							"description": "Using useState and useEffect with TypeScript",
+							"dependencies": ["react", "@types/react"],
+							"context": "Type-safe React component with data fetching"
+						}
+					],
+					"resultCount": 1,
+					"totalResults": 15,
+					"timing": {
+						"startTime": 1704067300000,
+						"endTime": 1704067303800,
+						"duration": 3800,
+						"cacheHit": false
+					},
+					"metadata": {
+						"requestId": "req_docs_001",
+						"version": "1.0.0",
+						"source": "context7-api",
+						"tokenUsage": 892
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "search_javascript_libraries",
+		"category": "search",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "search_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "search-documentation",
+					"search": {
+						"query": "state management",
+						"language": "javascript",
+						"platform": "react",
+						"minTrustScore": 7,
+						"limit": 5,
+						"sortBy": "trust-score"
+					},
+					"timeout": 20000,
+					"debug": false,
+					"useCache": true
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "search_1",
+				"output": {
+					"operation": "search-documentation",
+					"success": true,
+					"message": "Found 5 libraries matching search criteria",
+					"libraries": [
+						{
+							"id": "/reduxjs/redux",
+							"name": "Redux",
+							"description": "A predictable state container for JavaScript apps",
+							"website": "https://redux.js.org",
+							"repository": "https://github.com/reduxjs/redux",
+							"packageManager": "npm",
+							"packageName": "redux",
+							"version": "4.2.1",
+							"trustScore": 9.5,
+							"codeSnippetCount": 189,
+							"sections": ["Introduction", "Tutorials", "API Reference"],
+							"platforms": ["React", "Vue", "Angular"],
+							"languages": ["JavaScript", "TypeScript"],
+							"tags": ["state-management", "predictable", "flux"]
+						},
+						{
+							"id": "/pmndrs/zustand",
+							"name": "Zustand",
+							"description": "A small, fast and scalable bearbones state-management solution using simplified flux principles",
+							"website": "https://zustand-demo.pmnd.rs",
+							"repository": "https://github.com/pmndrs/zustand",
+							"packageManager": "npm",
+							"packageName": "zustand",
+							"version": "4.4.7",
+							"trustScore": 8.9,
+							"codeSnippetCount": 67,
+							"platforms": ["React"],
+							"languages": ["JavaScript", "TypeScript"],
+							"tags": ["state-management", "lightweight", "simple"]
+						}
+					],
+					"resultCount": 5,
+					"totalResults": 23,
+					"timing": {
+						"startTime": 1704067400000,
+						"endTime": 1704067402300,
+						"duration": 2300,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "get_code_examples_express",
+		"category": "examples",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "examples_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "get-code-examples",
+					"documentation": {
+						"libraryId": "/expressjs/express",
+						"topic": "middleware",
+						"tokens": 3000,
+						"includeExamples": true,
+						"contentTypes": ["example"]
+					},
+					"timeout": 20000,
+					"debug": false
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "examples_1",
+				"output": {
+					"operation": "get-code-examples",
+					"success": true,
+					"message": "Retrieved Express.js middleware examples",
+					"examples": [
+						{
+							"language": "javascript",
+							"code": "const express = require('express');\nconst app = express();\n\n// Basic middleware\napp.use((req, res, next) => {\n  console.log('Time:', Date.now());\n  next();\n});\n\n// Route-specific middleware\napp.get('/protected', authenticate, (req, res) => {\n  res.send('Protected content');\n});\n\nfunction authenticate(req, res, next) {\n  // Authentication logic here\n  if (req.headers.authorization) {\n    next();\n  } else {\n    res.status(401).send('Unauthorized');\n  }\n}",
+							"title": "Basic Express Middleware",
+							"description": "Example of creating and using middleware in Express.js",
+							"filename": "middleware-example.js",
+							"dependencies": ["express"],
+							"context": "Web server middleware pattern"
+						},
+						{
+							"language": "javascript",
+							"code": "const express = require('express');\nconst morgan = require('morgan');\nconst helmet = require('helmet');\nconst rateLimit = require('express-rate-limit');\n\nconst app = express();\n\n// Security middleware\napp.use(helmet());\n\n// Logging middleware\napp.use(morgan('combined'));\n\n// Rate limiting middleware\nconst limiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100 // limit each IP to 100 requests per windowMs\n});\napp.use(limiter);\n\n// Body parsing middleware\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));",
+							"title": "Production Middleware Stack",
+							"description": "Common middleware setup for production Express.js applications",
+							"dependencies": ["express", "morgan", "helmet", "express-rate-limit"],
+							"context": "Production-ready middleware configuration"
+						}
+					],
+					"resultCount": 2,
+					"timing": {
+						"startTime": 1704067500000,
+						"endTime": 1704067501800,
+						"duration": 1800,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "library_not_found_error",
+		"category": "errors",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "error_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "resolve-library-id",
+					"resolve": {
+						"libraryName": "nonexistent-library-xyz",
+						"packageManager": "npm",
+						"language": "javascript"
+					},
+					"timeout": 15000,
+					"debug": true
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "error_1",
+				"output": {
+					"operation": "resolve-library-id",
+					"success": false,
+					"message": "Context7 operation failed: Library 'nonexistent-library-xyz' not found in Context7 database",
+					"error": {
+						"code": "LIBRARY_NOT_FOUND",
+						"message": "Library 'nonexistent-library-xyz' not found in Context7 database",
+						"details": {
+							"searchedTerms": ["nonexistent-library-xyz", "nonexistent", "library", "xyz"],
+							"suggestions": ["express", "react", "vue", "angular"]
+						},
+						"suggestion": "Try using a more specific library name or check the spelling"
+					},
+					"timing": {
+						"startTime": 1704067600000,
+						"endTime": 1704067601200,
+						"duration": 1200,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "list_python_libraries",
+		"category": "listing",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "list_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "list-libraries",
+					"search": {
+						"language": "python",
+						"category": "web-framework",
+						"minTrustScore": 8,
+						"limit": 3,
+						"sortBy": "trust-score"
+					},
+					"timeout": 25000,
+					"useCache": true
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "list_1",
+				"output": {
+					"operation": "list-libraries",
+					"success": true,
+					"message": "Listed 3 Python web framework libraries",
+					"libraries": [
+						{
+							"id": "/django/django",
+							"name": "Django",
+							"description": "The Web framework for perfectionists with deadlines",
+							"website": "https://www.djangoproject.com",
+							"repository": "https://github.com/django/django",
+							"packageManager": "pypi",
+							"packageName": "Django",
+							"version": "5.0.0",
+							"trustScore": 9.7,
+							"codeSnippetCount": 312,
+							"platforms": ["Python"],
+							"languages": ["Python"],
+							"tags": ["web-framework", "mvc", "orm", "admin"]
+						},
+						{
+							"id": "/pallets/flask",
+							"name": "Flask",
+							"description": "A simple framework for building complex web applications",
+							"website": "https://flask.palletsprojects.com",
+							"repository": "https://github.com/pallets/flask",
+							"packageManager": "pypi",
+							"packageName": "Flask",
+							"version": "3.0.0",
+							"trustScore": 9.4,
+							"codeSnippetCount": 198,
+							"platforms": ["Python"],
+							"languages": ["Python"],
+							"tags": ["web-framework", "microframework", "wsgi"]
+						},
+						{
+							"id": "/tiangolo/fastapi",
+							"name": "FastAPI",
+							"description": "FastAPI framework, high performance, easy to learn, fast to code, ready for production",
+							"website": "https://fastapi.tiangolo.com",
+							"repository": "https://github.com/tiangolo/fastapi",
+							"packageManager": "pypi",
+							"packageName": "fastapi",
+							"version": "0.104.1",
+							"trustScore": 9.2,
+							"codeSnippetCount": 156,
+							"platforms": ["Python"],
+							"languages": ["Python"],
+							"tags": ["web-framework", "api", "async", "type-hints"]
+						}
+					],
+					"resultCount": 3,
+					"totalResults": 8,
+					"timing": {
+						"startTime": 1704067700000,
+						"endTime": 1704067701500,
+						"duration": 1500,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "get_api_reference_lodash",
+		"category": "api-reference",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "api_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "get-api-reference",
+					"documentation": {
+						"libraryId": "/lodash/lodash",
+						"topic": "array methods",
+						"tokens": 4000,
+						"includeExamples": true,
+						"sections": ["API Reference"],
+						"contentTypes": ["reference", "example"]
+					},
+					"timeout": 25000
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "api_1",
+				"output": {
+					"operation": "get-api-reference",
+					"success": true,
+					"message": "Retrieved Lodash array methods API reference",
+					"documentation": [
+						{
+							"title": "Array Methods - _.chunk",
+							"content": "Creates an array of elements split into groups the length of size. If array can't be split evenly, the final chunk will be the remaining elements.",
+							"type": "reference",
+							"section": "API Reference",
+							"codeExamples": [
+								{
+									"language": "javascript",
+									"code": "_.chunk(['a', 'b', 'c', 'd'], 2);\n// => [['a', 'b'], ['c', 'd']]\n\n_.chunk(['a', 'b', 'c', 'd'], 3);\n// => [['a', 'b', 'c'], ['d']]",
+									"title": "Basic chunk usage",
+									"description": "Examples of splitting arrays into chunks",
+									"dependencies": ["lodash"]
+								}
+							],
+							"metadata": {
+								"version": "4.17.21",
+								"difficulty": "beginner"
+							}
+						}
+					],
+					"resultCount": 1,
+					"totalResults": 42,
+					"timing": {
+						"startTime": 1704067800000,
+						"endTime": 1704067802100,
+						"duration": 2100,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "validate_library_usage_react",
+		"category": "validation",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "validate_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "validate-library-usage",
+					"documentation": {
+						"libraryId": "/facebook/react",
+						"topic": "component lifecycle",
+						"includeExamples": false,
+						"contentTypes": ["guide"]
+					},
+					"timeout": 15000
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "validate_1",
+				"output": {
+					"operation": "validate-library-usage",
+					"success": true,
+					"message": "Validated React component lifecycle usage patterns",
+					"documentation": [
+						{
+							"title": "Component Lifecycle Best Practices",
+							"content": "React components have several lifecycle methods you can override to run code at particular times in the process. Methods prefixed with will are called right before something happens, and methods prefixed with did are called right after something happens.",
+							"type": "guide",
+							"section": "Best Practices",
+							"metadata": {
+								"difficulty": "intermediate",
+								"estimatedReadTime": 8
+							}
+						}
+					],
+					"timing": {
+						"startTime": 1704067900000,
+						"endTime": 1704067901300,
+						"duration": 1300,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "timeout_error_example",
+		"category": "errors",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "timeout_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "get-library-docs",
+					"documentation": {
+						"libraryId": "/tensorflow/tensorflow",
+						"topic": "machine learning",
+						"tokens": 50000,
+						"includeExamples": true
+					},
+					"timeout": 5000,
+					"debug": true
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "timeout_1",
+				"output": {
+					"operation": "get-library-docs",
+					"success": false,
+					"message": "Context7 operation failed: Request timed out after 5000ms",
+					"error": {
+						"code": "TIMEOUT_ERROR",
+						"message": "Request timed out after 5000ms",
+						"details": {
+							"requestedTokens": 50000,
+							"timeoutMs": 5000,
+							"recommendedTimeout": 30000
+						},
+						"suggestion": "The request timed out, try reducing the token count or check your connection"
+					},
+					"timing": {
+						"startTime": 1704068000000,
+						"endTime": 1704068005000,
+						"duration": 5000,
+						"cacheHit": false
+					}
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "get_library_info_mongodb",
+		"category": "info",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "info_1",
+				"name": "Context7Mcp",
+				"input": {
+					"operation": "get-library-info",
+					"resolve": {
+						"libraryName": "MongoDB Node.js Driver",
+						"language": "javascript"
+					},
+					"timeout": 10000,
+					"useCache": true
+				}
+			},
+			"toolUseResult": {
+				"tool_use_id": "info_1",
+				"output": {
+					"operation": "get-library-info",
+					"success": true,
+					"message": "Retrieved MongoDB library information",
+					"library": {
+						"id": "/mongodb/node-mongodb-native",
+						"name": "MongoDB Node.js Driver",
+						"description": "The official MongoDB driver for Node.js",
+						"website": "https://mongodb.github.io/node-mongodb-native/",
+						"repository": "https://github.com/mongodb/node-mongodb-native",
+						"packageManager": "npm",
+						"packageName": "mongodb",
+						"version": "6.3.0",
+						"trustScore": 9.1,
+						"codeSnippetCount": 134,
+						"sections": ["Quick Start", "API Reference", "Tutorials", "Migration Guide"],
+						"platforms": ["Node.js"],
+						"languages": ["JavaScript", "TypeScript"],
+						"tags": ["database", "mongodb", "nosql", "driver"]
+					},
+					"timing": {
+						"startTime": 1704068100000,
+						"endTime": 1704068100800,
+						"duration": 800,
+						"cacheHit": true
+					}
+				},
+				"status": "completed"
+			}
+		}
+	}
+]

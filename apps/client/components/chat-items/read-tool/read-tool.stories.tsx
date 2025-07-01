@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ReadTool } from './read-tool';
+import type { Meta, StoryObj } from "@storybook/react";
+import { ReadTool } from "./read-tool";
 
 const meta = {
-  title: 'Chat Items/Read Tool',
-  component: ReadTool,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-  argTypes: {
-    status: {
-      control: { type: 'select' },
-      options: ['pending', 'completed', 'error'],
-    },
-    showLineNumbers: {
-      control: { type: 'boolean' },
-    },
-  },
+	title: "Chat Items/Read Tool",
+	component: ReadTool,
+	parameters: {
+		layout: "centered",
+	},
+	tags: ["autodocs"],
+	argTypes: {
+		status: {
+			control: { type: "select" },
+			options: ["pending", "completed", "error"],
+		},
+		showLineNumbers: {
+			control: { type: "boolean" },
+		},
+	},
 } satisfies Meta<typeof ReadTool>;
 
 export default meta;
@@ -46,35 +46,35 @@ export const Counter = () => {
 };`;
 
 export const Default: Story = {
-  args: {
-    filePath: '/Users/user/project/src/components/Counter.tsx',
-    content: sampleCode,
-    description: 'React component with TypeScript',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-    fileSize: 1024,
-    totalLines: 20,
-  },
+	args: {
+		filePath: "/Users/user/project/src/components/Counter.tsx",
+		content: sampleCode,
+		description: "React component with TypeScript",
+		status: "completed",
+		timestamp: "2024-06-28 23:45:12",
+		fileSize: 1024,
+		totalLines: 20,
+	},
 };
 
 export const LargeFile: Story = {
-  args: {
-    filePath: '/Users/user/project/src/App.tsx',
-    content: sampleCode,
-    description: 'Large file with pagination',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-    fileSize: 15680,
-    totalLines: 500,
-    startLine: 1,
-    endLine: 20,
-  },
+	args: {
+		filePath: "/Users/user/project/src/App.tsx",
+		content: sampleCode,
+		description: "Large file with pagination",
+		status: "completed",
+		timestamp: "2024-06-28 23:45:12",
+		fileSize: 15680,
+		totalLines: 500,
+		startLine: 1,
+		endLine: 20,
+	},
 };
 
 export const JSONFile: Story = {
-  args: {
-    filePath: '/Users/user/project/package.json',
-    content: `{
+	args: {
+		filePath: "/Users/user/project/package.json",
+		content: `{
   "name": "atomic-codex-ui",
   "version": "1.0.0",
   "description": "UI components for atomic codex",
@@ -89,29 +89,28 @@ export const JSONFile: Story = {
     "framer-motion": "^12.19.2"
   }
 }`,
-    description: 'Package configuration file',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-    fileSize: 512,
-  },
+		description: "Package configuration file",
+		status: "completed",
+		timestamp: "2024-06-28 23:45:12",
+		fileSize: 512,
+	},
 };
 
 export const BinaryFile: Story = {
-  args: {
-    filePath: '/Users/user/project/assets/logo.png',
-    content: '',
-    description: 'Binary image file',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-    fileSize: 45678,
-    isBinary: true,
-  },
+	args: {
+		filePath: "/Users/user/project/assets/logo.png",
+		content: "",
+		description: "Binary image file",
+		status: "completed",
+		timestamp: "2024-06-28 23:45:12",
+		fileSize: 45678,
+	},
 };
 
 export const NoLineNumbers: Story = {
-  args: {
-    filePath: '/Users/user/project/README.md',
-    content: `# Atomic Codex UI Components
+	args: {
+		filePath: "/Users/user/project/README.md",
+		content: `# Atomic Codex UI Components
 
 A comprehensive library of React components for building chat interfaces and displaying tool results from Claude conversations.
 
@@ -127,10 +126,10 @@ A comprehensive library of React components for building chat interfaces and dis
 \`\`\`bash
 bun add @dao/ui-components
 \`\`\``,
-    description: 'Markdown documentation',
-    status: 'completed',
-    showLineNumbers: false,
-    timestamp: '2024-06-28 23:45:12',
-    fileSize: 1024,
-  },
+		description: "Markdown documentation",
+		status: "completed",
+		showLineNumbers: false,
+		timestamp: "2024-06-28 23:45:12",
+		fileSize: 1024,
+	},
 };

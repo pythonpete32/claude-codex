@@ -1,225 +1,234 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { LsTool } from './ls-tool';
+import type { Meta, StoryObj } from "@storybook/react";
+import { LsTool } from "./ls-tool";
 
 const meta = {
-  title: 'Chat Items/LS Tool',
-  component: LsTool,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-  argTypes: {
-    status: {
-      control: { type: 'select' },
-      options: ['pending', 'completed', 'error'],
-    },
-    showHidden: {
-      control: { type: 'boolean' },
-    },
-  },
+	title: "Chat Items/LS Tool",
+	component: LsTool,
+	parameters: {
+		layout: "centered",
+	},
+	tags: ["autodocs"],
+	argTypes: {
+		status: {
+			control: { type: "select" },
+			options: ["pending", "completed", "failed", "in_progress", "interrupted"],
+		},
+	},
 } satisfies Meta<typeof LsTool>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sampleFiles = [
-  {
-    name: '.git',
-    type: 'directory' as const,
-    hidden: true,
-    permissions: 'drwxr-xr-x',
-    modified: '2024-06-28 23:45',
-  },
-  {
-    name: '.env',
-    type: 'file' as const,
-    size: 245,
-    hidden: true,
-    extension: '.env',
-    permissions: '-rw-r--r--',
-    modified: '2024-06-28 10:30',
-  },
-  {
-    name: 'node_modules',
-    type: 'directory' as const,
-    permissions: 'drwxr-xr-x',
-    modified: '2024-06-28 15:22',
-  },
-  {
-    name: 'src',
-    type: 'directory' as const,
-    permissions: 'drwxr-xr-x',
-    modified: '2024-06-28 23:40',
-  },
-  {
-    name: 'package.json',
-    type: 'file' as const,
-    size: 1520,
-    extension: '.json',
-    permissions: '-rw-r--r--',
-    modified: '2024-06-28 22:15',
-  },
-  {
-    name: 'README.md',
-    type: 'file' as const,
-    size: 2847,
-    extension: '.md',
-    permissions: '-rw-r--r--',
-    modified: '2024-06-28 18:30',
-  },
-  {
-    name: 'App.tsx',
-    type: 'file' as const,
-    size: 892,
-    extension: '.tsx',
-    permissions: '-rw-r--r--',
-    modified: '2024-06-28 23:45',
-  },
-  {
-    name: 'vite.config.ts',
-    type: 'file' as const,
-    size: 456,
-    extension: '.ts',
-    permissions: '-rw-r--r--',
-    modified: '2024-06-28 20:10',
-  },
+const sampleEntries = [
+	{
+		name: ".git",
+		type: "directory" as const,
+		hidden: true,
+		permissions: "drwxr-xr-x",
+		lastModified: "2024-06-28T23:45:00Z",
+	},
+	{
+		name: ".env",
+		type: "file" as const,
+		size: 245,
+		hidden: true,
+		permissions: "-rw-r--r--",
+		lastModified: "2024-06-28T10:30:00Z",
+	},
+	{
+		name: "node_modules",
+		type: "directory" as const,
+		hidden: false,
+		permissions: "drwxr-xr-x",
+		lastModified: "2024-06-28T15:22:00Z",
+	},
+	{
+		name: "src",
+		type: "directory" as const,
+		hidden: false,
+		permissions: "drwxr-xr-x",
+		lastModified: "2024-06-28T23:40:00Z",
+	},
+	{
+		name: "package.json",
+		type: "file" as const,
+		size: 1520,
+		hidden: false,
+		permissions: "-rw-r--r--",
+		lastModified: "2024-06-28T22:15:00Z",
+	},
+	{
+		name: "README.md",
+		type: "file" as const,
+		size: 2847,
+		hidden: false,
+		permissions: "-rw-r--r--",
+		lastModified: "2024-06-28T18:30:00Z",
+	},
+	{
+		name: "App.tsx",
+		type: "file" as const,
+		size: 892,
+		hidden: false,
+		permissions: "-rw-r--r--",
+		lastModified: "2024-06-28T23:45:00Z",
+	},
+	{
+		name: "vite.config.ts",
+		type: "file" as const,
+		size: 456,
+		hidden: false,
+		permissions: "-rw-r--r--",
+		lastModified: "2024-06-28T20:10:00Z",
+	},
 ];
 
 export const Default: Story = {
-  args: {
-    path: '/Users/user/atomic-codex/packages/ui-components',
-    files: sampleFiles,
-    description: 'List directory contents',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-  },
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_default",
+			name: "LS",
+			input: {
+				path: "/Users/user/atomic-codex/packages/ui-components",
+			},
+		},
+		status: "completed",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: sampleEntries,
+			entryCount: sampleEntries.length,
+			path: "/Users/user/atomic-codex/packages/ui-components",
+			isError: false,
+		},
+	},
 };
 
-export const GridView: Story = {
-  args: {
-    path: '/Users/user/projects/react-app',
-    files: sampleFiles,
-    description: 'Directory listing in grid view',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-  },
-};
-
-export const WithHiddenFiles: Story = {
-  args: {
-    path: '/Users/user/atomic-codex',
-    files: sampleFiles,
-    description: 'Show hidden files and directories',
-    status: 'completed',
-    showHidden: true,
-    timestamp: '2024-06-28 23:45:12',
-  },
-};
-
-export const LargeDirectory: Story = {
-  args: {
-    path: '/Users/user/large-project',
-    files: [
-      ...sampleFiles,
-      {
-        name: 'components',
-        type: 'directory' as const,
-        permissions: 'drwxr-xr-x',
-        modified: '2024-06-28 20:00',
-      },
-      {
-        name: 'utils',
-        type: 'directory' as const,
-        permissions: 'drwxr-xr-x',
-        modified: '2024-06-28 19:45',
-      },
-      {
-        name: 'assets',
-        type: 'directory' as const,
-        permissions: 'drwxr-xr-x',
-        modified: '2024-06-28 18:20',
-      },
-      {
-        name: 'logo.png',
-        type: 'file' as const,
-        size: 45678,
-        extension: '.png',
-        permissions: '-rw-r--r--',
-        modified: '2024-06-28 16:30',
-      },
-      {
-        name: 'video.mp4',
-        type: 'file' as const,
-        size: 12345678,
-        extension: '.mp4',
-        permissions: '-rw-r--r--',
-        modified: '2024-06-28 14:15',
-      },
-      {
-        name: 'archive.zip',
-        type: 'file' as const,
-        size: 567890,
-        extension: '.zip',
-        permissions: '-rw-r--r--',
-        modified: '2024-06-28 12:00',
-      },
-      {
-        name: 'music.mp3',
-        type: 'file' as const,
-        size: 4567890,
-        extension: '.mp3',
-        permissions: '-rw-r--r--',
-        modified: '2024-06-28 11:30',
-      },
-    ],
-    description: 'Large directory with many file types',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-  },
+export const WithIgnorePatterns: Story = {
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_ignore",
+			name: "LS",
+			input: {
+				path: "/Users/user/projects/react-app",
+				ignore: ["*.log", "*.tmp"],
+			},
+		},
+		status: "completed",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: sampleEntries.slice(2), // Exclude hidden files
+			entryCount: sampleEntries.length - 2,
+			path: "/Users/user/projects/react-app",
+			isError: false,
+		},
+	},
 };
 
 export const EmptyDirectory: Story = {
-  args: {
-    path: '/Users/user/empty-folder',
-    files: [],
-    description: 'Empty directory listing',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-  },
-};
-
-export const ErrorState: Story = {
-  args: {
-    path: '/Users/user/protected-folder',
-    files: [],
-    description: 'Permission denied',
-    status: 'error',
-    timestamp: '2024-06-28 23:45:12',
-  },
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_empty",
+			name: "LS",
+			input: {
+				path: "/tmp/empty-folder",
+			},
+		},
+		status: "completed",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: [],
+			entryCount: 0,
+			path: "/tmp/empty-folder",
+			isError: false,
+		},
+	},
 };
 
 export const PendingState: Story = {
-  args: {
-    path: '/Users/user/loading-folder',
-    files: [],
-    description: 'Scanning directory...',
-    status: 'pending',
-    timestamp: '2024-06-28 23:45:12',
-  },
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_pending",
+			name: "LS",
+			input: {
+				path: "/Users/user/loading-folder",
+			},
+		},
+		status: "pending",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: [],
+			entryCount: 0,
+			path: "/Users/user/loading-folder",
+			isError: false,
+		},
+	},
 };
 
-export const InteractiveExample: Story = {
-  args: {
-    path: '/Users/user/atomic-codex/packages/ui-components',
-    files: sampleFiles,
-    description: 'Click on files and directories',
-    status: 'completed',
-    timestamp: '2024-06-28 23:45:12',
-    onPathClick: (path: string) => {
-      console.log('Path clicked:', path);
-    },
-    onFileClick: (file: any) => {
-      console.log('File clicked:', file.name);
-    },
-  },
+export const InProgressState: Story = {
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_running",
+			name: "LS",
+			input: {
+				path: "/var/log",
+			},
+		},
+		status: "in_progress",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: [],
+			entryCount: 0,
+			path: "/var/log",
+			isError: false,
+		},
+	},
+};
+
+export const FailedState: Story = {
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_failed",
+			name: "LS",
+			input: {
+				path: "/nonexistent/directory",
+			},
+		},
+		status: "failed",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: [],
+			entryCount: 0,
+			path: "/nonexistent/directory",
+			isError: true,
+			errorMessage: "ENOENT: no such file or directory '/nonexistent/directory'",
+		},
+	},
+};
+
+export const InterruptedState: Story = {
+	args: {
+		toolUse: {
+			type: "tool_use",
+			id: "ls_interrupted",
+			name: "LS",
+			input: {
+				path: "/large/directory",
+			},
+		},
+		status: "interrupted",
+		timestamp: "2024-06-28T23:45:12.000Z",
+		toolResult: {
+			entries: [],
+			entryCount: 0,
+			path: "/large/directory",
+			isError: true,
+			errorMessage: "Operation was interrupted by user",
+		},
+	},
 };
