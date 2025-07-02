@@ -1,0 +1,3 @@
+{"type":"user","uuid":"user-1","timestamp":"2025-06-30T12:00:00.000Z","message":{"content":[{"type":"text","text":"Write a hello world file"}]}}
+{"type":"assistant","uuid":"tool-call-1","timestamp":"2025-06-30T12:00:00.100Z","message":{"content":[{"type":"tool_use","id":"tool-1","name":"Write","input":{"file_path":"/tmp/hello.txt","content":"Hello, World!"}}]}}
+{"type":"user","uuid":"tool-result-1","timestamp":"2025-06-30T12:00:00.250Z","message":{"content":[{"type":"tool_result","tool_use_id":"tool-1","content":"File written successfully"}]}}

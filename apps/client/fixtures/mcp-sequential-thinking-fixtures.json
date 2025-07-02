@@ -1,0 +1,1167 @@
+[
+	{
+		"name": "basic_problem_decomposition",
+		"category": "basic",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "tool_001",
+				"name": "SequentialThinking",
+				"input": {
+					"workflow": {
+						"id": "wf_001",
+						"name": "API Performance Issue Analysis",
+						"processType": "problem_decomposition",
+						"problemStatement": "Our API endpoints are responding slowly and users are complaining about timeouts",
+						"targetOutcome": "Identify root causes and implement solutions to achieve sub-200ms response times",
+						"status": "active",
+						"priority": "high",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Gather Performance Metrics",
+								"description": "Collect current response time data, error rates, and resource utilization metrics",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 30,
+								"actualMinutes": 25,
+								"result": "Found average response time of 850ms with 15% error rate during peak hours",
+								"mcpResources": ["monitoring-dashboard", "log-aggregation"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Analyze Database Query Performance",
+								"description": "Examine slow query logs and identify N+1 queries or missing indexes",
+								"status": "in_progress",
+								"priority": "high",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 45,
+								"mcpResources": ["database-profiler", "query-analyzer"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Review Caching Strategy",
+								"description": "Audit current caching implementation and identify cache miss patterns",
+								"status": "pending",
+								"priority": "medium",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 30,
+								"mcpResources": ["redis-monitor", "cache-analyzer"]
+							}
+						],
+						"tags": ["performance", "api", "troubleshooting"],
+						"metadata": {
+							"createdAt": "2024-01-15T10:00:00Z",
+							"updatedAt": "2024-01-15T14:30:00Z",
+							"estimatedTotalMinutes": 105,
+							"actualTotalMinutes": 25,
+							"completionPercentage": 33
+						}
+					},
+					"mode": "update",
+					"stepId": "step_002"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "tool_001",
+				"type": "tool_result",
+				"content": "{\"workflow\":{\"id\":\"wf_001\",\"name\":\"API Performance Issue Analysis\"},\"message\":\"Updated workflow - analyzing database performance\"}"
+			},
+			"toolUseResult": {
+				"output": {
+					"workflow": {
+						"id": "wf_001",
+						"name": "API Performance Issue Analysis",
+						"processType": "problem_decomposition",
+						"problemStatement": "Our API endpoints are responding slowly and users are complaining about timeouts",
+						"targetOutcome": "Identify root causes and implement solutions to achieve sub-200ms response times",
+						"status": "active",
+						"priority": "high",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Gather Performance Metrics",
+								"description": "Collect current response time data, error rates, and resource utilization metrics",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 30,
+								"actualMinutes": 25,
+								"result": "Found average response time of 850ms with 15% error rate during peak hours",
+								"mcpResources": ["monitoring-dashboard", "log-aggregation"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Analyze Database Query Performance",
+								"description": "Examine slow query logs and identify N+1 queries or missing indexes",
+								"status": "in_progress",
+								"priority": "high",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 45,
+								"mcpResources": ["database-profiler", "query-analyzer"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Review Caching Strategy",
+								"description": "Audit current caching implementation and identify cache miss patterns",
+								"status": "pending",
+								"priority": "medium",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 30,
+								"mcpResources": ["redis-monitor", "cache-analyzer"]
+							}
+						],
+						"tags": ["performance", "api", "troubleshooting"],
+						"metadata": {
+							"createdAt": "2024-01-15T10:00:00Z",
+							"updatedAt": "2024-01-15T14:30:00Z",
+							"estimatedTotalMinutes": 105,
+							"actualTotalMinutes": 25,
+							"completionPercentage": 33
+						}
+					},
+					"changesSummary": {
+						"stepsAdded": 0,
+						"stepsUpdated": 1,
+						"stepsCompleted": 0,
+						"stepsBlocked": 0
+					},
+					"progress": {
+						"totalSteps": 3,
+						"completedSteps": 1,
+						"pendingSteps": 2,
+						"blockedSteps": 0,
+						"completionPercentage": 33,
+						"estimatedRemainingMinutes": 75
+					},
+					"recommendations": {
+						"nextStepId": "step_002",
+						"nextStepTitle": "Analyze Database Query Performance",
+						"suggestedMcpTools": ["database-profiler", "query-analyzer", "redis-monitor", "cache-analyzer"]
+					},
+					"message": "Updated workflow \"API Performance Issue Analysis\" - 1 steps modified"
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "step_by_step_analysis",
+		"category": "analysis",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "tool_002",
+				"name": "SequentialThinking",
+				"input": {
+					"workflow": {
+						"id": "wf_002",
+						"name": "Security Vulnerability Assessment",
+						"processType": "step_by_step_analysis",
+						"problemStatement": "Multiple security scanners are reporting potential vulnerabilities in our web application",
+						"targetOutcome": "Systematically assess, prioritize, and remediate all identified security issues",
+						"status": "active",
+						"priority": "critical",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Vulnerability Inventory",
+								"description": "Compile and categorize all reported vulnerabilities from different scanners",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 60,
+								"actualMinutes": 55,
+								"result": "Identified 23 vulnerabilities: 3 critical, 8 high, 12 medium priority",
+								"mcpResources": ["vulnerability-scanner", "security-database"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Risk Assessment",
+								"description": "Evaluate business impact and exploitability of each vulnerability",
+								"status": "completed",
+								"priority": "critical",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 90,
+								"actualMinutes": 85,
+								"result": "Prioritized critical path: SQL injection (CVSS 9.1), XSS (CVSS 7.4), Insecure Auth (CVSS 8.2)",
+								"mcpResources": ["cvss-calculator", "threat-modeling"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Critical Vulnerability Remediation",
+								"description": "Address the 3 critical vulnerabilities identified in risk assessment",
+								"status": "in_progress",
+								"priority": "critical",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 240,
+								"mcpResources": ["code-scanner", "security-patches"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Validation Testing",
+								"description": "Verify that remediation efforts successfully address the vulnerabilities",
+								"status": "pending",
+								"priority": "high",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 120,
+								"mcpResources": ["penetration-testing", "validation-tools"]
+							}
+						],
+						"tags": ["security", "vulnerability", "remediation"],
+						"metadata": {
+							"createdAt": "2024-01-16T09:00:00Z",
+							"updatedAt": "2024-01-16T15:20:00Z",
+							"estimatedTotalMinutes": 510,
+							"actualTotalMinutes": 140,
+							"completionPercentage": 50
+						}
+					},
+					"mode": "analyze"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "tool_002",
+				"type": "tool_result",
+				"content": "{\"workflow\":{\"id\":\"wf_002\",\"name\":\"Security Vulnerability Assessment\"},\"message\":\"Analyzed workflow - 50% complete\"}"
+			},
+			"toolUseResult": {
+				"output": {
+					"workflow": {
+						"id": "wf_002",
+						"name": "Security Vulnerability Assessment",
+						"processType": "step_by_step_analysis",
+						"problemStatement": "Multiple security scanners are reporting potential vulnerabilities in our web application",
+						"targetOutcome": "Systematically assess, prioritize, and remediate all identified security issues",
+						"status": "active",
+						"priority": "critical",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Vulnerability Inventory",
+								"description": "Compile and categorize all reported vulnerabilities from different scanners",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 60,
+								"actualMinutes": 55,
+								"result": "Identified 23 vulnerabilities: 3 critical, 8 high, 12 medium priority",
+								"mcpResources": ["vulnerability-scanner", "security-database"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Risk Assessment",
+								"description": "Evaluate business impact and exploitability of each vulnerability",
+								"status": "completed",
+								"priority": "critical",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 90,
+								"actualMinutes": 85,
+								"result": "Prioritized critical path: SQL injection (CVSS 9.1), XSS (CVSS 7.4), Insecure Auth (CVSS 8.2)",
+								"mcpResources": ["cvss-calculator", "threat-modeling"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Critical Vulnerability Remediation",
+								"description": "Address the 3 critical vulnerabilities identified in risk assessment",
+								"status": "in_progress",
+								"priority": "critical",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 240,
+								"mcpResources": ["code-scanner", "security-patches"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Validation Testing",
+								"description": "Verify that remediation efforts successfully address the vulnerabilities",
+								"status": "pending",
+								"priority": "high",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 120,
+								"mcpResources": ["penetration-testing", "validation-tools"]
+							}
+						],
+						"tags": ["security", "vulnerability", "remediation"],
+						"metadata": {
+							"createdAt": "2024-01-16T09:00:00Z",
+							"updatedAt": "2024-01-16T15:20:00Z",
+							"estimatedTotalMinutes": 510,
+							"actualTotalMinutes": 140,
+							"completionPercentage": 50
+						}
+					},
+					"changesSummary": {
+						"stepsAdded": 0,
+						"stepsUpdated": 0,
+						"stepsCompleted": 2,
+						"stepsBlocked": 0
+					},
+					"progress": {
+						"totalSteps": 4,
+						"completedSteps": 2,
+						"pendingSteps": 2,
+						"blockedSteps": 0,
+						"completionPercentage": 50,
+						"estimatedRemainingMinutes": 360
+					},
+					"recommendations": {
+						"nextStepId": "step_003",
+						"nextStepTitle": "Critical Vulnerability Remediation",
+						"suggestedMcpTools": ["code-scanner", "security-patches"]
+					},
+					"message": "Analyzed workflow \"Security Vulnerability Assessment\" - 50% complete"
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "root_cause_analysis",
+		"category": "troubleshooting",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "tool_003",
+				"name": "SequentialThinking",
+				"input": {
+					"workflow": {
+						"id": "wf_003",
+						"name": "Production Outage Investigation",
+						"processType": "root_cause_analysis",
+						"problemStatement": "Our main service experienced a complete outage for 45 minutes affecting 10,000+ users",
+						"targetOutcome": "Identify the root cause and implement preventive measures to avoid future occurrences",
+						"status": "active",
+						"priority": "critical",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Timeline Reconstruction",
+								"description": "Build detailed timeline of events leading up to and during the outage",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 30,
+								"actualMinutes": 35,
+								"result": "Outage started at 14:23 UTC, coinciding with deployment of v2.4.1",
+								"mcpResources": ["log-analyzer", "deployment-tracker", "monitoring-timeline"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "System State Analysis",
+								"description": "Examine system metrics, logs, and resource utilization during incident",
+								"status": "completed",
+								"priority": "critical",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 45,
+								"actualMinutes": 50,
+								"result": "Memory leak detected in new caching module, causing OOM kills",
+								"mcpResources": ["metrics-dashboard", "log-aggregation", "system-profiler"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Code Change Analysis",
+								"description": "Review code changes in v2.4.1 deployment that triggered the incident",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 60,
+								"actualMinutes": 55,
+								"result": "Identified infinite loop in cache invalidation logic causing memory accumulation",
+								"mcpResources": ["code-diff", "static-analyzer", "memory-profiler"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Contributing Factors",
+								"description": "Identify any additional factors that amplified the impact",
+								"status": "in_progress",
+								"priority": "medium",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 30,
+								"mcpResources": ["infrastructure-audit", "process-review"]
+							},
+							{
+								"id": "step_005",
+								"sequence": 5,
+								"title": "Prevention Strategy",
+								"description": "Design comprehensive prevention and detection improvements",
+								"status": "pending",
+								"priority": "high",
+								"dependencies": ["step_004"],
+								"estimatedMinutes": 90,
+								"mcpResources": ["testing-framework", "monitoring-enhancement"]
+							}
+						],
+						"tags": ["incident", "outage", "root-cause"],
+						"metadata": {
+							"createdAt": "2024-01-17T15:00:00Z",
+							"updatedAt": "2024-01-17T18:15:00Z",
+							"estimatedTotalMinutes": 255,
+							"actualTotalMinutes": 140,
+							"completionPercentage": 60
+						}
+					},
+					"mode": "execute_next"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "tool_003",
+				"type": "tool_result",
+				"content": "{\"workflow\":{\"id\":\"wf_003\",\"name\":\"Production Outage Investigation\"},\"message\":\"Next step ready\"}"
+			},
+			"toolUseResult": {
+				"output": {
+					"workflow": {
+						"id": "wf_003",
+						"name": "Production Outage Investigation",
+						"processType": "root_cause_analysis",
+						"problemStatement": "Our main service experienced a complete outage for 45 minutes affecting 10,000+ users",
+						"targetOutcome": "Identify the root cause and implement preventive measures to avoid future occurrences",
+						"status": "active",
+						"priority": "critical",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Timeline Reconstruction",
+								"description": "Build detailed timeline of events leading up to and during the outage",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 30,
+								"actualMinutes": 35,
+								"result": "Outage started at 14:23 UTC, coinciding with deployment of v2.4.1",
+								"mcpResources": ["log-analyzer", "deployment-tracker", "monitoring-timeline"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "System State Analysis",
+								"description": "Examine system metrics, logs, and resource utilization during incident",
+								"status": "completed",
+								"priority": "critical",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 45,
+								"actualMinutes": 50,
+								"result": "Memory leak detected in new caching module, causing OOM kills",
+								"mcpResources": ["metrics-dashboard", "log-aggregation", "system-profiler"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Code Change Analysis",
+								"description": "Review code changes in v2.4.1 deployment that triggered the incident",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 60,
+								"actualMinutes": 55,
+								"result": "Identified infinite loop in cache invalidation logic causing memory accumulation",
+								"mcpResources": ["code-diff", "static-analyzer", "memory-profiler"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Contributing Factors",
+								"description": "Identify any additional factors that amplified the impact",
+								"status": "in_progress",
+								"priority": "medium",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 30,
+								"mcpResources": ["infrastructure-audit", "process-review"]
+							},
+							{
+								"id": "step_005",
+								"sequence": 5,
+								"title": "Prevention Strategy",
+								"description": "Design comprehensive prevention and detection improvements",
+								"status": "pending",
+								"priority": "high",
+								"dependencies": ["step_004"],
+								"estimatedMinutes": 90,
+								"mcpResources": ["testing-framework", "monitoring-enhancement"]
+							}
+						],
+						"tags": ["incident", "outage", "root-cause"],
+						"metadata": {
+							"createdAt": "2024-01-17T15:00:00Z",
+							"updatedAt": "2024-01-17T18:15:00Z",
+							"estimatedTotalMinutes": 255,
+							"actualTotalMinutes": 140,
+							"completionPercentage": 60
+						}
+					},
+					"changesSummary": {
+						"stepsAdded": 0,
+						"stepsUpdated": 0,
+						"stepsCompleted": 0,
+						"stepsBlocked": 0
+					},
+					"progress": {
+						"totalSteps": 5,
+						"completedSteps": 3,
+						"pendingSteps": 2,
+						"blockedSteps": 0,
+						"completionPercentage": 60,
+						"estimatedRemainingMinutes": 120
+					},
+					"recommendations": {
+						"nextStepId": "step_004",
+						"nextStepTitle": "Contributing Factors",
+						"suggestedMcpTools": ["infrastructure-audit", "process-review"]
+					},
+					"message": "Next step ready: \"Contributing Factors\""
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "decision_tree_workflow",
+		"category": "decision",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "tool_004",
+				"name": "SequentialThinking",
+				"input": {
+					"workflow": {
+						"id": "wf_004",
+						"name": "Technology Stack Selection",
+						"processType": "decision_tree",
+						"problemStatement": "We need to choose a new frontend framework for our customer portal rewrite",
+						"targetOutcome": "Select the optimal frontend technology that balances performance, developer experience, and long-term maintainability",
+						"status": "active",
+						"priority": "high",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Requirements Gathering",
+								"description": "Define technical and business requirements for the new frontend",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 120,
+								"actualMinutes": 110,
+								"result": "Key requirements: SSR support, TypeScript compatibility, large ecosystem, team familiarity",
+								"mcpResources": ["requirements-analysis", "stakeholder-interviews"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Technology Landscape Survey",
+								"description": "Research current frontend frameworks and their capabilities",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 180,
+								"actualMinutes": 165,
+								"result": "Evaluated React, Vue 3, Angular, Svelte - created comparison matrix",
+								"mcpResources": ["technology-research", "benchmarking-tools"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Performance Benchmarking",
+								"description": "Create prototype applications to measure performance characteristics",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 300,
+								"actualMinutes": 280,
+								"result": "React: 85ms TTI, Vue: 78ms TTI, Angular: 95ms TTI, Svelte: 72ms TTI",
+								"mcpResources": ["performance-testing", "lighthouse-ci"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Developer Experience Assessment",
+								"description": "Evaluate tooling, documentation, and developer productivity",
+								"status": "in_progress",
+								"priority": "medium",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 120,
+								"mcpResources": ["developer-survey", "tooling-evaluation"]
+							},
+							{
+								"id": "step_005",
+								"sequence": 5,
+								"title": "Decision Matrix Analysis",
+								"description": "Apply weighted scoring to make final technology selection",
+								"status": "pending",
+								"priority": "critical",
+								"dependencies": ["step_004"],
+								"estimatedMinutes": 60,
+								"mcpResources": ["decision-framework", "scoring-matrix"]
+							}
+						],
+						"tags": ["technology-selection", "frontend", "architecture"],
+						"metadata": {
+							"createdAt": "2024-01-18T10:00:00Z",
+							"updatedAt": "2024-01-18T16:45:00Z",
+							"estimatedTotalMinutes": 780,
+							"actualTotalMinutes": 555,
+							"completionPercentage": 60
+						}
+					},
+					"mode": "create"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "tool_004",
+				"type": "tool_result",
+				"content": "{\"workflow\":{\"id\":\"wf_004\",\"name\":\"Technology Stack Selection\"},\"message\":\"Created new workflow\"}"
+			},
+			"toolUseResult": {
+				"output": {
+					"workflow": {
+						"id": "wf_004",
+						"name": "Technology Stack Selection",
+						"processType": "decision_tree",
+						"problemStatement": "We need to choose a new frontend framework for our customer portal rewrite",
+						"targetOutcome": "Select the optimal frontend technology that balances performance, developer experience, and long-term maintainability",
+						"status": "active",
+						"priority": "high",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Requirements Gathering",
+								"description": "Define technical and business requirements for the new frontend",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 120,
+								"actualMinutes": 110,
+								"result": "Key requirements: SSR support, TypeScript compatibility, large ecosystem, team familiarity",
+								"mcpResources": ["requirements-analysis", "stakeholder-interviews"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Technology Landscape Survey",
+								"description": "Research current frontend frameworks and their capabilities",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 180,
+								"actualMinutes": 165,
+								"result": "Evaluated React, Vue 3, Angular, Svelte - created comparison matrix",
+								"mcpResources": ["technology-research", "benchmarking-tools"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Performance Benchmarking",
+								"description": "Create prototype applications to measure performance characteristics",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 300,
+								"actualMinutes": 280,
+								"result": "React: 85ms TTI, Vue: 78ms TTI, Angular: 95ms TTI, Svelte: 72ms TTI",
+								"mcpResources": ["performance-testing", "lighthouse-ci"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Developer Experience Assessment",
+								"description": "Evaluate tooling, documentation, and developer productivity",
+								"status": "in_progress",
+								"priority": "medium",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 120,
+								"mcpResources": ["developer-survey", "tooling-evaluation"]
+							},
+							{
+								"id": "step_005",
+								"sequence": 5,
+								"title": "Decision Matrix Analysis",
+								"description": "Apply weighted scoring to make final technology selection",
+								"status": "pending",
+								"priority": "critical",
+								"dependencies": ["step_004"],
+								"estimatedMinutes": 60,
+								"mcpResources": ["decision-framework", "scoring-matrix"]
+							}
+						],
+						"tags": ["technology-selection", "frontend", "architecture"],
+						"metadata": {
+							"createdAt": "2024-01-18T10:00:00Z",
+							"updatedAt": "2024-01-18T16:45:00Z",
+							"estimatedTotalMinutes": 780,
+							"actualTotalMinutes": 555,
+							"completionPercentage": 60
+						}
+					},
+					"changesSummary": {
+						"stepsAdded": 5,
+						"stepsUpdated": 0,
+						"stepsCompleted": 3,
+						"stepsBlocked": 0
+					},
+					"progress": {
+						"totalSteps": 5,
+						"completedSteps": 3,
+						"pendingSteps": 2,
+						"blockedSteps": 0,
+						"completionPercentage": 60,
+						"estimatedRemainingMinutes": 180
+					},
+					"recommendations": {
+						"nextStepId": "step_004",
+						"nextStepTitle": "Developer Experience Assessment",
+						"suggestedMcpTools": ["developer-survey", "tooling-evaluation"]
+					},
+					"message": "Created workflow \"Technology Stack Selection\" with 5 steps"
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "blocked_dependencies",
+		"category": "errors",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "tool_005",
+				"name": "SequentialThinking",
+				"input": {
+					"workflow": {
+						"id": "wf_005",
+						"name": "Database Migration Planning",
+						"processType": "systematic_approach",
+						"problemStatement": "We need to migrate from MySQL to PostgreSQL while maintaining zero downtime",
+						"targetOutcome": "Complete database migration with minimal service disruption and full data integrity",
+						"status": "paused",
+						"priority": "high",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Schema Analysis",
+								"description": "Analyze current MySQL schema and identify PostgreSQL compatibility issues",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 180,
+								"actualMinutes": 170,
+								"result": "Identified 15 compatibility issues, created migration plan",
+								"mcpResources": ["schema-analyzer", "migration-tools"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Data Migration Strategy",
+								"description": "Design approach for migrating 500GB of production data",
+								"status": "blocked",
+								"priority": "critical",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 120,
+								"mcpResources": ["data-pipeline", "migration-validator"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Application Code Updates",
+								"description": "Modify application code to support PostgreSQL-specific features",
+								"status": "blocked",
+								"priority": "high",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 480,
+								"mcpResources": ["code-migration", "orm-compatibility"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Testing Infrastructure",
+								"description": "Set up comprehensive testing environment for migration validation",
+								"status": "pending",
+								"priority": "medium",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 240,
+								"mcpResources": ["test-environment", "data-validation"]
+							}
+						],
+						"tags": ["database", "migration", "postgresql"],
+						"metadata": {
+							"createdAt": "2024-01-19T08:00:00Z",
+							"updatedAt": "2024-01-19T12:30:00Z",
+							"estimatedTotalMinutes": 1020,
+							"actualTotalMinutes": 170,
+							"completionPercentage": 25
+						}
+					},
+					"mode": "analyze"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "tool_005",
+				"type": "tool_result",
+				"content": "{\"workflow\":{\"id\":\"wf_005\",\"name\":\"Database Migration Planning\"},\"message\":\"Workflow analysis complete - blocked steps detected\"}"
+			},
+			"toolUseResult": {
+				"output": {
+					"workflow": {
+						"id": "wf_005",
+						"name": "Database Migration Planning",
+						"processType": "systematic_approach",
+						"problemStatement": "We need to migrate from MySQL to PostgreSQL while maintaining zero downtime",
+						"targetOutcome": "Complete database migration with minimal service disruption and full data integrity",
+						"status": "paused",
+						"priority": "high",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Schema Analysis",
+								"description": "Analyze current MySQL schema and identify PostgreSQL compatibility issues",
+								"status": "completed",
+								"priority": "critical",
+								"estimatedMinutes": 180,
+								"actualMinutes": 170,
+								"result": "Identified 15 compatibility issues, created migration plan",
+								"mcpResources": ["schema-analyzer", "migration-tools"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "Data Migration Strategy",
+								"description": "Design approach for migrating 500GB of production data",
+								"status": "blocked",
+								"priority": "critical",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 120,
+								"mcpResources": ["data-pipeline", "migration-validator"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Application Code Updates",
+								"description": "Modify application code to support PostgreSQL-specific features",
+								"status": "blocked",
+								"priority": "high",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 480,
+								"mcpResources": ["code-migration", "orm-compatibility"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Testing Infrastructure",
+								"description": "Set up comprehensive testing environment for migration validation",
+								"status": "pending",
+								"priority": "medium",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 240,
+								"mcpResources": ["test-environment", "data-validation"]
+							}
+						],
+						"tags": ["database", "migration", "postgresql"],
+						"metadata": {
+							"createdAt": "2024-01-19T08:00:00Z",
+							"updatedAt": "2024-01-19T12:30:00Z",
+							"estimatedTotalMinutes": 1020,
+							"actualTotalMinutes": 170,
+							"completionPercentage": 25
+						}
+					},
+					"changesSummary": {
+						"stepsAdded": 0,
+						"stepsUpdated": 0,
+						"stepsCompleted": 1,
+						"stepsBlocked": 2
+					},
+					"progress": {
+						"totalSteps": 4,
+						"completedSteps": 1,
+						"pendingSteps": 1,
+						"blockedSteps": 2,
+						"completionPercentage": 25,
+						"estimatedRemainingMinutes": 840
+					},
+					"recommendations": {
+						"nextStepId": "step_004",
+						"nextStepTitle": "Testing Infrastructure",
+						"blockedSteps": ["step_002", "step_003"],
+						"suggestedMcpTools": ["test-environment", "data-validation"]
+					},
+					"message": "Analyzed workflow \"Database Migration Planning\" - 25% complete"
+				},
+				"status": "completed"
+			}
+		}
+	},
+	{
+		"name": "iterative_refinement",
+		"category": "iteration",
+		"data": {
+			"type": "tool_use",
+			"toolUse": {
+				"type": "tool_use",
+				"id": "tool_006",
+				"name": "SequentialThinking",
+				"input": {
+					"workflow": {
+						"id": "wf_006",
+						"name": "API Rate Limiting Implementation",
+						"processType": "iterative_refinement",
+						"problemStatement": "Our API needs intelligent rate limiting to prevent abuse while maintaining good user experience",
+						"targetOutcome": "Implement adaptive rate limiting system that balances protection with usability",
+						"status": "active",
+						"priority": "medium",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Initial Rate Limiting Research",
+								"description": "Research different rate limiting algorithms and strategies",
+								"status": "completed",
+								"priority": "high",
+								"estimatedMinutes": 90,
+								"actualMinutes": 85,
+								"result": "Evaluated token bucket, sliding window, and adaptive algorithms",
+								"mcpResources": ["rate-limiting-research", "algorithm-comparison"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "MVP Implementation",
+								"description": "Implement basic token bucket rate limiting as MVP",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 180,
+								"actualMinutes": 195,
+								"result": "Basic token bucket implemented with Redis backend",
+								"mcpResources": ["redis-client", "rate-limiter-middleware"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Performance Testing V1",
+								"description": "Test initial implementation under various load conditions",
+								"status": "completed",
+								"priority": "medium",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 120,
+								"actualMinutes": 110,
+								"result": "Handles 1000 req/s but causes high Redis CPU usage",
+								"mcpResources": ["load-testing", "performance-monitoring"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Optimization Round 1",
+								"description": "Optimize Redis usage and implement request batching",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 150,
+								"actualMinutes": 140,
+								"result": "Reduced Redis CPU by 60% through batching and connection pooling",
+								"mcpResources": ["redis-optimization", "connection-pooling"]
+							},
+							{
+								"id": "step_005",
+								"sequence": 5,
+								"title": "Performance Testing V2",
+								"description": "Validate optimizations and identify remaining bottlenecks",
+								"status": "completed",
+								"priority": "medium",
+								"dependencies": ["step_004"],
+								"estimatedMinutes": 120,
+								"actualMinutes": 125,
+								"result": "Now handles 2500 req/s but response latency increases under load",
+								"mcpResources": ["load-testing", "latency-analysis"]
+							},
+							{
+								"id": "step_006",
+								"sequence": 6,
+								"title": "Adaptive Algorithm Implementation",
+								"description": "Implement adaptive rate limiting based on system load",
+								"status": "in_progress",
+								"priority": "high",
+								"dependencies": ["step_005"],
+								"estimatedMinutes": 240,
+								"mcpResources": ["adaptive-algorithms", "system-metrics"]
+							},
+							{
+								"id": "step_007",
+								"sequence": 7,
+								"title": "Final Performance Validation",
+								"description": "Comprehensive testing of adaptive system",
+								"status": "pending",
+								"priority": "medium",
+								"dependencies": ["step_006"],
+								"estimatedMinutes": 180,
+								"mcpResources": ["comprehensive-testing", "production-simulation"]
+							}
+						],
+						"tags": ["rate-limiting", "api", "performance", "iterative"],
+						"metadata": {
+							"createdAt": "2024-01-20T09:00:00Z",
+							"updatedAt": "2024-01-20T17:30:00Z",
+							"estimatedTotalMinutes": 1080,
+							"actualTotalMinutes": 655,
+							"completionPercentage": 71
+						}
+					},
+					"mode": "update",
+					"stepId": "step_006"
+				}
+			},
+			"toolResult": {
+				"tool_use_id": "tool_006",
+				"type": "tool_result",
+				"content": "{\"workflow\":{\"id\":\"wf_006\",\"name\":\"API Rate Limiting Implementation\"},\"message\":\"Updated workflow - adaptive algorithm in progress\"}"
+			},
+			"toolUseResult": {
+				"output": {
+					"workflow": {
+						"id": "wf_006",
+						"name": "API Rate Limiting Implementation",
+						"processType": "iterative_refinement",
+						"problemStatement": "Our API needs intelligent rate limiting to prevent abuse while maintaining good user experience",
+						"targetOutcome": "Implement adaptive rate limiting system that balances protection with usability",
+						"status": "active",
+						"priority": "medium",
+						"steps": [
+							{
+								"id": "step_001",
+								"sequence": 1,
+								"title": "Initial Rate Limiting Research",
+								"description": "Research different rate limiting algorithms and strategies",
+								"status": "completed",
+								"priority": "high",
+								"estimatedMinutes": 90,
+								"actualMinutes": 85,
+								"result": "Evaluated token bucket, sliding window, and adaptive algorithms",
+								"mcpResources": ["rate-limiting-research", "algorithm-comparison"]
+							},
+							{
+								"id": "step_002",
+								"sequence": 2,
+								"title": "MVP Implementation",
+								"description": "Implement basic token bucket rate limiting as MVP",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_001"],
+								"estimatedMinutes": 180,
+								"actualMinutes": 195,
+								"result": "Basic token bucket implemented with Redis backend",
+								"mcpResources": ["redis-client", "rate-limiter-middleware"]
+							},
+							{
+								"id": "step_003",
+								"sequence": 3,
+								"title": "Performance Testing V1",
+								"description": "Test initial implementation under various load conditions",
+								"status": "completed",
+								"priority": "medium",
+								"dependencies": ["step_002"],
+								"estimatedMinutes": 120,
+								"actualMinutes": 110,
+								"result": "Handles 1000 req/s but causes high Redis CPU usage",
+								"mcpResources": ["load-testing", "performance-monitoring"]
+							},
+							{
+								"id": "step_004",
+								"sequence": 4,
+								"title": "Optimization Round 1",
+								"description": "Optimize Redis usage and implement request batching",
+								"status": "completed",
+								"priority": "high",
+								"dependencies": ["step_003"],
+								"estimatedMinutes": 150,
+								"actualMinutes": 140,
+								"result": "Reduced Redis CPU by 60% through batching and connection pooling",
+								"mcpResources": ["redis-optimization", "connection-pooling"]
+							},
+							{
+								"id": "step_005",
+								"sequence": 5,
+								"title": "Performance Testing V2",
+								"description": "Validate optimizations and identify remaining bottlenecks",
+								"status": "completed",
+								"priority": "medium",
+								"dependencies": ["step_004"],
+								"estimatedMinutes": 120,
+								"actualMinutes": 125,
+								"result": "Now handles 2500 req/s but response latency increases under load",
+								"mcpResources": ["load-testing", "latency-analysis"]
+							},
+							{
+								"id": "step_006",
+								"sequence": 6,
+								"title": "Adaptive Algorithm Implementation",
+								"description": "Implement adaptive rate limiting based on system load",
+								"status": "in_progress",
+								"priority": "high",
+								"dependencies": ["step_005"],
+								"estimatedMinutes": 240,
+								"mcpResources": ["adaptive-algorithms", "system-metrics"]
+							},
+							{
+								"id": "step_007",
+								"sequence": 7,
+								"title": "Final Performance Validation",
+								"description": "Comprehensive testing of adaptive system",
+								"status": "pending",
+								"priority": "medium",
+								"dependencies": ["step_006"],
+								"estimatedMinutes": 180,
+								"mcpResources": ["comprehensive-testing", "production-simulation"]
+							}
+						],
+						"tags": ["rate-limiting", "api", "performance", "iterative"],
+						"metadata": {
+							"createdAt": "2024-01-20T09:00:00Z",
+							"updatedAt": "2024-01-20T17:30:00Z",
+							"estimatedTotalMinutes": 1080,
+							"actualTotalMinutes": 655,
+							"completionPercentage": 71
+						}
+					},
+					"changesSummary": {
+						"stepsAdded": 0,
+						"stepsUpdated": 1,
+						"stepsCompleted": 0,
+						"stepsBlocked": 0
+					},
+					"progress": {
+						"totalSteps": 7,
+						"completedSteps": 5,
+						"pendingSteps": 2,
+						"blockedSteps": 0,
+						"completionPercentage": 71,
+						"estimatedRemainingMinutes": 420
+					},
+					"recommendations": {
+						"nextStepId": "step_006",
+						"nextStepTitle": "Adaptive Algorithm Implementation",
+						"suggestedMcpTools": ["adaptive-algorithms", "system-metrics"]
+					},
+					"message": "Updated workflow \"API Rate Limiting Implementation\" - 1 steps modified"
+				},
+				"status": "completed"
+			}
+		}
+	}
+]

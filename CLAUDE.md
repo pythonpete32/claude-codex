@@ -2,294 +2,174 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Essential Development Commands
+## Project Overview
 
-### Building and Development
-- `bun run build` - Build the CLI for production (outputs to `dist/`)
-- `bun run dev` - Run in development mode with hot reload
-- `bun run start` - Run the built CLI executable
+**Claude Codex** - A DDD (Domain-Driven Design) monorepo for parsing and displaying Claude Code tool logs. The architecture follows a hybrid schema approach where parsers output UI-ready props that components can directly consume.
 
-### Code Quality and Testing
-- `bun run check:fix` - Auto-fix all formatting and linting issues (recommended before commits)
-- `bun run format` - Format all code with Biome
-- `bun run lint` - Lint code with Biome
-- `bun run test` - Run all unit tests
-- `bun run test:watch` - Run tests in watch mode for TDD
-- `bun run test:coverage` - Run tests with coverage report
-
-### Release Management
-- `bun run changeset` - Create a changeset describing your changes (required for releases)
-- `bun run release` - Complete release workflow (build + publish to npm)
-
-
-### Advanced Technical Architecture
-
-**Claude Code SDK Integration:**
-- **177-line advanced SDK wrapper** with comprehensive options support and dependency injection
-- **Real-time message processing pipeline** with adaptive terminal display and streaming
-- **Debug logging system** with structured output and task state persistence
-- **Error handling hierarchy** with specific exception types and graceful recovery
-- Enforces subscription mode by removing API key environment variables
-- Supports all Claude Code permission modes and tool restrictions
-
-**MCP Server Ecosystem Integration:**
-```json
-{
-  "mcpServers": {
-    "puppeteer": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-puppeteer"] },
-    "snap-happy": { "command": "npx", "args": ["@mariozechner/snap-happy"] },
-    "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp"] },
-    "mcp_excalidraw": { "command": "npx", "args": ["-y", "excalidraw-mcp"] },
-    "sequential-thinking": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"] }
-  },
-  "teams": {
-    "frontend": { "mcps": ["context7", "puppeteer"] },
-    "tdd": { "mcps": ["context7", "snap-happy"] },
-    "standard": { "mcps": ["context7", "snap-happy"] },
-    "smart-contract": { "mcps": ["context7"] }
-  }
-}
+### Repository Structure
+```
+claude-codex-1/
+├── apps/                    # Application layer
+│   ├── api/                # Backend API server (Next.js API routes)
+│   └── web/                # Frontend Next.js application
+├── packages/               # Core domain packages
+│   ├── core/              # Business logic and parsers
+│   ├── log-processor/     # Log monitoring and transformation
+│   ├── types/             # Shared type definitions
+│   └── utils/             # Shared utilities (logging)
+├── docs/                   # Architecture documentation
+└── LEGACY/                # Previous implementation (preserved)
 ```
 
-**Git Worktree Isolation System:**
-- **Parallel task execution** without conflicts via isolated worktrees
-- **Automatic branch creation** (`tdd/{taskId}` or custom names)
-- **Task state management** with persistent state in `.codex/task-{id}.json`
-- **Cleanup orchestration** with optional preservation for debugging
-- **Agent communication protocol** via `.temp/coder-feedback.md` and `.temp/review-feedback.md`
+## Essential Commands
 
-
-## Development Workflow
-
-### Code Quality Automation
-This project uses automated git hooks via Lefthook:
-- **Pre-commit**: Automatically formats staged files with Biome
-- **Pre-push**: Runs format check, linting, and tests (blocks push if any fail)
-
-### Advanced Testing Strategy
-
-**Multi-Agent System Testing:**
-- **Agent Template Validation**: Test prompt engineering and reasoning capabilities
-- **MCP Integration Testing**: Validate server connectivity and tool functionality  
-- **Workflow Orchestration Testing**: End-to-end team coordination validation
-- **Worktree Isolation Testing**: Git operation safety and cleanup verification
-- **Configuration Management Testing**: Template and config file validation
-
-**Testing Infrastructure:**
-- Uses Vitest for testing with Node.js environment
-- Test files: `tests/**/*.{test,spec}.{js,ts}` (separate from source code)
-- Coverage reports generated to `coverage/` directory
-- Tests run automatically on pre-push hook
-- **Advanced Testing Patterns**: See @docs/TESTING.md for multi-agent testing strategies
-
-**Specialized Testing Patterns:**
-- **Mock MCP Servers**: Injectable MCP server implementations for testing
-- **Agent Response Mocking**: Controllable agent behavior for deterministic tests
-- **Worktree Environment Isolation**: Safe testing environments with automatic cleanup
-- **Multi-Team Integration Testing**: Cross-team workflow validation and state management
-
-### Release Process
-Uses Changesets for automated releases:
-1. Make changes and create changeset with `bun run changeset`
-2. GitHub Actions creates Release PR with version bump
-3. Merging Release PR automatically publishes to npm
-
-## Important Technical Considerations
-
-### Claude Code SDK Usage
-- The tool forces subscription authentication to ensure users leverage their Claude Code subscription
-- External Claude Code SDK dependency allows users to control their Claude Code version
-- Supports all Claude Code permission modes and tool restrictions
-
-### CLI Design
-- Follows standard CLI conventions with help/version flags
-- Graceful error handling with colored output
-- Supports Ctrl+C interruption with cleanup
-- Conversation saving in JSON format when requested
-
-### Development Tools
-- **Biome** replaces ESLint + Prettier for faster linting and formatting
-- **Bun** used as package manager for performance
-- **TypeScript** with strict configuration
-- Modern ESM modules throughout
-
-## Project Architecture
-
-**Claude Codex** is a sophisticated **multi-agent orchestration platform** that coordinates specialized AI teams to automate complex development workflows. The system integrates advanced MCP servers, git worktree isolation, and domain-expert agents to deliver enterprise-grade automation capabilities.
-
-### Multi-Agent Team Architecture
-
-#### Specialized Agent Teams
-- **TDD Team**: Test-Driven Development specialists with comprehensive testing methodology and Red-Green-Refactor workflow enforcement
-- **Frontend Team**: Modern web development experts with accessibility (WCAG 2.1 AA), performance (Core Web Vitals), and responsive design focus  
-- **Standard Team**: General-purpose development automation with Clean Architecture and SOLID principles
-- **Smart Contract Team**: Blockchain and Web3 development specialists with security-first approach and economic attack prevention
-
-#### Agent Capabilities Integration
-- **ULTRA THINK**: Advanced reasoning for complex architectural decisions and comprehensive codebase analysis
-- **Subagents**: Parallel specialized processing for multi-perspective development and comprehensive analysis
-- **Codebase Exploration**: Mandatory deep-dive exploration before any implementation work begins
-- **Critical Validation**: Multi-layer validation preventing dangerous changes and ensuring GitHub issue compliance
-
-#### Team Execution Workflow
-1. **Initialization**: Create isolated git worktree for task execution (`../.codex-worktrees/`)
-2. **Coder Phase**: Specialized domain-expert agent implements requirements with full codebase context
-3. **Reviewer Phase**: Quality assurance and validation agent provides comprehensive feedback
-4. **Iteration Loop**: Feedback integration and refinement through `.temp/` file communication
-5. **Completion**: Automated PR creation with GitHub integration and optional cleanup
-
-### Core CLI Commands
-
-#### Initialization
 ```bash
-# Initialize configuration and team templates
-claude-codex init [--force]  # Overwrite existing configuration
+# Development
+bun dev              # Start all development servers (API + Web)
+bun build            # Build all packages in dependency order
+bun test             # Run all tests across packages
+bun lint             # Run Biome linter
+bun format           # Format code with Biome
+bun type-check       # TypeScript type checking
+
+# Testing (from package directory)
+bun test             # Run tests for specific package
+bun test:watch       # Watch mode for test development
+bun test:coverage    # Generate coverage reports
+bun test:ui          # Vitest UI for debugging tests
+
+# Run single test file
+bun test packages/core/src/parsers/tests/bash-parser.test.ts
 ```
 
-#### Team-Based Execution  
-```bash
-# Execute specialized team workflows
-claude-codex team <type> <spec-or-issue> [options]
+## Architecture & Key Concepts
 
-# Available teams
-claude-codex team standard ./spec.md     # General development
-claude-codex team tdd ./spec.md          # Test-driven development
-claude-codex team frontend ./spec.md     # Modern web development
-claude-codex team smart-contract ./spec.md  # Blockchain development
+### 1. Hybrid Schema Architecture
+- **Simple Tools** (Bash, Read, Write): Use flat props for immediate UI consumption
+- **Complex Tools** (Grep, MultiEdit, LS): Use structured props for relational data
+- **Parser-centric Design**: Parsers transform raw logs into UI-ready props
+- **No Runtime Transformation**: Components directly consume parser output
 
-# Options
--r, --max-reviews <number>    # Maximum review iterations (default: 3)
--b, --branch-name <name>      # Custom branch name (default: tdd/{taskId})
---no-cleanup                  # Skip worktree cleanup after completion
-```
-
-#### Configuration Management
-- **Config file**: `~/.claude/.codex.config.json` - Team and MCP server configuration
-- **Team templates**: `~/.claude/teams/` - Customizable agent prompt templates  
-- **Command templates**: `~/.claude/commands/` - Reusable command patterns
-
-## Claude Code Best Practices Integration
-
-This project follows [Anthropic's Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices):
-
-### **Explore-Plan-Code-Commit Workflow**
-When implementing features:
-1. **Explore**: Read relevant files, understand context and requirements
-2. **Plan**: Create detailed implementation plan (show for approval)  
-3. **Code**: Implement using TDD with frequent verification
-4. **Commit**: Verify quality, test coverage, and requirements compliance
-
-### **Task Execution Commands**
-- **Implementation**: Use `@scripts/execute-task.md` with task file path
-- **Code Review**: Use `@scripts/review-code.md` with task file path
-
-### **TDD with Subagents**
-- Use separate Claude instances for test writing vs implementation
-- Prevents "cheating" where code writer knows test expectations
-- Write failing tests FIRST, then implement minimal passing code
-- Iterate with frequent verification cycles
-
-### **Context Management**
-- Use `/clear` command to maintain focused context during long sessions
-- Break complex tasks into smaller, focused sub-tasks
-- Show progress incrementally rather than big-bang implementations
-
-### **Visual Verification**
-- Screenshot results when implementing UI changes
-- Verify actual behavior matches expected outcomes
-- Course-correct early and frequently based on concrete evidence
-
-### **Permission Management**
-- Start with conservative tool permissions
-- Use `/permissions` to customize access as needed
-- Consider safety implications for file system and git operations
-
-### **Quality Standards**
-- Follow @docs/TESTING.md patterns for meaningful tests
-- Use dependency injection for testability
-- Test error scenarios comprehensively
-- Achieve ≥90% test coverage with behavioral verification
-
-## Coding Style Guidelines
-
-### **Control Flow: Switch vs If-Else Chains**
-
-❌ **Bad: Long if-else chains**
+### 2. Parser Architecture
+All parsers follow this pattern:
 ```typescript
-function handleTaskStatus(status: string): string {
-  if (status === 'pending') {
-    return 'Task is waiting to be processed';
-  } else if (status === 'in_progress') {
-    return 'Task is currently being worked on';
-  } else if (status === 'completed') {
-    return 'Task has been successfully completed';
-  } else if (status === 'failed') {
-    return 'Task encountered an error and failed';
-  } else if (status === 'cancelled') {
-    return 'Task was cancelled by user';
-  } else {
-    return 'Unknown task status';
+parse(toolCall: LogEntry, toolResult?: LogEntry, config?: ParseConfig): ToolProps
+```
+
+Key responsibilities:
+- Extract ALL data from raw log fixtures (never comment out fields)
+- Map tool-specific statuses to normalized UI statuses
+- Output props that UI components can directly consume
+- Handle correlation via UUIDs for tool call/result linking
+
+### 3. Status Mapping
+The `StatusMapper` harmonizes diverse tool statuses:
+- Normalized statuses: `pending`, `running`, `completed`, `failed`, `interrupted`, `unknown`
+- Preserves original status for debugging
+- Handles MCP tool variability gracefully
+
+### 4. Type System
+- All UI props centralized in `@claude-codex/types`
+- Parser interfaces and base types defined here
+- StatusMapper included for consistent status handling
+- **CRITICAL**: All types MUST follow `/docs/SOT/0_1_type-system-design-authority.md`
+
+## Critical Principles
+
+### 1. NEVER BE LAZY - Extract ALL Data from Raw Logs
+
+**The source of truth is ALWAYS the raw log data in fixtures, NOT the initial type definitions.**
+
+- Parsers should be transparent pipes that extract ALL available data
+- NEVER comment out fields because of type mismatches - fix the types instead
+- If data exists in the raw logs, it MUST be extracted and passed through
+- The UI components should decide what to show, not the parsers
+
+### 2. ABSOLUTELY NO `any` TYPES
+
+The `any` type is FORBIDDEN in this codebase. Instead:
+- Use proper TypeScript interfaces for all data structures
+- Use `unknown` for truly unknown data, then narrow with type guards
+- Leverage TypeScript's strict mode for compile-time safety
+
+### 3. NEVER USE RELATIVE IMPORTS
+
+In this monorepo, always use workspace imports:
+```typescript
+// ✅ CORRECT
+import { parserLogger } from '@claude-codex/utils';
+
+// ❌ WRONG
+import { parserLogger } from '../../../utils/src/logger';
+```
+
+### 4. Always Update Documentation When Deviating
+
+When making architectural decisions that deviate from the original plan:
+1. Update `docs/scratch-pads/ddd-architecture-deviations.md`
+2. Explain WHY the deviation was necessary
+3. Document WHAT changed
+4. Describe the IMPACT of the change
+
+### 5. Validate Against Real Fixture Data
+
+Before implementing any parser:
+1. Check the actual fixture files in `packages/core/src/parsers/fixtures/`
+2. Understand the real data structure
+3. Don't make assumptions - test against multiple examples
+
+### 6. TYPE SAFETY IS FOUNDATIONAL
+
+**All type definitions MUST follow the Source of Truth document.**
+
+- **Before creating ANY type**: Read `/docs/SOT/0_1_type-system-design-authority.md`
+- **Output field naming**: Simple tools use direct props, complex tools use `results`
+- **Inheritance rules**: Extend proper base classes (CommandToolProps, FileToolProps, SearchToolProps, MCPToolProps)
+- **No mixed patterns**: Either fully flat OR fully structured - never mixed
+- **No exceptions**: Deviations require approval and documentation
+
+## Testing Standards
+
+- All parsers must have 100% test coverage
+- Test fixtures use real Claude Code log data
+- Tests should cover success, failure, and edge cases
+- Use descriptive test names that explain the scenario
+
+## Logging Architecture
+
+The project uses Pino for structured logging:
+- Logger instances created per package: `parserLogger`, `processorLogger`, etc.
+- Dependency injection pattern keeps types package pure
+- Log levels: trace, debug, info, warn, error, fatal
+- Pretty printing in development, JSON in production
+
+## Common Patterns
+
+### Parser Implementation Pattern
+```typescript
+export class BashToolParser implements ToolParser<LogEntry, LogEntry, BashToolProps> {
+  parse(toolCall: LogEntry, toolResult?: LogEntry): BashToolProps {
+    // 1. Extract correlation data (UUIDs)
+    // 2. Extract tool-specific input
+    // 3. Extract output and determine status
+    // 4. Map status using StatusMapper
+    // 5. Return UI-ready props
   }
 }
 ```
 
-✅ **Good: Switch statements for multiple conditions**
-```typescript
-function handleTaskStatus(status: string): string {
-  switch (status) {
-    case 'pending':
-      return 'Task is waiting to be processed';
-    case 'in_progress':
-      return 'Task is currently being worked on';
-    case 'completed':
-      return 'Task has been successfully completed';
-    case 'failed':
-      return 'Task encountered an error and failed';
-    case 'cancelled':
-      return 'Task was cancelled by user';
-    default:
-      return 'Unknown task status';
-  }
-}
-```
+### Adding New Parsers
+1. **READ THE SOT FIRST**: `/docs/SOT/0_1_type-system-design-authority.md`
+2. Define UI props in `packages/types/src/ui-props/` (following SOT rules)
+3. Create parser in `packages/core/src/parsers/`
+4. Add fixtures in `packages/core/src/parsers/fixtures/`
+5. Write comprehensive tests
+6. Register in parser registry
 
-**Why switch is better:**
-- More readable and scannable
-- Easier to add/remove cases
-- Better performance for multiple conditions
-- TypeScript provides better exhaustiveness checking
-- Clear intent for enum-like value handling
+## Important Files to Know
 
-### **When to Use Each**
-
-**Use switch when:**
-- Comparing a single variable against multiple specific values
-- Handling enums or union types
-- 3+ conditions on the same variable
-- You need fall-through behavior
-
-**Use if-else when:**
-- Complex boolean conditions
-- Different variables in each condition
-- Only 1-2 simple conditions
-- Conditions involve ranges or complex logic
-
-```typescript
-// Good use of if-else (different conditions)
-if (user.isAdmin && hasPermission) {
-  return AdminDashboard;
-} else if (user.isAuthenticated) {
-  return UserDashboard;
-} else {
-  return LoginPage;
-}
-```
-
-## File Management
-
-### Document Storage Guidelines
-- Temporary documents are saved in the .temp file
-- Permanent documents are saved in docs
-
-### Git Workflow Guidelines
-- NEVER make PRs into main only dev
+- **`docs/SOT/0_1_type-system-design-authority.md`** - **MUST READ**: Source of truth for all type definitions
+- `docs/hybrid-schema-architecture.md` - Core architecture documentation
+- `docs/scratch-pads/ddd-architecture-deviations.md` - Track all changes from original plan
+- `packages/types/src/status-mapper.ts` - Status harmonization logic
+- `packages/core/src/parsers/registry.ts` - Parser registration system

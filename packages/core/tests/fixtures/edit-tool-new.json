@@ -1,0 +1,119 @@
+{
+	"toolName": "Edit",
+	"category": "core",
+	"priority": "critical",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "b9be9cff-9a4c-45fc-a4b0-8fa91e873a16",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:56:49.590Z",
+				"message": {
+					"id": "msg_013xN3mfuRFcdchiD7YEQiMy",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01BoPSTJW6B8fSqCZ6JX5h9a",
+							"name": "Edit",
+							"input": {
+								"file_path": "/Users/abuusama/Desktop/temp/test-data/sample.txt",
+								"old_string": "This is a sample text file for testing.",
+								"new_string": "This is a sample text file for testing tools and operations."
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 5,
+						"cache_creation_input_tokens": 293,
+						"cache_read_input_tokens": 31008,
+						"output_tokens": 1,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeXDVivwo8rinSs9cXwN",
+				"uuid": "c92072fe-b72c-4cf0-b593-d919e6c2a1d5"
+			},
+			"toolResult": {
+				"parentUuid": "c92072fe-b72c-4cf0-b593-d919e6c2a1d5",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "4edd45e6-3863-481a-b708-5a409e3a0681",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:56:49.894Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01BoPSTJW6B8fSqCZ6JX5h9a",
+							"type": "tool_result",
+							"content": "The file /Users/abuusama/Desktop/temp/test-data/sample.txt has been updated. Here's the result of running `cat -n` on a snippet of the edited file:\n     1→This is a sample text file for testing tools and operations.\n     2→Line 2 contains some text.\n     3→Line 3 has different content.\n     4→This file is used to test Read, Edit, and other file operations.\n     5→"
+						}
+					]
+				},
+				"uuid": "c4bbddce-97df-4d69-85cd-99d1bb0de34a",
+				"toolUseResult": {
+					"filePath": "/Users/abuusama/Desktop/temp/test-data/sample.txt",
+					"oldString": "This is a sample text file for testing.",
+					"newString": "This is a sample text file for testing tools and operations.",
+					"originalFile": "This is a sample text file for testing.\nLine 2 contains some text.\nLine 3 has different content.\nThis file is used to test Read, Edit, and other file operations.\n\nFeatures to test:\n- Reading files\n- Searching content with Grep\n- Pattern matching with Glob\n- File editing operations\n\nEnd of test file.",
+					"structuredPatch": [
+						{
+							"oldStart": 1,
+							"oldLines": 4,
+							"newStart": 1,
+							"newLines": 4,
+							"lines": [
+								"-This is a sample text file for testing.",
+								"+This is a sample text file for testing tools and operations.",
+								" Line 2 contains some text.",
+								" Line 3 has different content.",
+								" This file is used to test Read, Edit, and other file operations."
+							]
+						}
+					],
+					"userModified": false,
+					"replaceAll": false
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01BoPSTJW6B8fSqCZ6JX5h9a",
+				"uuid": "c92072fe-b72c-4cf0-b593-d919e6c2a1d5",
+				"parentUuid": "b9be9cff-9a4c-45fc-a4b0-8fa91e873a16",
+				"timestamp": "2025-06-30T13:56:49.590Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"filePath": "/Users/abuusama/Desktop/temp/test-data/sample.txt",
+				"oldContent": "This is a sample text file for testing.\nLine 2 contains some text.\nLine 3 has different content.\nThis file is used to test Read, Edit, and other file operations.\n\nFeatures to test:\n- Reading files\n- Searching content with Grep\n- Pattern matching with Glob\n- File editing operations\n\nEnd of test file.",
+				"newContent": "This is a sample text file for testing tools and operations.\nLine 2 contains some text.\nLine 3 has different content.\nThis file is used to test Read, Edit, and other file operations.\n\nFeatures to test:\n- Reading files\n- Searching content with Grep\n- Pattern matching with Glob\n- File editing operations\n\nEnd of test file.",
+				"diff": [
+					{
+						"oldStart": 1,
+						"oldLines": 4,
+						"newStart": 1,
+						"newLines": 4,
+						"lines": [
+							"-This is a sample text file for testing.",
+							"+This is a sample text file for testing tools and operations.",
+							" Line 2 contains some text.",
+							" Line 3 has different content.",
+							" This file is used to test Read, Edit, and other file operations."
+						]
+					}
+				]
+			}
+		}
+	]
+}

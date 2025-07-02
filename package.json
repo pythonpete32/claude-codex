@@ -1,75 +1,28 @@
 {
   "name": "claude-codex",
-  "version": "0.6.1",
-  "description": "Automation scripts powered by Claude Code SDK",
-  "type": "module",
-  "main": "dist/lib.js",
-  "bin": {
-    "claude-codex": "./dist/index.js"
-  },
-  "exports": {
-    ".": "./dist/lib.js",
-    "./core": "./dist/core/index.js",
-    "./cli": "./dist/cli/index.js"
-  },
-  "files": [
-    "dist/",
-    "README.md"
-  ],
+  "version": "0.0.1",
+  "private": true,
+  "description": "UI wrapper for Claude Code with DDD architecture",
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch",
-    "start": "node dist/index.js",
-    "dev": "tsx src/index.ts",
-    "format": "biome format --write .",
-    "format:check": "biome check .",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint --write .",
-    "check": "biome check .",
-    "check:fix": "biome check --write .",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "changeset": "changeset",
-    "changeset:version": "changeset version",
-    "changeset:publish": "npm run build && changeset publish",
-    "release": "npm run build && npm run changeset:publish",
-    "prepare": "lefthook install"
-  },
-  "keywords": [
-    "claude",
-    "automation",
-    "ai",
-    "scripts",
-    "code-generation"
-  ],
-  "author": "abuusama",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/abuusama/claude-codex.git"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "type-check": "turbo type-check"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.4",
-    "@changesets/cli": "^2.29.5",
-    "@types/bun": "latest",
-    "@types/node": "^24.0.3",
-    "@vitest/coverage-v8": "^3.2.4",
-    "lefthook": "^1.11.14",
-    "tsup": "^8.5.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^3.2.4"
+    "@biomejs/biome": "2.0.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.7.0"
   },
-  "dependencies": {
-    "@anthropic-ai/claude-code": "^1.0.31",
-    "@reliverse/relinka": "^1.5.3",
-    "commander": "^14.0.0",
-    "picocolors": "^1.1.1",
-    "terminal-size": "^4.0.0",
-    "zod": "^3.25.67"
-  },
+  "packageManager": "bun@1.2.0",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "pino": "^9.7.0",
+    "pino-pretty": "^13.0.0"
   }
 }

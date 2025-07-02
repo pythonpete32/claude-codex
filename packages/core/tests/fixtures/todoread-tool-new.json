@@ -1,0 +1,166 @@
+{
+	"toolName": "TodoRead",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "129d0dcc-0587-4705-b8e3-48bc4459251b",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_014fpPScF4eJKNZ2b9nUSDUM",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01Ei48cpDg2AJr8a7W5w3iyN",
+							"name": "TodoRead",
+							"input": {}
+						}
+					],
+					"usage": {
+						"input_tokens": 8,
+						"cache_creation_input_tokens": 587,
+						"cache_read_input_tokens": 92827,
+						"output_tokens": 12,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeSn9gWsceE8bfviDbus",
+				"uuid": "662821bd-ceb7-4f8a-a0b7-57156f540311"
+			},
+			"toolResult": {
+				"parentUuid": "662821bd-ceb7-4f8a-a0b7-57156f540311",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01Ei48cpDg2AJr8a7W5w3iyN",
+							"type": "tool_result",
+							"content": "Remember to continue to use update and read from the todo list as you make progress. Here is the current list: [{\"content\":\"Create comprehensive checklist of all tools and functions\",\"status\":\"completed\",\"priority\":\"high\",\"id\":\"1\"},{\"content\":\"Enhance tool signatures document with output schemas and explicit uncertainty markers\",\"status\":\"completed\",\"priority\":\"high\",\"id\":\"2\"},{\"content\":\"Create necessary test files (Jupyter notebooks, etc.)\",\"status\":\"completed\",\"priority\":\"high\",\"id\":\"3\"},{\"content\":\"Systematically call all safe built-in tools to generate logs\",\"status\":\"in_progress\",\"priority\":\"high\",\"id\":\"4\"},{\"content\":\"Systematically call all safe MCP tools to generate logs\",\"status\":\"pending\",\"priority\":\"high\",\"id\":\"5\"},{\"content\":\"Document any tools that cannot be called safely\",\"status\":\"completed\",\"priority\":\"medium\",\"id\":\"6\"}]"
+						}
+					]
+				},
+				"uuid": "c9087df0-3ec8-456b-97a0-7b30a1d1c03e",
+				"toolUseResult": [
+					{
+						"content": "Create comprehensive checklist of all tools and functions",
+						"status": "completed",
+						"priority": "high",
+						"id": "1"
+					},
+					{
+						"content": "Enhance tool signatures document with output schemas and explicit uncertainty markers",
+						"status": "completed",
+						"priority": "high",
+						"id": "2"
+					},
+					{
+						"content": "Create necessary test files (Jupyter notebooks, etc.)",
+						"status": "completed",
+						"priority": "high",
+						"id": "3"
+					},
+					{
+						"content": "Document any tools that cannot be called safely",
+						"status": "completed",
+						"priority": "medium",
+						"id": "6"
+					},
+					{
+						"content": "Systematically call all safe built-in tools to generate logs",
+						"status": "in_progress",
+						"priority": "high",
+						"id": "4"
+					},
+					{
+						"content": "Systematically call all safe MCP tools to generate logs",
+						"status": "pending",
+						"priority": "high",
+						"id": "5"
+					}
+				]
+			},
+			"expectedComponentData": {
+				"id": "toolu_01Ei48cpDg2AJr8a7W5w3iyN",
+				"uuid": "662821bd-ceb7-4f8a-a0b7-57156f540311",
+				"parentUuid": "129d0dcc-0587-4705-b8e3-48bc4459251b",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"todos": [
+					{
+						"id": "1",
+						"content": "Create comprehensive checklist of all tools and functions",
+						"status": "completed",
+						"priority": "high"
+					},
+					{
+						"id": "2",
+						"content": "Enhance tool signatures document with output schemas and explicit uncertainty markers",
+						"status": "completed",
+						"priority": "high"
+					},
+					{
+						"id": "3",
+						"content": "Create necessary test files (Jupyter notebooks, etc.)",
+						"status": "completed",
+						"priority": "high"
+					},
+					{
+						"id": "6",
+						"content": "Document any tools that cannot be called safely",
+						"status": "completed",
+						"priority": "medium"
+					},
+					{
+						"id": "4",
+						"content": "Systematically call all safe built-in tools to generate logs",
+						"status": "in_progress",
+						"priority": "high"
+					},
+					{
+						"id": "5",
+						"content": "Systematically call all safe MCP tools to generate logs",
+						"status": "pending",
+						"priority": "high"
+					}
+				],
+				"statusCounts": {
+					"pending": 1,
+					"in_progress": 1,
+					"completed": 4
+				},
+				"priorityCounts": {
+					"high": 5,
+					"medium": 1,
+					"low": 0
+				},
+				"ui": {
+					"totalTodos": 6,
+					"completedTodos": 4,
+					"pendingTodos": 1,
+					"inProgressTodos": 1
+				}
+			}
+		}
+	]
+}

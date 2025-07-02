@@ -1,0 +1,105 @@
+{
+	"toolName": "Grep",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "448abafc-f808-429c-9e3e-eb555aab5ebd",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_01VdMH3o3bXAwxE8WRRSzwsn",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01BrMmoBFNf3QVphRLWPmAEm",
+							"name": "Grep",
+							"input": {
+								"pattern": "function|def",
+								"path": "/Users/abuusama/Desktop/temp/test-data",
+								"include": "*.{js,py}"
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 221,
+						"cache_creation_input_tokens": 1184,
+						"cache_read_input_tokens": 93414,
+						"output_tokens": 10,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeSo7JRTnNAL5aQFuQBC",
+				"uuid": "448abafc-f808-429c-9e3e-eb555aab5ebd"
+			},
+			"toolResult": {
+				"parentUuid": "448abafc-f808-429c-9e3e-eb555aab5ebd",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01BrMmoBFNf3QVphRLWPmAEm",
+							"type": "tool_result",
+							"content": "Found 2 files\n/Users/abuusama/Desktop/temp/test-data/subdir/nested.py\n/Users/abuusama/Desktop/temp/test-data/test.js"
+						}
+					]
+				},
+				"uuid": "75e7ef7b-faf1-4db2-a2f7-a20eff990904",
+				"toolUseResult": {
+					"filenames": [
+						"/Users/abuusama/Desktop/temp/test-data/subdir/nested.py",
+						"/Users/abuusama/Desktop/temp/test-data/test.js"
+					],
+					"numFiles": 2
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01BrMmoBFNf3QVphRLWPmAEm",
+				"uuid": "448abafc-f808-429c-9e3e-eb555aab5ebd",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"input": {
+					"pattern": "function|def",
+					"searchPath": "/Users/abuusama/Desktop/temp/test-data",
+					"filePatterns": ["*.{js,py}"],
+					"useRegex": true
+				},
+				"results": [
+					{
+						"filePath": "/Users/abuusama/Desktop/temp/test-data/subdir/nested.py",
+						"matches": []
+					},
+					{
+						"filePath": "/Users/abuusama/Desktop/temp/test-data/test.js",
+						"matches": []
+					}
+				],
+				"ui": {
+					"totalMatches": 0,
+					"filesWithMatches": 2,
+					"searchTime": 125
+				}
+			}
+		}
+	]
+}

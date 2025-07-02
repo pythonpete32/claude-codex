@@ -1,0 +1,92 @@
+{
+	"toolName": "Read",
+	"category": "core",
+	"priority": "critical",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "82a4aab9-7db6-478c-af22-58b5b4a63b95",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "assistant",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"message": {
+					"id": "msg_01HQ5PXPBFiFULfJdv1v8KH3",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01UEtYm9MKA78irhfEqhfSiJ",
+							"name": "Read",
+							"input": {
+								"file_path": "/Users/abuusama/Desktop/temp/test-data/sample.txt"
+							}
+						}
+					],
+					"usage": {
+						"input_tokens": 3,
+						"cache_creation_input_tokens": 93412,
+						"cache_read_input_tokens": 0,
+						"output_tokens": 32,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeRJdh8c3eP5P4vAZjgQ",
+				"uuid": "a4bfa022-e053-4d94-8890-71956a1a9885"
+			},
+			"toolResult": {
+				"parentUuid": "a4bfa022-e053-4d94-8890-71956a1a9885",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "ba2d4bdc-ac7b-44b4-a92d-b737b740e751",
+				"version": "1.0.35",
+				"type": "user",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01UEtYm9MKA78irhfEqhfSiJ",
+							"type": "tool_result",
+							"content": "     1→This is a sample text file for testing.\n     2→Line 2 contains some text.\n     3→Line 3 has different content.\n     4→This file is used to test Read, Edit, and other file operations.\n     5→\n     6→Features to test:\n     7→- Reading files\n     8→- Searching content with Grep\n     9→- Pattern matching with Glob\n    10→- File editing operations\n    11→\n    12→End of test file.\n"
+						}
+					]
+				},
+				"uuid": "837a63af-3bfb-4874-b8fc-3c07ad94d2eb",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"toolUseResult": {
+					"type": "text",
+					"file": {
+						"filePath": "/Users/abuusama/Desktop/temp/test-data/sample.txt",
+						"content": "This is a sample text file for testing.\nLine 2 contains some text.\nLine 3 has different content.\nThis file is used to test Read, Edit, and other file operations.\n\nFeatures to test:\n- Reading files\n- Searching content with Grep\n- Pattern matching with Glob\n- File editing operations\n\nEnd of test file.",
+						"numLines": 12,
+						"startLine": 1,
+						"totalLines": 12
+					}
+				}
+			},
+			"expectedComponentData": {
+				"id": "toolu_01UEtYm9MKA78irhfEqhfSiJ",
+				"uuid": "a4bfa022-e053-4d94-8890-71956a1a9885",
+				"parentUuid": "82a4aab9-7db6-478c-af22-58b5b4a63b95",
+				"timestamp": "2025-06-30T13:02:18.515Z",
+				"status": {
+					"normalized": "completed",
+					"original": "completed"
+				},
+				"filePath": "/Users/abuusama/Desktop/temp/test-data/sample.txt",
+				"content": "This is a sample text file for testing.\nLine 2 contains some text.\nLine 3 has different content.\nThis file is used to test Read, Edit, and other file operations.\n\nFeatures to test:\n- Reading files\n- Searching content with Grep\n- Pattern matching with Glob\n- File editing operations\n\nEnd of test file.",
+				"totalLines": 12,
+				"fileType": "txt",
+				"truncated": false,
+				"language": "text"
+			}
+		}
+	]
+}

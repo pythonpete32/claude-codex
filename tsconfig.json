@@ -1,39 +1,33 @@
 {
   "compilerOptions": {
-    // Enable latest features
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
+    "target": "ES2022",
     "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-
-    // Bundler mode
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
-
-    // Path mapping for cleaner imports
+    "incremental": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "useDefineForClassFields": true,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"],
-      "~/cli/*": ["src/cli/*"],
-      "~/config/*": ["src/config/*"],
-      "~/messaging/*": ["src/messaging/*"],
-      "~/operations/*": ["src/operations/*"],
-      "~/shared/*": ["src/shared/*"],
-      "~/teams/*": ["src/teams/*"]
-    },
-
-    // Best practices
-    "strict": true,
-    "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+      "@claude-codex/core/*": ["packages/core/src/*"],
+      "@claude-codex/log-processor/*": ["packages/log-processor/src/*"],
+      "@claude-codex/types/*": ["packages/types/src/*"],
+      "@claude-codex/utils/*": ["packages/utils/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".next"]
 }

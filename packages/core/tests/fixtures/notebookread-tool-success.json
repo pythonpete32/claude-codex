@@ -1,0 +1,176 @@
+{
+	"toolName": "NotebookRead",
+	"category": "core",
+	"priority": "high",
+	"fixtureCount": 1,
+	"fixtures": [
+		{
+			"toolCall": {
+				"parentUuid": "b3cc1ead-c31e-46eb-9172-a8f9397fc98f",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "20304939-a518-4a36-af19-71055997e2ef",
+				"version": "1.0.35",
+				"message": {
+					"id": "msg_01VdMH3o3bXAwxE8WRRSzwsn",
+					"type": "message",
+					"role": "assistant",
+					"model": "claude-sonnet-4-20250514",
+					"content": [
+						{
+							"type": "tool_use",
+							"id": "toolu_01HMGainynyExjKSq27pPU63",
+							"name": "NotebookRead",
+							"input": {
+								"notebook_path": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb"
+							}
+						}
+					],
+					"stop_reason": null,
+					"stop_sequence": null,
+					"usage": {
+						"input_tokens": 221,
+						"cache_creation_input_tokens": 1184,
+						"cache_read_input_tokens": 93414,
+						"output_tokens": 10,
+						"service_tier": "standard"
+					}
+				},
+				"requestId": "req_011CQeSo7JRTnNAL5aQFuQBC",
+				"type": "assistant",
+				"uuid": "8a8b7c3f-7168-473d-a319-b53c129286f7",
+				"timestamp": "2025-06-30T12:58:50.763Z"
+			},
+			"toolResult": {
+				"parentUuid": "448abafc-f808-429c-9e3e-eb555aab5ebd",
+				"isSidechain": false,
+				"userType": "external",
+				"cwd": "/Users/abuusama/Desktop/temp/test-data",
+				"sessionId": "20304939-a518-4a36-af19-71055997e2ef",
+				"version": "1.0.35",
+				"type": "user",
+				"message": {
+					"role": "user",
+					"content": [
+						{
+							"tool_use_id": "toolu_01HMGainynyExjKSq27pPU63",
+							"type": "tool_result",
+							"content": [
+								{
+									"text": "<cell id=\"test-md-1\"><cell_type>markdown</cell_type># Test Jupyter Notebook\n\nThis is a test notebook for testing Claude Code's notebook tools.</cell id=\"test-md-1\">\n<cell id=\"test-code-1\">print(\"Hello, World!\")</cell id=\"test-code-1\">\n\nHello, World!\n\n<cell id=\"test-code-2\"># Test calculation\nresult = 6 * 7\nresult</cell id=\"test-code-2\">\n\n42",
+									"type": "text"
+								}
+							]
+						}
+					]
+				},
+				"uuid": "0597a87f-75f3-4e12-b533-d99af9d0bc54",
+				"timestamp": "2025-06-30T12:58:53.637Z",
+				"toolUseResult": [
+					{
+						"cellType": "markdown",
+						"source": "# Test Jupyter Notebook\n\nThis is a test notebook for testing Claude Code's notebook tools.",
+						"cell_id": "test-md-1"
+					},
+					{
+						"cellType": "code",
+						"source": "print(\"Hello, World!\")",
+						"execution_count": 1,
+						"cell_id": "test-code-1",
+						"language": "python",
+						"outputs": [
+							{
+								"output_type": "stream",
+								"text": "Hello, World!\n"
+							}
+						]
+					},
+					{
+						"cellType": "code",
+						"source": "# Test calculation\nresult = 6 * 7\nresult",
+						"execution_count": 2,
+						"cell_id": "test-code-2",
+						"language": "python",
+						"outputs": [
+							{
+								"output_type": "execute_result",
+								"text": "42"
+							}
+						]
+					}
+				]
+			},
+			"expectedComponentData": {
+				"id": "toolu_01HMGainynyExjKSq27pPU63",
+				"uuid": "8a8b7c3f-7168-473d-a319-b53c129286f7",
+				"parentUuid": "b3cc1ead-c31e-46eb-9172-a8f9397fc98f",
+				"timestamp": "2025-06-30T12:58:50.763Z",
+				"duration": 2874,
+				"status": {
+					"normalized": "completed",
+					"original": "success"
+				},
+				"filePath": "/Users/abuusama/Desktop/temp/test-data/test-notebook.ipynb",
+				"results": {
+					"cells": [
+						{
+							"id": "test-md-1",
+							"cell_type": "markdown",
+							"source": [
+								"# Test Jupyter Notebook",
+								"",
+								"This is a test notebook for testing Claude Code's notebook tools."
+							],
+							"outputs": [],
+							"execution_count": null,
+							"metadata": {}
+						},
+						{
+							"id": "test-code-1",
+							"cell_type": "code",
+							"source": ["print(\"Hello, World!\")"],
+							"outputs": [
+								{
+									"output_type": "stream",
+									"text": ["Hello, World!\n"]
+								}
+							],
+							"execution_count": 1,
+							"metadata": {}
+						},
+						{
+							"id": "test-code-2",
+							"cell_type": "code",
+							"source": ["# Test calculation", "result = 6 * 7", "result"],
+							"outputs": [
+								{
+									"output_type": "execute_result",
+									"text": ["42"]
+								}
+							],
+							"execution_count": 2,
+							"metadata": {}
+						}
+					],
+					"metadata": {
+						"kernelspec": {
+							"display_name": "Python 3",
+							"language": "python",
+							"name": "python3"
+						}
+					},
+					"nbformat": 4,
+					"nbformat_minor": 4
+				},
+				"ui": {
+					"totalCells": 3,
+					"codeCells": 2,
+					"markdownCells": 1,
+					"hasOutputs": true,
+					"cellsWithErrors": 0
+				}
+			}
+		}
+	]
+}
