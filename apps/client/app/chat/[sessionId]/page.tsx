@@ -27,6 +27,44 @@ function MessageDisplay({ entry }: { entry: HistoryEntry }) {
   const isToolCall = entry.type === 'assistant' && entry.content?.type === 'tool_use'
   const isTextMessage = entry.type === 'assistant' && typeof entry.content === 'string'
 
+  // If this is a tool call, render it as a tool (with or without parsed props)
+  if (isToolCall) {
+    if (entry.parsedProps) {
+      // Tool call with result - render the full tool component
+      return (
+        <div className="space-y-2">
+          <ToolDisplay parsedProps={entry.parsedProps} timestamp={entry.timestamp} />
+        </div>
+      )
+    } else {
+      // Tool call without result yet - render pending state
+      // Create a basic parsed props structure for pending tools
+      const pendingProps = {
+        toolType: entry.content.name || 'Unknown',
+        props: {
+          id: entry.content.id,
+          uuid: entry.uuid,
+          timestamp: entry.timestamp,
+          duration: 0,
+          status: {
+            normalized: 'pending' as const,
+            original: 'pending'
+          },
+          // Add tool-specific input props
+          ...(entry.content.input || {})
+        },
+        correlationId: entry.content.id || entry.uuid
+      }
+      
+      return (
+        <div className="space-y-2">
+          <ToolDisplay parsedProps={pendingProps} timestamp={entry.timestamp} />
+        </div>
+      )
+    }
+  }
+
+  // Regular message display for non-tool content
   return (
     <div className="space-y-2">
       <Card>
@@ -62,37 +100,23 @@ function MessageDisplay({ entry }: { entry: HistoryEntry }) {
                   {entry.content}
                 </div>
               )}
-
-              {isToolCall && (
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Tool Call:</div>
-                  <div className="bg-muted p-3 rounded">
-                    <div className="text-sm">
-                      <div><strong>Tool:</strong> {entry.content.name}</div>
-                      <div><strong>ID:</strong> {entry.content.id}</div>
-                    </div>
-                    {entry.content.input && (
-                      <details className="mt-2">
-                        <summary className="text-sm font-medium cursor-pointer">Input Parameters</summary>
-                        <pre className="text-xs mt-1 overflow-x-auto">
-                          {JSON.stringify(entry.content.input, null, 2)}
-                        </pre>
-                      </details>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Show parsed props if available */}
-      {entry.parsedProps && (
-        <ToolDisplay parsedProps={entry.parsedProps} timestamp={entry.timestamp} />
-      )}
     </div>
   )
+}
+
+// Helper function to filter out tool result user messages since they're already correlated
+function filterToolResults(history: HistoryEntry[]): HistoryEntry[] {
+  if (!history) return []
+  
+  return history.filter(entry => {
+    // Filter out tool result user messages - they're already correlated with tool calls
+    const isToolResult = entry.type === 'user' && entry.content?.type === 'tool_result'
+    return !isToolResult
+  })
 }
 
 export default function ChatPage() {
@@ -100,10 +124,13 @@ export default function ChatPage() {
   const router = useRouter()
   const sessionId = params.sessionId as string
   
-  const { history, loading, error, pagination, loadMore, refresh } = useEnhancedHistory(
+  const { history: rawHistory, loading, error, pagination, loadMore, refresh } = useEnhancedHistory(
     sessionId, 
     { limit: 50, autoRefresh: false }
   )
+  
+  // Filter out tool result user messages since they're already correlated
+  const history = filterToolResults(rawHistory || [])
 
   const handleRefresh = async () => {
     try {
